@@ -1,3 +1,5 @@
 .history
 read_data
 doc/archive/*
+data/*
+!data/README.md
