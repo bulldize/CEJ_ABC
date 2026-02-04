@@ -14,4 +14,4 @@ def normalize_intensity(volume, clip_percentiles=(1.0, 99.0), mode="zscore"):
         vmin = vol.min()
         vmax = vol.max() + 1e-6
         vol = (vol - vmin) / (vmax - vmin)
-    return vol
+    return vol.astype(np.float32)
