@@ -3,3 +3,6 @@ read_data
 doc/archive/*
 data/*
 !data/README.md
+outputs/
+__pycache__/
+.pytest_cache/

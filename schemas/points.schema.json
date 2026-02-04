@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "points",
+  "type": "object",
+  "required": ["case_id", "coord_type", "space", "points"],
+  "properties": {
+    "case_id": {"type": "string"},
+    "coord_type": {"type": "string", "enum": ["voxel", "world"]},
+    "space": {"type": "string", "enum": ["roi", "full"]},
+    "points": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {"type": "number"},
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    }
+  }
+}

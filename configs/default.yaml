@@ -1,0 +1,55 @@
+project:
+  seed: 42
+  device: auto
+
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  output_dir: outputs
+  raw_a_name: A.nii.gz
+  raw_b_name: B.nii.gz
+  raw_points_name: points.json
+  raw_meta_name: meta.json
+  processed_format: nii.gz
+  use_tooth_mask_channel: true
+
+preprocess:
+  roi_padding_mm: 8.0
+  target_spacing_mm: [0.5, 0.5, 0.5]
+  resample_to_target: false
+  intensity_clip_percentiles: [1.0, 99.0]
+  intensity_norm: zscore
+  dense_sample_step_mm: 0.2
+  sigma_mm: 1.0
+  point_surface_dist_thresh_mm: 3.0
+  z_ignore_ratio: 0.1
+
+model:
+  in_channels: 2
+  out_channels: 1
+  base_channels: 16
+  depth: 4
+
+train:
+  epochs: 1
+  batch_size: 1
+  lr: 0.001
+  num_workers: 0
+  loss: dice_bce
+
+infer:
+  threshold_theta: 0.3
+  use_prior_gating: false
+  prior_sigma_z_mm: 2.0
+  prior_sigma_s_mm: 1.0
+  prior_delta_s_mm: 1.0
+  prior_use_gradient: false
+  prior_gradient_weight: 1.0
+
+eval:
+  eval_taus_mm: [0.5, 1.0, 1.5]
+
+viz:
+  num_slices: 4
+  max_cases: 5
+  max_teeth_per_case: 8
