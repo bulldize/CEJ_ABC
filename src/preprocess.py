@@ -7,6 +7,7 @@ from scipy.ndimage import zoom
 
 from src.datasets.io import load_volume, save_volume
 from src.datasets.points import load_points, get_points_for_tooth, ensure_voxel_points, save_points
+from src.datasets.mark_points import ensure_mark_points
 from src.datasets.roi import crop_roi
 from src.datasets.heatmap import fit_curve_and_sample, generate_heatmap_from_points
 from src.utils.config import load_config, ensure_dir
@@ -58,6 +59,15 @@ def preprocess_case(case_dir, cfg):
     if not np.allclose(affine, affine_b, atol=1e-3):
         logger.warning("affine mismatch for case=%s", os.path.basename(case_dir))
 
+    case_id = os.path.basename(case_dir)
+    try:
+        converted = ensure_mark_points(case_dir, case_id, A.shape, affine, cfg)
+        if converted:
+            logger.info("converted cej_points_ras.xlsx for case=%s", case_id)
+    except Exception as e:
+        logger.error("failed to convert cej_points_ras.xlsx for case=%s: %s", case_id, e)
+        raise
+
     B = map_pulp_to_tooth(B)
     tooth_labels = get_tooth_labels(B)
 
@@ -67,7 +77,6 @@ def preprocess_case(case_dir, cfg):
     padding_mm = cfg["preprocess"]["roi_padding_mm"]
     pad_vox = np.round(np.array(padding_mm) / np.array(spacing)).astype(int)
 
-    case_id = os.path.basename(case_dir)
     processed_case_dir = ensure_dir(os.path.join(cfg["data"]["processed_dir"], case_id))
 
     for tooth_id in tooth_labels:

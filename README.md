@@ -23,6 +23,7 @@ If `data/raw/` is empty, the script will generate a small synthetic case.
 data/raw/{case_id}/
   A.nii.gz            # CBCT volume, float32
   B.nii.gz            # segmentation, int labels
+  cej_points_ras.xlsx # CEJ points in mark (RAS) space (per-case)
   points.json         # sparse CEJ points per tooth
   meta.json           # required only for .npy inputs
 ```
@@ -42,6 +43,12 @@ data/raw/{case_id}/
 ```
 
 If points are in physical space, set `coord_type: "world"` and provide `affine` in `meta.json`.
+If `cej_points_ras.xlsx` exists, preprocess will convert it to `points.json` (voxel/full) and write `mark_meta.json`.
+
+Global mark boundary (single file):
+```
+data/scan_boundary_ras.xlsx
+```
 
 ### Processed
 
@@ -113,3 +120,4 @@ python -m src.viz --config configs/default.yaml
 - For .npy inputs, provide `meta.json` with `spacing` and `affine`.
 - `preprocess.resample_to_target` is off by default; enable it to resample to `target_spacing_mm`.
 - The default config uses placeholder values from the PRD and tech-route spec.
+- TODO: confirm external software import format and add export option for points/curves.

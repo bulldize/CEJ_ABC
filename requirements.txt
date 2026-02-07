@@ -4,6 +4,7 @@ scikit-image
 nibabel
 torch
 pandas
+openpyxl
 matplotlib
 pyyaml
 tqdm

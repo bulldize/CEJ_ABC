@@ -10,6 +10,9 @@ data:
   raw_b_name: B.nii.gz
   raw_points_name: points.json
   raw_meta_name: meta.json
+  cej_points_name: cej_points_ras.xlsx
+  scan_boundary_path: data/scan_boundary_ras.xlsx
+  mark_meta_name: mark_meta.json
   processed_format: nii.gz
   use_tooth_mask_channel: true
 
