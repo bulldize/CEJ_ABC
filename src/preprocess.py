@@ -71,8 +71,16 @@ def preprocess_case(case_dir, cfg):
     B = map_pulp_to_tooth(B)
     tooth_labels = get_tooth_labels(B)
 
+    points_exist = os.path.exists(raw_points)
     points_data = load_points(raw_points)
     coord_type = points_data.get("coord_type", "voxel")
+    points_dict = points_data.get("points", {}) or {}
+    has_points = any(len(v) > 0 for v in points_dict.values())
+    if not has_points:
+        if points_exist:
+            logger.info("points.json empty for case=%s; skip point/heatmap outputs", case_id)
+        else:
+            logger.info("no points.json for case=%s; skip point/heatmap outputs", case_id)
 
     padding_mm = cfg["preprocess"]["roi_padding_mm"]
     pad_vox = np.round(np.array(padding_mm) / np.array(spacing)).astype(int)
@@ -86,51 +94,54 @@ def preprocess_case(case_dir, cfg):
             continue
         A_roi, T_roi, origin, mins, maxs = out
 
-        pts = get_points_for_tooth(points_data, tooth_id)
-        pts_vox = ensure_voxel_points(pts, coord_type, affine)
-        # remove outliers by surface distance + report distribution
         point_dist_report = None
-        if pts_vox.shape[0] > 0:
-            dist = distance_to_surface(T_t, spacing)
-            keep = []
-            distances = []
-            invalid = 0
-            removed = 0
-            thresh = cfg["preprocess"]["point_surface_dist_thresh_mm"]
-            for p in pts_vox:
-                x, y, z = np.round(p).astype(int)
-                if 0 <= x < dist.shape[0] and 0 <= y < dist.shape[1] and 0 <= z < dist.shape[2]:
-                    d = float(dist[x, y, z])
-                    distances.append(d)
-                    if d <= thresh:
-                        keep.append(p)
+        if has_points:
+            pts = get_points_for_tooth(points_data, tooth_id)
+            pts_vox = ensure_voxel_points(pts, coord_type, affine)
+            # remove outliers by surface distance + report distribution
+            if pts_vox.shape[0] > 0:
+                dist = distance_to_surface(T_t, spacing)
+                keep = []
+                distances = []
+                invalid = 0
+                removed = 0
+                thresh = cfg["preprocess"]["point_surface_dist_thresh_mm"]
+                for p in pts_vox:
+                    x, y, z = np.round(p).astype(int)
+                    if 0 <= x < dist.shape[0] and 0 <= y < dist.shape[1] and 0 <= z < dist.shape[2]:
+                        d = float(dist[x, y, z])
+                        distances.append(d)
+                        if d <= thresh:
+                            keep.append(p)
+                        else:
+                            removed += 1
                     else:
-                        removed += 1
-                else:
-                    distances.append(float("inf"))
-                    invalid += 1
-            pts_vox = np.asarray(keep, dtype=np.float32)
-            finite = np.asarray([d for d in distances if np.isfinite(d)], dtype=np.float32)
-            point_dist_report = {
-                "case_id": case_id,
-                "tooth_id": tooth_id,
-                "threshold_mm": float(thresh),
-                "n_points": int(len(distances)),
-                "n_in_bounds": int(len(finite)),
-                "n_removed": int(removed),
-                "n_invalid": int(invalid),
-                "mean_mm": float(np.mean(finite)) if finite.size > 0 else None,
-                "p95_mm": float(np.percentile(finite, 95)) if finite.size > 0 else None,
-                "max_mm": float(np.max(finite)) if finite.size > 0 else None,
-                "distances_mm": [float(d) if np.isfinite(d) else None for d in distances],
-            }
-            if removed > 0 or invalid > 0:
-                logger.warning(
-                    "point filter case=%s tooth=%s removed=%d invalid=%d",
-                    case_id, tooth_id, removed, invalid
-                )
-
-        pts_roi = points_full_to_roi(pts_vox, origin)
+                        distances.append(float("inf"))
+                        invalid += 1
+                pts_vox = np.asarray(keep, dtype=np.float32)
+                finite = np.asarray([d for d in distances if np.isfinite(d)], dtype=np.float32)
+                point_dist_report = {
+                    "case_id": case_id,
+                    "tooth_id": tooth_id,
+                    "threshold_mm": float(thresh),
+                    "n_points": int(len(distances)),
+                    "n_in_bounds": int(len(finite)),
+                    "n_removed": int(removed),
+                    "n_invalid": int(invalid),
+                    "mean_mm": float(np.mean(finite)) if finite.size > 0 else None,
+                    "p95_mm": float(np.percentile(finite, 95)) if finite.size > 0 else None,
+                    "max_mm": float(np.max(finite)) if finite.size > 0 else None,
+                    "distances_mm": [float(d) if np.isfinite(d) else None for d in distances],
+                }
+                if removed > 0 or invalid > 0:
+                    logger.warning(
+                        "point filter case=%s tooth=%s removed=%d invalid=%d",
+                        case_id, tooth_id, removed, invalid
+                    )
+            pts_roi = points_full_to_roi(pts_vox, origin)
+        else:
+            pts_vox = np.zeros((0, 3), dtype=np.float32)
+            pts_roi = pts_vox
 
         # optional resample
         roi_shape_full = A_roi.shape
@@ -142,18 +153,23 @@ def preprocess_case(case_dir, cfg):
         else:
             resampled, scale = False, np.array([1.0, 1.0, 1.0])
 
-        dense_pts = fit_curve_and_sample(pts_roi, spacing, cfg["preprocess"]["dense_sample_step_mm"])
-        H_GT = generate_heatmap_from_points(A_roi.shape, dense_pts, spacing, cfg["preprocess"]["sigma_mm"])
-
         tooth_dir = ensure_dir(os.path.join(processed_case_dir, f"tooth_{tooth_id}"))
         fmt = cfg["data"]["processed_format"]
 
         save_volume(os.path.join(tooth_dir, f"A_t.{fmt}"), A_roi, affine=None, spacing=spacing)
         save_volume(os.path.join(tooth_dir, f"T_t.{fmt}"), T_roi.astype(np.uint8), affine=None, spacing=spacing)
-        save_volume(os.path.join(tooth_dir, f"H_GT.{fmt}"), H_GT.astype(np.float32), affine=None, spacing=spacing)
-
-        save_points(os.path.join(tooth_dir, "points.json"), case_id, "voxel", "roi", {str(tooth_id): pts_roi.tolist()})
-        np.save(os.path.join(tooth_dir, "curve_dense_points.npy"), dense_pts.astype(np.float32))
+        if has_points:
+            dense_pts = fit_curve_and_sample(pts_roi, spacing, cfg["preprocess"]["dense_sample_step_mm"])
+            H_GT = generate_heatmap_from_points(A_roi.shape, dense_pts, spacing, cfg["preprocess"]["sigma_mm"])
+            save_volume(os.path.join(tooth_dir, f"H_GT.{fmt}"), H_GT.astype(np.float32), affine=None, spacing=spacing)
+            save_points(
+                os.path.join(tooth_dir, "points.json"),
+                case_id,
+                "voxel",
+                "roi",
+                {str(tooth_id): pts_roi.tolist()},
+            )
+            np.save(os.path.join(tooth_dir, "curve_dense_points.npy"), dense_pts.astype(np.float32))
 
         roi_meta = {
             "case_id": case_id,

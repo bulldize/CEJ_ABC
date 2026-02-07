@@ -31,3 +31,32 @@
 
 下一个会话只做的一件事：
 确认外部软件所需的导出格式，并补充对应导出功能。
+
+---
+
+更新（2026-02-08）：
+- Completed: 真实数据 case0002 已按标准落盘（A/B/cej_points_ras.xlsx），raw 仅保留该 case。
+- Completed: 预处理支持无 points 数据（无 points.json 时跳过点/热力图相关输出）。
+- Completed: 真实 case0002 预处理跑通并生成 `data/processed/case0002/`。
+- Completed: 修复 cej_points_ras.xlsx 牙位解析正则，points.json 成功生成并写入 28 颗牙的点。
+
+一句话目标：
+跑通真实数据 case0002 的预处理，并兼容无监督（无 points）数据集。
+
+已确认关键决策：
+- 目标用户：项目内 CEJ pipeline 使用者
+- 技术栈：Python + pandas/openpyxl
+- 关键约束：本次只跑真实 case0002；无 cej_points_ras.xlsx 则无 points.json（无监督）
+- 已选方案/库：case0002 落盘 + preprocess 内部跳过点/热力图输出
+
+当前进度：
+- 已完成：真实数据落盘与预处理跑通；无 points 兼容逻辑
+- 进行中：无
+- 未开始：多 case 批量处理与无监督训练流程定义
+
+明确约束：
+- 必须做：cej_points_ras.xlsx 存在时自动生成 points.json
+- 禁止做：在 scripts/ 下新增转换脚本
+
+下一个会话只做的一件事：
+明确无监督训练/评估所需的数据输出与流程调整。

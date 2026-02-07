@@ -24,9 +24,9 @@ def _find_xyz_cols(df: pd.DataFrame) -> Tuple[str, str, str]:
                     return c
         return None
 
-    x_col = pick_by_patterns([r"position\\s*\\[0\\]", r"\\bx\\b"])
-    y_col = pick_by_patterns([r"position\\s*\\[1\\]", r"\\by\\b"])
-    z_col = pick_by_patterns([r"position\\s*\\[2\\]", r"\\bz\\b"])
+    x_col = pick_by_patterns([r"position\s*\[0\]", r"\bx\b"])
+    y_col = pick_by_patterns([r"position\s*\[1\]", r"\by\b"])
+    z_col = pick_by_patterns([r"position\s*\[2\]", r"\bz\b"])
     if x_col and y_col and z_col:
         return x_col, y_col, z_col
 
@@ -98,7 +98,7 @@ def _read_cej_points(cej_path: str):
 
 def _group_points_by_tooth(df: pd.DataFrame, tooth_col: str, x_col: str, y_col: str, z_col: str, order_col=None):
     df = df.copy()
-    tooth_ids = df[tooth_col].astype(str).str.extract(r"(\\d+)")[0]
+    tooth_ids = df[tooth_col].astype(str).str.extract(r"(\d+)")[0]
     df["_tooth_id"] = tooth_ids
     df = df.dropna(subset=["_tooth_id"])
     if order_col is not None:
@@ -119,7 +119,19 @@ def ensure_mark_points(case_dir: str, case_id: str, shape, affine_world: np.ndar
 
     cej_path = os.path.join(case_dir, cej_name)
     if not os.path.exists(cej_path):
-        return False
+        fallback = cfg["data"].get("cej_points_path")
+        if fallback and os.path.exists(fallback):
+            cej_path = fallback
+        else:
+            fallback = os.path.join(os.path.dirname(scan_path), cej_name)
+            if os.path.exists(fallback):
+                cej_path = fallback
+            else:
+                # no cej points available -> ensure empty points.json for unsupervised cases
+                raw_points_path = os.path.join(case_dir, raw_points_name)
+                if not os.path.exists(raw_points_path):
+                    save_points(raw_points_path, case_id, "voxel", "full", {})
+                return False
     if not os.path.exists(scan_path):
         raise FileNotFoundError(f"scan boundary file not found: {scan_path}")
 
