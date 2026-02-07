@@ -8,6 +8,7 @@ import pandas as pd
 
 from src.datasets.points import save_points
 from src.utils.log import get_logger
+from src.utils.geometry import world_to_vox
 
 
 logger = get_logger("mark_points")
@@ -84,6 +85,31 @@ def _points_mark_to_vox(points_mark: np.ndarray, aff_m2v: np.ndarray) -> np.ndar
     return pts_v[:, :3]
 
 
+def _points_world_to_vox(points_world: np.ndarray, affine_world: np.ndarray, flip_xy: bool = False) -> np.ndarray:
+    if points_world.size == 0:
+        return np.zeros((0, 3), dtype=np.float32)
+    pts = np.asarray(points_world, dtype=np.float32)
+    if flip_xy:
+        pts = pts.copy()
+        pts[:, 0] *= -1.0
+        pts[:, 1] *= -1.0
+    return world_to_vox(pts, affine_world)
+
+
+def _count_in_bounds(points_by_tooth: Dict[str, np.ndarray], shape: Tuple[int, int, int]) -> Tuple[int, int]:
+    shape = np.asarray(shape, dtype=np.float32) - 1.0
+    total = 0
+    inb = 0
+    for pts in points_by_tooth.values():
+        pts = np.asarray(pts, dtype=np.float32)
+        if pts.size == 0:
+            continue
+        mask = np.all((pts >= 0) & (pts <= shape), axis=1)
+        inb += int(mask.sum())
+        total += int(mask.size)
+    return total, inb
+
+
 def _read_cej_points(cej_path: str):
     df = pd.read_excel(cej_path)
     tooth_col = _find_tooth_col(df)
@@ -132,74 +158,119 @@ def ensure_mark_points(case_dir: str, case_id: str, shape, affine_world: np.ndar
                 if not os.path.exists(raw_points_path):
                     save_points(raw_points_path, case_id, "voxel", "full", {})
                 return False
-    if not os.path.exists(scan_path):
-        raise FileNotFoundError(f"scan boundary file not found: {scan_path}")
-
-    scan_pts = _read_scan_boundary(scan_path)
-    minv, maxv, spacing, aff_v2m, aff_m2v = compute_mark_affines(scan_pts, shape)
-    affine_spacing = np.linalg.norm(np.asarray(affine_world, dtype=np.float32)[:3, :3], axis=0)
-    if not np.allclose(spacing, affine_spacing, atol=1e-3):
-        logger.warning(
-            "case=%s mark spacing %s differs from A affine spacing %s",
-            case_id, np.round(spacing, 6).tolist(), np.round(affine_spacing, 6).tolist()
-        )
-
     df, tooth_col, x_col, y_col, z_col, order_col = _read_cej_points(cej_path)
     points_by_tooth_mark = _group_points_by_tooth(df, tooth_col, x_col, y_col, z_col, order_col)
 
-    points_by_tooth_vox: Dict[str, list] = {}
-    n_outside = 0
-    for tooth_id, pts_mark in points_by_tooth_mark.items():
-        pts_vox = _points_mark_to_vox(pts_mark, aff_m2v)
-        if pts_vox.size > 0:
-            in_bounds = np.all((pts_vox >= 0) & (pts_vox <= (np.asarray(shape) - 1)), axis=1)
-            n_outside += int((~in_bounds).sum())
-        points_by_tooth_vox[tooth_id] = pts_vox.tolist()
+    scan_pts = _read_scan_boundary(scan_path) if os.path.exists(scan_path) else None
+    minv = maxv = spacing = aff_v2m = aff_m2v = None
+    if scan_pts is not None:
+        minv, maxv, spacing, aff_v2m, aff_m2v = compute_mark_affines(scan_pts, shape)
+        affine_spacing = np.linalg.norm(np.asarray(affine_world, dtype=np.float32)[:3, :3], axis=0)
+        if not np.allclose(spacing, affine_spacing, atol=1e-3):
+            logger.warning(
+                "case=%s mark spacing %s differs from A affine spacing %s",
+                case_id, np.round(spacing, 6).tolist(), np.round(affine_spacing, 6).tolist()
+            )
 
+    # try interpreting CEJ points in world (RAS or LPS) using the real affine
+    world_ras = {
+        tooth_id: _points_world_to_vox(pts_mark, affine_world, flip_xy=False)
+        for tooth_id, pts_mark in points_by_tooth_mark.items()
+    }
+    total_ras, in_ras = _count_in_bounds(world_ras, shape)
+    world_lps = {
+        tooth_id: _points_world_to_vox(pts_mark, affine_world, flip_xy=True)
+        for tooth_id, pts_mark in points_by_tooth_mark.items()
+    }
+    total_lps, in_lps = _count_in_bounds(world_lps, shape)
+
+    world_candidates = [
+        ("world_ras", world_ras, total_ras, in_ras),
+        ("world_lps", world_lps, total_lps, in_lps),
+    ]
+    best_world = max(world_candidates, key=lambda x: (x[3] / max(x[2], 1), x[3]))
+    best_world_ratio = best_world[3] / max(best_world[2], 1)
+
+    conversion_mode = None
+    points_by_tooth_vox: Dict[str, np.ndarray] = {}
+    total = inb = 0
+    if best_world_ratio >= 0.5:
+        conversion_mode, points_by_tooth_vox, total, inb = best_world
+        logger.info(
+            "case=%s using %s with A affine (in-bounds %d/%d)",
+            case_id, conversion_mode, inb, total
+        )
+    elif scan_pts is not None and aff_m2v is not None:
+        points_by_tooth_vox = {
+            tooth_id: _points_mark_to_vox(pts_mark, aff_m2v)
+            for tooth_id, pts_mark in points_by_tooth_mark.items()
+        }
+        total, inb = _count_in_bounds(points_by_tooth_vox, shape)
+        conversion_mode = "mark"
+        logger.info(
+            "case=%s using mark->vox from scan boundary (in-bounds %d/%d)",
+            case_id, inb, total
+        )
+    else:
+        conversion_mode, points_by_tooth_vox, total, inb = best_world
+        logger.warning(
+            "case=%s scan boundary missing; fallback to %s (in-bounds %d/%d)",
+            case_id, conversion_mode, inb, total
+        )
+
+    n_outside = int(total - inb)
     if n_outside > 0:
-        logger.warning("case=%s mark->vox has %d points outside volume bounds", case_id, n_outside)
+        logger.warning("case=%s %s has %d points outside volume bounds", case_id, conversion_mode, n_outside)
 
     raw_points_path = os.path.join(case_dir, raw_points_name)
-    save_points(raw_points_path, case_id, "voxel", "full", points_by_tooth_vox)
-
-    aff_mark_to_world = (affine_world @ aff_m2v).astype(np.float32)
+    points_by_tooth_vox_list = {k: v.tolist() for k, v in points_by_tooth_vox.items()}
+    save_points(raw_points_path, case_id, "voxel", "full", points_by_tooth_vox_list)
 
     mark_meta = {
         "case_id": case_id,
-        "scan_boundary_path": scan_path,
+        "scan_boundary_path": scan_path if scan_pts is not None else None,
         "cej_points_path": cej_path,
         "shape": [int(v) for v in shape],
-        "mark_min": [float(v) for v in minv],
-        "mark_max": [float(v) for v in maxv],
-        "spacing_mark": [float(v) for v in spacing],
-        "affine_vox_to_mark": aff_v2m.tolist(),
-        "affine_mark_to_vox": aff_m2v.tolist(),
-        "affine_mark_to_world": aff_mark_to_world.tolist(),
+        "points_coord": conversion_mode,
+        "points_in_bounds": {"total": int(total), "in_bounds": int(inb)},
         "affine_world": affine_world.tolist(),
     }
+    if scan_pts is not None and aff_v2m is not None and aff_m2v is not None:
+        aff_mark_to_world = (affine_world @ aff_m2v).astype(np.float32)
+        mark_meta.update(
+            {
+                "mark_min": [float(v) for v in minv],
+                "mark_max": [float(v) for v in maxv],
+                "spacing_mark": [float(v) for v in spacing],
+                "affine_vox_to_mark": aff_v2m.tolist(),
+                "affine_mark_to_vox": aff_m2v.tolist(),
+                "affine_mark_to_world": aff_mark_to_world.tolist(),
+            }
+        )
     with open(os.path.join(case_dir, mark_meta_name), "w") as f:
         json.dump(mark_meta, f)
 
     # quick validation on corners
-    corners = np.array(
-        [
-            [0, 0, 0],
-            [shape[0] - 1, 0, 0],
-            [0, shape[1] - 1, 0],
-            [0, 0, shape[2] - 1],
-            [shape[0] - 1, shape[1] - 1, 0],
-            [shape[0] - 1, 0, shape[2] - 1],
-            [0, shape[1] - 1, shape[2] - 1],
-            [shape[0] - 1, shape[1] - 1, shape[2] - 1],
-        ],
-        dtype=np.float32,
-    )
-    ones = np.ones((corners.shape[0], 1), dtype=np.float32)
-    corners_h = np.concatenate([corners, ones], axis=1)
-    corners_mark = (aff_v2m @ corners_h.T).T[:, :3]
-    min_err = float(np.max(np.abs(corners_mark.min(axis=0) - minv)))
-    max_err = float(np.max(np.abs(corners_mark.max(axis=0) - maxv)))
-    logger.info("mark affine check case=%s min_err=%.6f max_err=%.6f", case_id, min_err, max_err)
+    if scan_pts is not None and aff_v2m is not None:
+        corners = np.array(
+            [
+                [0, 0, 0],
+                [shape[0] - 1, 0, 0],
+                [0, shape[1] - 1, 0],
+                [0, 0, shape[2] - 1],
+                [shape[0] - 1, shape[1] - 1, 0],
+                [shape[0] - 1, 0, shape[2] - 1],
+                [0, shape[1] - 1, shape[2] - 1],
+                [shape[0] - 1, shape[1] - 1, shape[2] - 1],
+            ],
+            dtype=np.float32,
+        )
+        ones = np.ones((corners.shape[0], 1), dtype=np.float32)
+        corners_h = np.concatenate([corners, ones], axis=1)
+        corners_mark = (aff_v2m @ corners_h.T).T[:, :3]
+        min_err = float(np.max(np.abs(corners_mark.min(axis=0) - minv)))
+        max_err = float(np.max(np.abs(corners_mark.max(axis=0) - maxv)))
+        logger.info("mark affine check case=%s min_err=%.6f max_err=%.6f", case_id, min_err, max_err)
     logger.info("wrote %s and %s", raw_points_path, os.path.join(case_dir, mark_meta_name))
 
     return True

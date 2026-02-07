@@ -39,6 +39,8 @@
 - Completed: 预处理支持无 points 数据（无 points.json 时跳过点/热力图相关输出）。
 - Completed: 真实 case0002 预处理跑通并生成 `data/processed/case0002/`。
 - Completed: 修复 cej_points_ras.xlsx 牙位解析正则，points.json 成功生成并写入 28 颗牙的点。
+- Completed: 依据真实 A 仿射自动选择 world_lps 坐标转换（x/y 翻转），points 全部落入体素范围。
+- Completed: mark_meta.json 记录 points_coord 与 in-bounds 统计；case0002 所有点均在 3mm 表面阈值内。
 
 一句话目标：
 跑通真实数据 case0002 的预处理，并兼容无监督（无 points）数据集。

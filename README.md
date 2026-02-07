@@ -44,6 +44,8 @@ data/raw/{case_id}/
 
 If points are in physical space, set `coord_type: "world"` and provide `affine` in `meta.json`.
 If `cej_points_ras.xlsx` exists, preprocess will convert it to `points.json` (voxel/full) and write `mark_meta.json`.
+If the per-case `cej_points_ras.xlsx` is missing, preprocess will look for `data/cej_points_ras.xlsx`.
+If no CEJ file is found, it will write an empty `points.json` and treat the case as unsupervised.
 
 Global mark boundary (single file):
 ```
@@ -63,6 +65,7 @@ data/processed/{case_id}/tooth_{tooth_id}/
 ```
 
 `roi_meta.json` includes ROI origin, shape, spacing, and affine for ROI <-> full mapping.
+For unsupervised cases (empty `points.json`), `H_GT.nii.gz`, `points.json`, and `curve_dense_points.npy` are not generated.
 See `schemas/` for JSON schema.
 
 ## Outputs
@@ -120,4 +123,5 @@ python -m src.viz --config configs/default.yaml
 - For .npy inputs, provide `meta.json` with `spacing` and `affine`.
 - `preprocess.resample_to_target` is off by default; enable it to resample to `target_spacing_mm`.
 - The default config uses placeholder values from the PRD and tech-route spec.
+- Preprocess auto-detects CEJ point coordinates as `world_ras` or `world_lps` using the A volume affine and records the choice in `mark_meta.json`.
 - TODO: confirm external software import format and add export option for points/curves.
