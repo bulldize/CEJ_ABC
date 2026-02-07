@@ -23,7 +23,11 @@ def load_volume(path, meta_path=None, dtype=None):
             with open(meta_candidate, "r") as f:
                 meta = json.load(f)
             spacing = tuple(meta.get("spacing", spacing))
-            affine = np.array(meta.get("affine", affine)).astype(np.float32)
+            affine_meta = meta.get("affine", None)
+            if affine_meta is None:
+                affine = _default_affine(spacing)
+            else:
+                affine = np.array(affine_meta).astype(np.float32)
         if dtype is not None:
             arr = arr.astype(dtype)
         return arr, spacing, affine
@@ -43,6 +47,8 @@ def save_volume(path, arr, affine=None, spacing=None, dtype=None):
     if path.endswith(".npy"):
         np.save(path, arr)
         if spacing is not None:
+            if affine is None:
+                affine = _default_affine(spacing)
             meta_path = path.replace(".npy", ".meta.json")
             with open(meta_path, "w") as f:
                 json.dump({"spacing": list(spacing), "affine": affine.tolist() if affine is not None else None}, f)

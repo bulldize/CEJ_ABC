@@ -49,7 +49,14 @@ def preprocess_case(case_dir, cfg):
     raw_meta = os.path.join(case_dir, cfg["data"]["raw_meta_name"])
 
     A, spacing, affine = load_volume(raw_a, meta_path=raw_meta, dtype=np.float32)
-    B, _, _ = load_volume(raw_b, meta_path=raw_meta, dtype=np.int16)
+    B, spacing_b, affine_b = load_volume(raw_b, meta_path=raw_meta, dtype=np.int16)
+    if A.shape != B.shape:
+        logger.error("shape mismatch A%s vs B%s for case=%s", A.shape, B.shape, os.path.basename(case_dir))
+        return
+    if not np.allclose(spacing, spacing_b, atol=1e-3):
+        logger.warning("spacing mismatch A%s vs B%s for case=%s", spacing, spacing_b, os.path.basename(case_dir))
+    if not np.allclose(affine, affine_b, atol=1e-3):
+        logger.warning("affine mismatch for case=%s", os.path.basename(case_dir))
 
     B = map_pulp_to_tooth(B)
     tooth_labels = get_tooth_labels(B)
@@ -72,16 +79,47 @@ def preprocess_case(case_dir, cfg):
 
         pts = get_points_for_tooth(points_data, tooth_id)
         pts_vox = ensure_voxel_points(pts, coord_type, affine)
-        # remove outliers by surface distance
+        # remove outliers by surface distance + report distribution
+        point_dist_report = None
         if pts_vox.shape[0] > 0:
             dist = distance_to_surface(T_t, spacing)
             keep = []
+            distances = []
+            invalid = 0
+            removed = 0
+            thresh = cfg["preprocess"]["point_surface_dist_thresh_mm"]
             for p in pts_vox:
                 x, y, z = np.round(p).astype(int)
                 if 0 <= x < dist.shape[0] and 0 <= y < dist.shape[1] and 0 <= z < dist.shape[2]:
-                    if dist[x, y, z] <= cfg["preprocess"]["point_surface_dist_thresh_mm"]:
+                    d = float(dist[x, y, z])
+                    distances.append(d)
+                    if d <= thresh:
                         keep.append(p)
+                    else:
+                        removed += 1
+                else:
+                    distances.append(float("inf"))
+                    invalid += 1
             pts_vox = np.asarray(keep, dtype=np.float32)
+            finite = np.asarray([d for d in distances if np.isfinite(d)], dtype=np.float32)
+            point_dist_report = {
+                "case_id": case_id,
+                "tooth_id": tooth_id,
+                "threshold_mm": float(thresh),
+                "n_points": int(len(distances)),
+                "n_in_bounds": int(len(finite)),
+                "n_removed": int(removed),
+                "n_invalid": int(invalid),
+                "mean_mm": float(np.mean(finite)) if finite.size > 0 else None,
+                "p95_mm": float(np.percentile(finite, 95)) if finite.size > 0 else None,
+                "max_mm": float(np.max(finite)) if finite.size > 0 else None,
+                "distances_mm": [float(d) if np.isfinite(d) else None for d in distances],
+            }
+            if removed > 0 or invalid > 0:
+                logger.warning(
+                    "point filter case=%s tooth=%s removed=%d invalid=%d",
+                    case_id, tooth_id, removed, invalid
+                )
 
         pts_roi = points_full_to_roi(pts_vox, origin)
 
@@ -128,6 +166,9 @@ def preprocess_case(case_dir, cfg):
         }
         with open(os.path.join(tooth_dir, "roi_meta.json"), "w") as f:
             json.dump(roi_meta, f)
+        if point_dist_report is not None:
+            with open(os.path.join(tooth_dir, "point_surface_dist.json"), "w") as f:
+                json.dump(point_dist_report, f)
 
         logger.info("processed case=%s tooth=%s", case_id, tooth_id)
 

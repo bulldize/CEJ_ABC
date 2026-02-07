@@ -27,8 +27,8 @@ def pick_slices(shape_z, n=4):
     return np.linspace(0, shape_z - 1, n, dtype=int).tolist()
 
 
-def save_overlay(A, overlay=None, points=None, out_path=None, title=None):
-    z_slices = pick_slices(A.shape[2], n=4)
+def save_overlay(A, overlay=None, points=None, out_path=None, title=None, num_slices=4):
+    z_slices = pick_slices(A.shape[2], n=num_slices)
     fig, axes = plt.subplots(1, len(z_slices), figsize=(4 * len(z_slices), 4))
     if len(z_slices) == 1:
         axes = [axes]
@@ -53,10 +53,10 @@ def save_overlay(A, overlay=None, points=None, out_path=None, title=None):
     plt.close(fig)
 
 
-def save_error_map(A, points, distances, out_path):
+def save_error_map(A, points, distances, out_path, num_slices=4):
     if points is None or len(points) == 0:
         return
-    z_slices = pick_slices(A.shape[2], n=4)
+    z_slices = pick_slices(A.shape[2], n=num_slices)
     fig, axes = plt.subplots(1, len(z_slices), figsize=(4 * len(z_slices), 4))
     if len(z_slices) == 1:
         axes = [axes]
@@ -105,6 +105,7 @@ def main():
         logger.warning("no processed teeth found")
         return
 
+    num_slices = int(cfg["viz"].get("num_slices", 4))
     for tdir in tooth_dirs:
         roi_meta_path = os.path.join(tdir, "roi_meta.json")
         with open(roi_meta_path, "r") as f:
@@ -124,8 +125,14 @@ def main():
         boundary = np.zeros_like(T)
         for z in range(T.shape[2]):
             boundary[:, :, z] = boundary2d(T[:, :, z])
-        out_dir_roi = ensure_dir(os.path.join(out_root, "roi", case_id))
-        save_overlay(A, overlay=boundary, out_path=os.path.join(out_dir_roi, f"tooth_{tooth_id}.png"), title="roi")
+        out_dir_roi = ensure_dir(os.path.join(out_root, "roi", case_id, f"tooth_{tooth_id}"))
+        save_overlay(
+            A,
+            overlay=boundary,
+            out_path=os.path.join(out_dir_roi, "roi.png"),
+            title="roi",
+            num_slices=num_slices,
+        )
 
         # Prior check (R_t)
         R = compute_geometric_prior(
@@ -139,12 +146,25 @@ def main():
             use_gradient=cfg["infer"]["prior_use_gradient"],
             gradient_weight=cfg["infer"]["prior_gradient_weight"],
         )
-        out_dir_prior = ensure_dir(os.path.join(out_root, "prior", case_id))
-        save_overlay(A, overlay=R, out_path=os.path.join(out_dir_prior, f"tooth_{tooth_id}.png"), title="prior")
+        out_dir_prior = ensure_dir(os.path.join(out_root, "prior", case_id, f"tooth_{tooth_id}"))
+        save_overlay(
+            A,
+            overlay=R,
+            out_path=os.path.join(out_dir_prior, "prior.png"),
+            title="prior",
+            num_slices=num_slices,
+        )
 
         # Pseudo-GT check
-        out_dir_pgt = ensure_dir(os.path.join(out_root, "pseudo_gt", case_id))
-        save_overlay(A, overlay=H, points=pts, out_path=os.path.join(out_dir_pgt, f"tooth_{tooth_id}.png"), title="pseudo_gt")
+        out_dir_pgt = ensure_dir(os.path.join(out_root, "pseudo_gt", case_id, f"tooth_{tooth_id}"))
+        save_overlay(
+            A,
+            overlay=H,
+            points=pts,
+            out_path=os.path.join(out_dir_pgt, "pseudo_gt.png"),
+            title="pseudo_gt",
+            num_slices=num_slices,
+        )
 
         # Inference check
         h_pred_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "H_pred.nii.gz")
@@ -152,13 +172,19 @@ def main():
         if os.path.exists(h_pred_path) and os.path.exists(c_pred_path):
             H_pred, _, _ = load_volume(h_pred_path, dtype=np.float32)
             C_pred, _, _ = load_volume(c_pred_path, dtype=np.uint8)
-            out_dir_inf = ensure_dir(os.path.join(out_root, "infer", case_id))
-            save_overlay(A, overlay=H_pred + C_pred, out_path=os.path.join(out_dir_inf, f"tooth_{tooth_id}.png"), title="infer")
+            out_dir_inf = ensure_dir(os.path.join(out_root, "infer", case_id, f"tooth_{tooth_id}"))
+            save_overlay(
+                A,
+                overlay=H_pred + C_pred,
+                out_path=os.path.join(out_dir_inf, "infer.png"),
+                title="infer",
+                num_slices=num_slices,
+            )
 
             # Error map
             d = compute_distances(pts, C_pred, spacing)
-            out_dir_err = ensure_dir(os.path.join(out_root, "error", case_id))
-            save_error_map(A, pts, d, os.path.join(out_dir_err, f"tooth_{tooth_id}.png"))
+            out_dir_err = ensure_dir(os.path.join(out_root, "error", case_id, f"tooth_{tooth_id}"))
+            save_error_map(A, pts, d, os.path.join(out_dir_err, "error.png"), num_slices=num_slices)
 
         logger.info("viz case=%s tooth=%s", case_id, tooth_id)
 
