@@ -3,9 +3,7 @@ import glob
 import json
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
-from skimage.morphology import binary_erosion
 
 from src.datasets.io import load_volume
 from src.datasets.points import load_points, get_points_for_tooth
@@ -15,9 +13,22 @@ from src.utils.log import get_logger
 
 logger = get_logger("viz")
 
+_plt = None
+_binary_erosion = None
+
+
+def _ensure_viz_deps():
+    global _plt, _binary_erosion
+    if _plt is None:
+        import matplotlib.pyplot as plt
+        _plt = plt
+    if _binary_erosion is None:
+        from skimage.morphology import binary_erosion
+        _binary_erosion = binary_erosion
+
 
 def boundary2d(mask2d):
-    er = binary_erosion(mask2d)
+    er = _binary_erosion(mask2d)
     return mask2d ^ er
 
 
@@ -29,7 +40,7 @@ def pick_slices(shape_z, n=4):
 
 def save_overlay(A, overlay=None, points=None, out_path=None, title=None, num_slices=4):
     z_slices = pick_slices(A.shape[2], n=num_slices)
-    fig, axes = plt.subplots(1, len(z_slices), figsize=(4 * len(z_slices), 4))
+    fig, axes = _plt.subplots(1, len(z_slices), figsize=(4 * len(z_slices), 4))
     if len(z_slices) == 1:
         axes = [axes]
 
@@ -47,17 +58,17 @@ def save_overlay(A, overlay=None, points=None, out_path=None, title=None, num_sl
         if title:
             ax.set_title(f"{title} z={z}")
 
-    plt.tight_layout()
+    _plt.tight_layout()
     if out_path:
-        plt.savefig(out_path, dpi=150)
-    plt.close(fig)
+        _plt.savefig(out_path, dpi=150)
+    _plt.close(fig)
 
 
 def save_error_map(A, points, distances, out_path, num_slices=4):
     if points is None or len(points) == 0:
         return
     z_slices = pick_slices(A.shape[2], n=num_slices)
-    fig, axes = plt.subplots(1, len(z_slices), figsize=(4 * len(z_slices), 4))
+    fig, axes = _plt.subplots(1, len(z_slices), figsize=(4 * len(z_slices), 4))
     if len(z_slices) == 1:
         axes = [axes]
 
@@ -71,9 +82,9 @@ def save_error_map(A, points, distances, out_path, num_slices=4):
             sc = ax.scatter(pts[:, 0], pts[:, 1], s=10, c=d, cmap="hot")
             fig.colorbar(sc, ax=ax, fraction=0.046, pad=0.04)
         ax.set_axis_off()
-    plt.tight_layout()
-    plt.savefig(out_path, dpi=150)
-    plt.close(fig)
+    _plt.tight_layout()
+    _plt.savefig(out_path, dpi=150)
+    _plt.close(fig)
 
 
 def compute_distances(points_vox, curve_mask, spacing):
@@ -96,6 +107,12 @@ def main():
     args = parser.parse_args()
 
     cfg = load_config(args.config)
+    enable_2d = bool(cfg.get("viz", {}).get("enable_2d", False))
+    if not enable_2d:
+        logger.info("2D viz disabled (viz.enable_2d=false); skipping.")
+        return
+
+    _ensure_viz_deps()
     processed_dir = cfg["data"]["processed_dir"]
     infer_dir = os.path.join(cfg["data"]["output_dir"], "infer")
     out_root = ensure_dir(os.path.join(cfg["data"]["output_dir"], "viz"))

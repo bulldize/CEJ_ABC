@@ -53,6 +53,7 @@ eval:
   eval_taus_mm: [0.5, 1.0, 1.5]
 
 viz:
+  enable_2d: false
   num_slices: 4
   max_cases: 5
   max_teeth_per_case: 8
