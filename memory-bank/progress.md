@@ -123,6 +123,9 @@
 更新（2026-02-11）：
 - Completed: 清理 `outputs/` 与 `data/processed/` 后，`scripts/run_all.sh` 重新全流程跑通（TF_008）。
 
+更新（2026-02-11）：
+- Completed: `scripts/run_all_unsup.sh` 在 TF_008 冒烟跑通，并产出 `outputs/unsup/pretrain/checkpoints/last.pt`。
+
 一句话目标：
 基于 MONAI 替换监督流程并用 TF_008 冒烟跑通。
 

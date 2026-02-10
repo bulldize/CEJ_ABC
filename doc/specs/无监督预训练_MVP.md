@@ -32,8 +32,14 @@
 - `finetune.*`：监督微调入口（可选）
 
 ## TODO（后续补充）
+- 跑通 MONAI 无监督流程（`run_all_unsup.sh`，数据集 TF_008）。
 - 替换为 ViT/MAE 编码器-解码器结构
 - 支持更复杂的 mask 策略（结构化/块状/重要性）
 - 加入更合理的无监督验收指标（表示质量/线性探针等）
 - 对 TF_008 label 语义范围进行确认与适配
 - 增加多 case 无监督数据集接入与数据清洗
+
+---
+
+## 更新记录
+- 2026-02-11：`run_all_unsup.sh`（TF_008）冒烟跑通，输出 `outputs/unsup/pretrain/checkpoints/last.pt`。

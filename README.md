@@ -125,6 +125,7 @@ outputs/
 
 - 2026-02-11: Supervised pipeline `scripts/run_all.sh` fully passes on TF_008 after MONAI integration.
 - 2026-02-11: Default raw dir is `data/raw_tf008`, with TF_008 auto-prepare from `data/TF_008`.
+- 2026-02-11: Unsupervised pipeline `scripts/run_all_unsup.sh` passes on TF_008.
 - A1+A2 only: no R_t in training loss; optional gating in inference only.
 
 ## Commands
