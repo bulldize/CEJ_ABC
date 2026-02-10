@@ -5,6 +5,7 @@ import json
 import os
 import numpy as np
 from scipy.spatial import cKDTree
+from monai.data.utils import affine_to_spacing
 
 from src.datasets.io import load_volume
 from src.datasets.points import load_points, get_points_for_tooth
@@ -75,7 +76,8 @@ def main():
         if not os.path.exists(pred_path):
             continue
 
-        C_pred, spacing, _ = load_volume(pred_path, dtype=np.uint8)
+        C_pred, spacing, affine = load_volume(pred_path, dtype=np.uint8)
+        spacing = _ensure_spacing(spacing, affine)
         d = compute_distances(pts, C_pred, spacing)
         metrics = summarize_metrics(d, taus)
 
@@ -115,3 +117,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+def _ensure_spacing(spacing, affine):
+    if spacing is not None:
+        return spacing
+    if affine is None:
+        return (1.0, 1.0, 1.0)
+    return tuple(affine_to_spacing(affine))

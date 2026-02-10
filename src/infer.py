@@ -5,6 +5,8 @@ import os
 import numpy as np
 import torch
 from scipy.ndimage import zoom
+from monai.inferers import sliding_window_inference
+from monai.transforms import DivisiblePad
 
 from src.datasets.io import load_volume, save_volume
 from src.datasets.transforms import normalize_intensity
@@ -51,6 +53,8 @@ def main():
         out_channels=cfg["model"]["out_channels"],
         base_channels=cfg["model"]["base_channels"],
         depth=cfg["model"]["depth"],
+        num_res_units=cfg["model"].get("num_res_units", 2),
+        norm=cfg["model"].get("norm", "batch"),
     ).to(device)
 
     ckpt_path = os.path.join(cfg["data"]["output_dir"], "train", "checkpoints", "last.pt")
@@ -101,8 +105,22 @@ def main():
 
         with torch.no_grad():
             x_t = torch.from_numpy(x[None, ...]).to(device)
-            logits = model(x_t)
+            pad_divisor = 2 ** max(0, int(cfg["model"]["depth"]) - 1)
+            if pad_divisor > 1:
+                padder = DivisiblePad(k=pad_divisor, method="end")
+                x_t = padder(x_t)
+            if cfg.get("infer", {}).get("use_sliding_window", False):
+                roi_size = cfg["infer"].get("sw_roi_size", None)
+                if roi_size is None:
+                    roi_size = list(x_t.shape[-3:])
+                sw_batch = int(cfg["infer"].get("sw_batch_size", 1))
+                overlap = float(cfg["infer"].get("sw_overlap", 0.25))
+                logits = sliding_window_inference(x_t, roi_size, sw_batch, model, overlap=overlap)
+            else:
+                logits = model(x_t)
             H_pred = torch.sigmoid(logits).cpu().numpy()[0, 0]
+            if pad_divisor > 1:
+                H_pred = H_pred[:A.shape[0], :A.shape[1], :A.shape[2]]
 
         if cfg["infer"]["use_prior_gating"]:
             R = compute_geometric_prior(

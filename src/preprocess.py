@@ -43,11 +43,27 @@ def resample_roi(A_roi, T_roi, points_roi, spacing, target_spacing):
     return A_rs, T_rs, pts_rs, target, True, scale
 
 
+def _resolve_nifti_path(path):
+    if not os.path.isdir(path):
+        return path
+    base = os.path.basename(path)
+    candidate = os.path.join(path, base)
+    if os.path.exists(candidate):
+        return candidate
+    for name in os.listdir(path):
+        if name.endswith(".nii") or name.endswith(".nii.gz"):
+            return os.path.join(path, name)
+    return path
+
+
 def preprocess_case(case_dir, cfg):
     raw_a = os.path.join(case_dir, cfg["data"]["raw_a_name"])
     raw_b = os.path.join(case_dir, cfg["data"]["raw_b_name"])
     raw_points = os.path.join(case_dir, cfg["data"]["raw_points_name"])
     raw_meta = os.path.join(case_dir, cfg["data"]["raw_meta_name"])
+
+    raw_a = _resolve_nifti_path(raw_a)
+    raw_b = _resolve_nifti_path(raw_b)
 
     A, spacing, affine = load_volume(raw_a, meta_path=raw_meta, dtype=np.float32)
     B, spacing_b, affine_b = load_volume(raw_b, meta_path=raw_meta, dtype=np.int16)
@@ -78,9 +94,9 @@ def preprocess_case(case_dir, cfg):
     has_points = any(len(v) > 0 for v in points_dict.values())
     if not has_points:
         if points_exist:
-            logger.info("points.json empty for case=%s; skip point/heatmap outputs", case_id)
+            logger.info("points.json empty for case=%s; writing empty heatmaps for smoke test", case_id)
         else:
-            logger.info("no points.json for case=%s; skip point/heatmap outputs", case_id)
+            logger.info("no points.json for case=%s; writing empty heatmaps for smoke test", case_id)
 
     padding_mm = cfg["preprocess"]["roi_padding_mm"]
     pad_vox = np.round(np.array(padding_mm) / np.array(spacing)).astype(int)
@@ -158,18 +174,18 @@ def preprocess_case(case_dir, cfg):
 
         save_volume(os.path.join(tooth_dir, f"A_t.{fmt}"), A_roi, affine=None, spacing=spacing)
         save_volume(os.path.join(tooth_dir, f"T_t.{fmt}"), T_roi.astype(np.uint8), affine=None, spacing=spacing)
-        if has_points:
-            dense_pts = fit_curve_and_sample(pts_roi, spacing, cfg["preprocess"]["dense_sample_step_mm"])
-            H_GT = generate_heatmap_from_points(A_roi.shape, dense_pts, spacing, cfg["preprocess"]["sigma_mm"])
-            save_volume(os.path.join(tooth_dir, f"H_GT.{fmt}"), H_GT.astype(np.float32), affine=None, spacing=spacing)
-            save_points(
-                os.path.join(tooth_dir, "points.json"),
-                case_id,
-                "voxel",
-                "roi",
-                {str(tooth_id): pts_roi.tolist()},
-            )
-            np.save(os.path.join(tooth_dir, "curve_dense_points.npy"), dense_pts.astype(np.float32))
+
+        dense_pts = fit_curve_and_sample(pts_roi, spacing, cfg["preprocess"]["dense_sample_step_mm"])
+        H_GT = generate_heatmap_from_points(A_roi.shape, dense_pts, spacing, cfg["preprocess"]["sigma_mm"])
+        save_volume(os.path.join(tooth_dir, f"H_GT.{fmt}"), H_GT.astype(np.float32), affine=None, spacing=spacing)
+        save_points(
+            os.path.join(tooth_dir, "points.json"),
+            case_id,
+            "voxel",
+            "roi",
+            {str(tooth_id): pts_roi.tolist()},
+        )
+        np.save(os.path.join(tooth_dir, "curve_dense_points.npy"), dense_pts.astype(np.float32))
 
         roi_meta = {
             "case_id": case_id,
@@ -188,6 +204,7 @@ def preprocess_case(case_dir, cfg):
             "target_spacing_mm": [float(v) for v in cfg["preprocess"]["target_spacing_mm"]],
             "resampled": bool(resampled),
             "resample_scale": [float(v) for v in scale],
+            "has_points": bool(has_points),
         }
         with open(os.path.join(tooth_dir, "roi_meta.json"), "w") as f:
             json.dump(roi_meta, f)

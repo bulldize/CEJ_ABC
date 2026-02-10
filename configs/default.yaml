@@ -3,7 +3,7 @@ project:
   device: auto
 
 data:
-  raw_dir: data/raw
+  raw_dir: data/raw_tf008
   processed_dir: data/processed
   output_dir: outputs
   raw_a_name: A.nii.gz
@@ -32,6 +32,8 @@ model:
   out_channels: 1
   base_channels: 16
   depth: 4
+  num_res_units: 2
+  norm: batch
 
 train:
   epochs: 1
@@ -39,6 +41,7 @@ train:
   lr: 0.001
   num_workers: 0
   loss: dice_bce
+  cache_rate: 0.0
 
 infer:
   threshold_theta: 0.3
@@ -48,6 +51,10 @@ infer:
   prior_delta_s_mm: 1.0
   prior_use_gradient: false
   prior_gradient_weight: 1.0
+  use_sliding_window: false
+  sw_roi_size: null
+  sw_batch_size: 1
+  sw_overlap: 0.25
 
 eval:
   eval_taus_mm: [0.5, 1.0, 1.5]

@@ -104,3 +104,35 @@
 更新（2026-02-11）：
 - Completed: `python -m src.preprocess_unsup --config configs/unsup_mae.yaml` 跑通 TF_008 ROI 预处理。
 - Completed: `python -m src.pretrain_mae --config configs/unsup_mae.yaml` 冒烟训练 1 step 成功并保存 checkpoint。
+
+---
+
+更新（2026-02-11）：
+- Completed: 引入本地 MONAI 源码到 `MONAI/`，通过 `src/__init__.py` 自动注入到 `PYTHONPATH`。
+- Completed: 监督流程模块替换为 MONAI 风格（dataset/transforms、UNet、DiceCE loss、推理可选滑窗、后处理 LCC）。
+- Completed: 预处理在无 CEJ 点时仍生成空热图与空 points.json 以支持冒烟训练。
+- Completed: `scripts/run_all.sh` 改为使用 TF_008 数据准备（不再生成合成数据），默认 raw_dir 改为 `data/raw_tf008`。
+- Completed: 技术路线文档补充 MONAI + TF_008 冒烟 TODO。
+- Completed: `python -m src.train --config configs/default.yaml` 在现有 processed 数据上训练通过（padding 修复生效）。
+- Blocked: 监督冒烟失败，`data/TF_008` 缺失 `ToothFairy3F_008_volume.nii`（A 体数据）。需要补齐真实 A 体文件后重跑。
+
+一句话目标：
+基于 MONAI 替换监督流程并用 TF_008 冒烟跑通。
+
+已确认关键决策：
+- 目标用户：项目内 CEJ pipeline 使用者
+- 技术栈：Python + PyTorch + MONAI（本地源码注入）
+- 关键约束：保持入口与结构；不使用合成数据；TF_008 作为监督/无监督数据；CPU 兜底
+- 已选方案/库：MONAI UNet + MONAI transforms + 现有 ROI/热图流程
+
+当前进度：
+- 已完成：监督模块替换与配置更新
+- 进行中：监督冒烟（缺 TF_008 A 体文件）
+- 未开始：无监督对齐与 run_all_unsup 冒烟
+
+明确约束：
+- 必须做：补齐 TF_008 体数据后跑通 `scripts/run_all.sh`
+- 禁止做：使用合成数据替代 TF_008
+
+下一个会话只做的一件事：
+补齐 TF_008 A 体数据并重跑监督冒烟，通过后进入无监督对齐。

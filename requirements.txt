@@ -3,6 +3,7 @@ scipy
 scikit-image
 nibabel
 torch
+monai
 pandas
 openpyxl
 matplotlib

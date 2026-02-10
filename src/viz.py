@@ -4,6 +4,7 @@ import json
 import os
 import numpy as np
 from scipy.spatial import cKDTree
+from monai.data.utils import affine_to_spacing
 
 from src.datasets.io import load_volume
 from src.datasets.points import load_points, get_points_for_tooth
@@ -131,7 +132,8 @@ def main():
         tooth_id = roi_meta["tooth_id"]
 
         fmt = cfg["data"]["processed_format"]
-        A, spacing, _ = load_volume(os.path.join(tdir, f"A_t.{fmt}"), dtype=np.float32)
+        A, spacing, affine = load_volume(os.path.join(tdir, f"A_t.{fmt}"), dtype=np.float32)
+        spacing = _ensure_spacing(spacing, affine)
         T, _, _ = load_volume(os.path.join(tdir, f"T_t.{fmt}"), dtype=np.uint8)
         H, _, _ = load_volume(os.path.join(tdir, f"H_GT.{fmt}"), dtype=np.float32)
 
@@ -208,3 +210,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+def _ensure_spacing(spacing, affine):
+    if spacing is not None:
+        return spacing
+    if affine is None:
+        return (1.0, 1.0, 1.0)
+    return tuple(affine_to_spacing(affine))

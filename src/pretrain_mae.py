@@ -30,6 +30,8 @@ def build_mae_model(cfg):
         out_channels=mcfg["out_channels"],
         base_channels=mcfg["base_channels"],
         depth=mcfg["depth"],
+        num_res_units=mcfg.get("num_res_units", 2),
+        norm=mcfg.get("norm", "batch"),
     )
 
 
@@ -100,12 +102,14 @@ def main():
     set_seed(cfg["project"]["seed"])
     device = get_device(cfg["project"]["device"])
 
+    pad_divisor = 2 ** max(0, int(cfg["model_unsup"]["depth"]) - 1)
     ds = ToothDatasetUnsupervised(
         cfg["unsup"]["processed_dir"],
         processed_format=cfg["unsup"].get("processed_format", "nii.gz"),
         use_mask_channel=cfg["unsup"].get("use_tooth_mask_channel", True),
         clip_percentiles=cfg["preprocess"]["intensity_clip_percentiles"],
         norm_mode=cfg["preprocess"]["intensity_norm"],
+        pad_divisor=pad_divisor,
     )
 
     if len(ds) == 0:

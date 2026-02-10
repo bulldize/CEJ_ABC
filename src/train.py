@@ -2,37 +2,40 @@ import argparse
 import csv
 import os
 import torch
-import torch.nn.functional as F
 from torch.utils.data import DataLoader
+
+from monai.losses import DiceCELoss, DiceLoss
+from monai.utils import set_determinism
 
 from src.datasets.dataset import ToothDataset
 from src.models.unet3d import UNet3D
 from src.utils.config import load_config, ensure_dir, get_device
-from src.utils.seed import set_seed
 from src.utils.log import get_logger
 
 
 logger = get_logger("train")
 
 
-def dice_loss(pred, target, eps=1e-6):
-    pred = torch.sigmoid(pred)
-    num = 2 * (pred * target).sum(dim=(2, 3, 4))
-    den = (pred + target).sum(dim=(2, 3, 4)) + eps
-    loss = 1 - (num / den)
-    return loss.mean()
+def build_loss(cfg):
+    loss_name = cfg["train"].get("loss", "dice_bce")
+    if loss_name in ("dice_bce", "dice_ce"):
+        return DiceCELoss(sigmoid=True)
+    if loss_name == "dice":
+        return DiceLoss(sigmoid=True)
+    if loss_name == "bce":
+        return torch.nn.BCEWithLogitsLoss()
+    raise NotImplementedError(f"unsupported loss: {loss_name}")
 
 
-def train_one_epoch(model, loader, optimizer, device):
+def train_one_epoch(model, loader, optimizer, device, loss_fn):
     model.train()
     total = 0.0
-    bce = torch.nn.BCEWithLogitsLoss()
     for batch in loader:
         x = batch["x"].to(device)
         y = batch["y"].to(device)
         optimizer.zero_grad()
         logits = model(x)
-        loss = bce(logits, y) + dice_loss(logits, y)
+        loss = loss_fn(logits, y)
         loss.backward()
         optimizer.step()
         total += loss.item()
@@ -47,15 +50,18 @@ def main():
     args = parser.parse_args()
 
     cfg = load_config(args.config)
-    set_seed(cfg["project"]["seed"])
+    set_determinism(seed=cfg["project"]["seed"])
     device = get_device(cfg["project"]["device"])
 
+    pad_divisor = 2 ** max(0, int(cfg["model"]["depth"]) - 1)
     ds = ToothDataset(
         cfg["data"]["processed_dir"],
         processed_format=cfg["data"]["processed_format"],
         use_mask_channel=cfg["data"]["use_tooth_mask_channel"],
         clip_percentiles=cfg["preprocess"]["intensity_clip_percentiles"],
         norm_mode=cfg["preprocess"]["intensity_norm"],
+        cache_rate=cfg["train"].get("cache_rate", 0.0),
+        pad_divisor=pad_divisor,
     )
 
     if len(ds) == 0:
@@ -69,6 +75,8 @@ def main():
         out_channels=cfg["model"]["out_channels"],
         base_channels=cfg["model"]["base_channels"],
         depth=cfg["model"]["depth"],
+        num_res_units=cfg["model"].get("num_res_units", 2),
+        norm=cfg["model"].get("norm", "batch"),
     ).to(device)
 
     pretrained = args.pretrained or cfg["train"].get("pretrained_ckpt")
@@ -84,6 +92,7 @@ def main():
             logger.warning("pretrained checkpoint not found: %s", pretrained)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg["train"]["lr"])
+    loss_fn = build_loss(cfg)
 
     out_dir = ensure_dir(os.path.join(cfg["data"]["output_dir"], "train"))
     ckpt_dir = ensure_dir(os.path.join(out_dir, "checkpoints"))
@@ -93,7 +102,7 @@ def main():
         writer = csv.writer(f)
         writer.writerow(["epoch", "loss"])
         for epoch in range(cfg["train"]["epochs"]):
-            loss = train_one_epoch(model, loader, optimizer, device)
+            loss = train_one_epoch(model, loader, optimizer, device, loss_fn)
             writer.writerow([epoch, loss])
             logger.info("epoch %d loss %.4f", epoch, loss)
 

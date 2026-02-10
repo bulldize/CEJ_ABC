@@ -1,10 +1,12 @@
 import numpy as np
-from skimage.measure import label
+from monai.transforms import KeepLargestConnectedComponent
 
 try:
     from skimage.morphology import skeletonize_3d as _skeletonize
 except Exception:
     from skimage.morphology import skeletonize as _skeletonize
+
+_keep_lcc = KeepLargestConnectedComponent(applied_labels=[1], is_onehot=False, connectivity=1)
 
 
 def extract_curve(mask_prob, tooth_mask, threshold=0.3):
@@ -20,11 +22,6 @@ def extract_curve(mask_prob, tooth_mask, threshold=0.3):
         skel = binary
     if skel.sum() == 0:
         return skel
-    labels = label(skel, connectivity=1)
-    if labels.max() <= 1:
-        return skel
-    # keep largest component
-    counts = np.bincount(labels.ravel())
-    counts[0] = 0
-    keep = counts.argmax()
-    return (labels == keep).astype(np.uint8)
+    # keep largest component via MONAI
+    skel = _keep_lcc(skel[None, ...])[0]
+    return skel.astype(np.uint8)

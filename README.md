@@ -13,7 +13,7 @@ pip install -r requirements.txt
 bash scripts/run_all.sh
 ```
 
-If `data/raw/` is empty, the script will generate a small synthetic case.
+If `data/raw_tf008/` is empty, the script will prepare a TF_008 case from `data/TF_008` (no synthetic data).
 
 ## Unsupervised Pretrain (Masked Reconstruction)
 
@@ -40,7 +40,7 @@ Notes:
 ### Raw
 
 ```
-data/raw/{case_id}/
+data/raw_tf008/{case_id}/
   A.nii.gz            # CBCT volume, float32
   B.nii.gz            # segmentation, int labels
   cej_points_ras.xlsx # CEJ points in mark (RAS) space (per-case)

@@ -18,8 +18,57 @@ PY
 )
 
 if [ ! -d "$RAW_DIR" ] || [ -z "$(ls -A "$RAW_DIR" 2>/dev/null)" ]; then
-  echo "[run_all] data/raw is empty. Creating synthetic case..."
-  "$PY_BIN" -m src.synth --output_dir "$RAW_DIR" --case_id case_0001
+  echo "[run_all] raw_dir is empty. Preparing TF_008 case..."
+  "$PY_BIN" - <<PY
+import os
+from pathlib import Path
+
+root = Path("${ROOT_DIR}")
+raw_dir = Path("${RAW_DIR}")
+src_dir = root / "data" / "TF_008"
+if not src_dir.exists():
+    raise SystemExit("[run_all] data/TF_008 not found; please provide TF_008 data.")
+
+def resolve_nifti(p: Path) -> Path:
+    if p.is_dir():
+        candidate = p / p.name
+        if candidate.exists():
+            return candidate
+        for f in p.iterdir():
+            if f.name.endswith(".nii") or f.name.endswith(".nii.gz"):
+                return f
+    return p
+
+case_dir = raw_dir / "TF_008"
+case_dir.mkdir(parents=True, exist_ok=True)
+
+a_src = resolve_nifti(src_dir / "ToothFairy3F_008_volume.nii")
+b_src = resolve_nifti(src_dir / "ToothFairy3F_008label.nii")
+
+if not a_src.is_file():
+    raise SystemExit(f"[run_all] missing volume file: {a_src}")
+if not b_src.is_file():
+    raise SystemExit(f"[run_all] missing label file: {b_src}")
+
+a_dst = case_dir / "A.nii.gz"
+b_dst = case_dir / "B.nii.gz"
+
+def ensure_link(src: Path, dst: Path):
+    if dst.exists():
+        if dst.is_file():
+            return
+        dst.unlink()
+    try:
+        os.symlink(src, dst)
+    except Exception:
+        # fallback to copy if symlink fails
+        import shutil
+        shutil.copy2(src, dst)
+
+ensure_link(a_src, a_dst)
+ensure_link(b_src, b_dst)
+print(f"[run_all] TF_008 prepared at {case_dir}")
+PY
 fi
 
 echo "[run_all] preprocess"
