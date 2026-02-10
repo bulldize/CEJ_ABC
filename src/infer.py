@@ -69,8 +69,9 @@ def main():
 
     infer_root = ensure_dir(os.path.join(cfg["data"]["output_dir"], "infer"))
 
-    # collect per-case curves for stitching
+    # collect per-case curves/heatmaps for stitching
     curves_by_case = {}
+    heatmaps_by_case = {}
 
     for tdir in tooth_dirs:
         roi_meta_path = os.path.join(tdir, "roi_meta.json")
@@ -125,13 +126,17 @@ def main():
 
         # handle resampled ROI for stitching
         curve_roi = C_pred
+        heat_roi = H_pred
         if roi_meta.get("resampled", False):
             scale = np.array(roi_meta.get("resample_scale", [1.0, 1.0, 1.0]), dtype=np.float32)
             inv_scale = 1.0 / scale
             curve_roi = zoom(curve_roi, inv_scale, order=0)
             curve_roi = resize_to_shape(curve_roi, roi_meta["roi_shape_full"])
+            heat_roi = zoom(heat_roi, inv_scale, order=1)
+            heat_roi = resize_to_shape(heat_roi, roi_meta["roi_shape_full"])
 
         curves_by_case.setdefault(case_id, []).append((curve_roi, roi_meta))
+        heatmaps_by_case.setdefault(case_id, []).append((heat_roi, roi_meta))
 
         logger.info("inferred case=%s tooth=%s", case_id, tooth_id)
 
@@ -143,6 +148,18 @@ def main():
         B_full, spacing, affine = load_volume(b_path, meta_path=meta_path, dtype=np.int16)
         B_full = map_pulp_to_tooth(B_full)
 
+        # full heatmap (max over teeth)
+        H_full = np.zeros(B_full.shape, dtype=np.float32)
+        for heat_roi, roi_meta in heatmaps_by_case.get(case_id, []):
+            origin = roi_meta["roi_origin_in_full"]
+            x0, y0, z0 = origin
+            x1 = x0 + heat_roi.shape[0]
+            y1 = y0 + heat_roi.shape[1]
+            z1 = z0 + heat_roi.shape[2]
+            H_full[x0:x1, y0:y1, z0:z1] = np.maximum(
+                H_full[x0:x1, y0:y1, z0:z1], heat_roi
+            )
+
         curves_full = []
         for curve_roi, roi_meta in curves:
             origin = roi_meta["roi_origin_in_full"]
@@ -152,6 +169,7 @@ def main():
         Y = build_full_output(B_full, curves_full)
         out_case_dir = ensure_dir(os.path.join(infer_root, case_id))
         save_volume(os.path.join(out_case_dir, "Y_pred.nii.gz"), Y.astype(np.uint8), affine=affine, spacing=spacing)
+        save_volume(os.path.join(out_case_dir, "H_pred.nii.gz"), H_full.astype(np.float32), affine=affine, spacing=spacing)
         logger.info("stitched case=%s", case_id)
 
 

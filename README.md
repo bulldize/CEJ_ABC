@@ -82,6 +82,7 @@ outputs/
         H_pred.nii.gz
         C_pred.nii.gz
       Y_pred.nii.gz
+      H_pred.nii.gz
   eval/
     metrics_summary.json
     metrics_per_tooth.csv
