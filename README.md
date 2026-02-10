@@ -15,6 +15,26 @@ bash scripts/run_all.sh
 
 If `data/raw/` is empty, the script will generate a small synthetic case.
 
+## Unsupervised Pretrain (Masked Reconstruction)
+
+MVP skeleton for MAE-style masked reconstruction pretrain on tooth ROIs.
+
+```bash
+# preprocess TF_008 into unsupervised ROI dataset
+python -m src.preprocess_unsup --config configs/unsup_mae.yaml
+
+# run masked reconstruction pretrain
+python -m src.pretrain_mae --config configs/unsup_mae.yaml
+
+# or use one-shot script
+bash scripts/run_all_unsup.sh
+```
+
+Notes:
+- Uses ROI/牙体 mask by default; set `unsup.use_label_mask: false` to fall back to full-volume ROI.
+- Pretrain output checkpoint: `outputs/unsup/pretrain/checkpoints/last.pt`
+- To finetune, enable `finetune.enable: true` in `configs/unsup_mae.yaml` or pass `--pretrained` to `src.train`.
+
 ## Data Layout
 
 ### Raw

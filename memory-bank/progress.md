@@ -70,3 +70,37 @@
 
 已确认关键决策：
 - 坐标统一基准：以 `A.nii.gz` 的 sform/qform（affine）世界坐标系为准（真实坐标）。
+
+---
+
+更新（2026-02-10）：
+- Completed: 无监督预训练骨架（ROI 预处理 + masked reconstruction 训练 + 脚本 + 配置）已落地。
+- Completed: 新增 `run_all_unsup.sh` 与 `configs/unsup_mae.yaml`，支持 pretrain →（可选）finetune。
+- Completed: 文档补充无监督 MVP 方案与 TODO 清单。
+
+一句话目标：
+跑通无监督预训练（masked reconstruction）→ 监督微调的最小流程骨架。
+
+已确认关键决策：
+- 目标用户：项目内 CEJ pipeline 使用者
+- 技术栈：Python + PyTorch + nibabel
+- 关键约束：不干扰现有监督主流程；只做冒烟级可跑通；未填内容必须 TODO
+- 已选方案/库：UNet3D + patch mask + masked MSE
+
+当前进度：
+- 已完成：unsup 预处理与训练脚本、配置、文档、可选微调入口
+- 进行中：无
+- 未开始：替换 ViT/MAE、补充无监督评估指标
+
+明确约束：
+- 必须做：ROI/牙体为默认输入粒度；输出骨架与 TODO
+- 禁止做：改动监督主流程行为（默认配置）
+
+下一个会话只做的一件事：
+确认 TF_008 label 语义范围并接入真实 MAE/ViT 实现与评估指标。
+
+---
+
+更新（2026-02-11）：
+- Completed: `python -m src.preprocess_unsup --config configs/unsup_mae.yaml` 跑通 TF_008 ROI 预处理。
+- Completed: `python -m src.pretrain_mae --config configs/unsup_mae.yaml` 冒烟训练 1 step 成功并保存 checkpoint。

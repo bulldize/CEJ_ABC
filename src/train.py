@@ -42,6 +42,8 @@ def train_one_epoch(model, loader, optimizer, device):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/default.yaml")
+    parser.add_argument("--pretrained", default=None)
+    parser.add_argument("--pretrained-strict", action="store_true")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -68,6 +70,18 @@ def main():
         base_channels=cfg["model"]["base_channels"],
         depth=cfg["model"]["depth"],
     ).to(device)
+
+    pretrained = args.pretrained or cfg["train"].get("pretrained_ckpt")
+    if pretrained:
+        if os.path.exists(pretrained):
+            ckpt = torch.load(pretrained, map_location="cpu")
+            state = ckpt.get("model", ckpt)
+            strict = args.pretrained_strict or bool(cfg["train"].get("pretrained_strict", False))
+            missing, unexpected = model.load_state_dict(state, strict=strict)
+            logger.info("loaded pretrained=%s strict=%s missing=%d unexpected=%d",
+                        pretrained, strict, len(missing), len(unexpected))
+        else:
+            logger.warning("pretrained checkpoint not found: %s", pretrained)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg["train"]["lr"])
 
