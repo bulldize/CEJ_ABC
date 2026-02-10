@@ -123,5 +123,6 @@ python -m src.viz --config configs/default.yaml
 - For .npy inputs, provide `meta.json` with `spacing` and `affine`.
 - `preprocess.resample_to_target` is off by default; enable it to resample to `target_spacing_mm`.
 - The default config uses placeholder values from the PRD and tech-route spec.
+- Coordinate convention: all external annotations are aligned to the world coordinate system defined by `A.nii.gz` sform/qform (affine) before converting to voxel space.
 - Preprocess auto-detects CEJ point coordinates as `world_ras` or `world_lps` using the A volume affine and records the choice in `mark_meta.json`.
 - TODO: confirm external software import format and add export option for points/curves.
