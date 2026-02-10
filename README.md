@@ -14,6 +14,7 @@ bash scripts/run_all.sh
 ```
 
 If `data/raw_tf008/` is empty, the script will prepare a TF_008 case from `data/TF_008` (no synthetic data).
+Matplotlib cache is stored under `outputs/.mpl_cache` to avoid permission warnings.
 
 ## Unsupervised Pretrain (Masked Reconstruction)
 
@@ -85,7 +86,8 @@ data/processed/{case_id}/tooth_{tooth_id}/
 ```
 
 `roi_meta.json` includes ROI origin, shape, spacing, and affine for ROI <-> full mapping.
-For unsupervised cases (empty `points.json`), `H_GT.nii.gz`, `points.json`, and `curve_dense_points.npy` are not generated.
+If `points.json` is empty or missing, `H_GT.nii.gz` is still generated as an all-zero heatmap for smoke tests, and
+`curve_dense_points.npy` will be empty.
 See `schemas/` for JSON schema.
 
 ## Outputs
@@ -118,6 +120,11 @@ outputs/
 
 - Array axis order is (X, Y, Z) with voxel indices [x, y, z].
 - Distances are computed in mm using spacing.
+
+## Updates
+
+- 2026-02-11: Supervised pipeline `scripts/run_all.sh` fully passes on TF_008 after MONAI integration.
+- 2026-02-11: Default raw dir is `data/raw_tf008`, with TF_008 auto-prepare from `data/TF_008`.
 - A1+A2 only: no R_t in training loss; optional gating in inference only.
 
 ## Commands

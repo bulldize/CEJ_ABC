@@ -116,6 +116,13 @@
 - Completed: `python -m src.train --config configs/default.yaml` 在现有 processed 数据上训练通过（padding 修复生效）。
 - Blocked: 监督冒烟失败，`data/TF_008` 缺失 `ToothFairy3F_008_volume.nii`（A 体数据）。需要补齐真实 A 体文件后重跑。
 
+更新（2026-02-11）：
+- Completed: TF_008 数据补齐后 `scripts/run_all.sh` 已跑通（preprocess/train/infer/eval/viz）。
+- Completed: 修复 `src/eval.py` 中 `_ensure_spacing` 定义顺序导致的 NameError。
+
+更新（2026-02-11）：
+- Completed: 清理 `outputs/` 与 `data/processed/` 后，`scripts/run_all.sh` 重新全流程跑通（TF_008）。
+
 一句话目标：
 基于 MONAI 替换监督流程并用 TF_008 冒烟跑通。
 

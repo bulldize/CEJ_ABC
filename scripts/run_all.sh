@@ -4,6 +4,8 @@ set -euo pipefail
 ROOT_DIR=$(cd -- "$(dirname "$0")/.." && pwd)
 CONFIG_PATH=${1:-configs/default.yaml}
 export PYTHONPATH="$ROOT_DIR"
+export MPLCONFIGDIR="$ROOT_DIR/outputs/.mpl_cache"
+mkdir -p "$MPLCONFIGDIR"
 
 PY_BIN="$ROOT_DIR/.venv/bin/python"
 if [ ! -x "$PY_BIN" ]; then
@@ -17,8 +19,19 @@ print(cfg["data"]["raw_dir"])
 PY
 )
 
+CASE_DIR="$RAW_DIR/TF_008"
+A_DST="$CASE_DIR/A.nii.gz"
+B_DST="$CASE_DIR/B.nii.gz"
+
+NEED_PREPARE=0
 if [ ! -d "$RAW_DIR" ] || [ -z "$(ls -A "$RAW_DIR" 2>/dev/null)" ]; then
-  echo "[run_all] raw_dir is empty. Preparing TF_008 case..."
+  NEED_PREPARE=1
+elif [ ! -e "$A_DST" ] || [ ! -e "$B_DST" ]; then
+  NEED_PREPARE=1
+fi
+
+if [ "$NEED_PREPARE" -eq 1 ]; then
+  echo "[run_all] preparing TF_008 case..."
   "$PY_BIN" - <<PY
 import os
 from pathlib import Path
@@ -54,9 +67,9 @@ a_dst = case_dir / "A.nii.gz"
 b_dst = case_dir / "B.nii.gz"
 
 def ensure_link(src: Path, dst: Path):
-    if dst.exists():
-        if dst.is_file():
-            return
+    if dst.exists() or dst.is_symlink():
+        if dst.is_dir() and not dst.is_symlink():
+            raise SystemExit(f"[run_all] unexpected directory at {dst}")
         dst.unlink()
     try:
         os.symlink(src, dst)

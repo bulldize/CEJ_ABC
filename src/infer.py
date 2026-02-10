@@ -108,7 +108,8 @@ def main():
             pad_divisor = 2 ** max(0, int(cfg["model"]["depth"]) - 1)
             if pad_divisor > 1:
                 padder = DivisiblePad(k=pad_divisor, method="end")
-                x_t = padder(x_t)
+                x_pad = padder(x_t[0])
+                x_t = x_pad.unsqueeze(0)
             if cfg.get("infer", {}).get("use_sliding_window", False):
                 roi_size = cfg["infer"].get("sw_roi_size", None)
                 if roi_size is None:
@@ -163,6 +164,9 @@ def main():
         raw_case_dir = os.path.join(cfg["data"]["raw_dir"], case_id)
         b_path = os.path.join(raw_case_dir, cfg["data"]["raw_b_name"])
         meta_path = os.path.join(raw_case_dir, cfg["data"]["raw_meta_name"])
+        if not os.path.exists(b_path):
+            logger.warning("raw label not found for case=%s, skip stitching (%s)", case_id, b_path)
+            continue
         B_full, spacing, affine = load_volume(b_path, meta_path=meta_path, dtype=np.int16)
         B_full = map_pulp_to_tooth(B_full)
 

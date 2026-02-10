@@ -15,6 +15,14 @@ from src.utils.log import get_logger
 logger = get_logger("eval")
 
 
+def _ensure_spacing(spacing, affine):
+    if spacing is not None:
+        return spacing
+    if affine is None:
+        return (1.0, 1.0, 1.0)
+    return tuple(affine_to_spacing(affine))
+
+
 def compute_distances(points_vox, curve_mask, spacing):
     if points_vox is None or len(points_vox) == 0:
         return np.array([], dtype=np.float32)
@@ -117,9 +125,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-def _ensure_spacing(spacing, affine):
-    if spacing is not None:
-        return spacing
-    if affine is None:
-        return (1.0, 1.0, 1.0)
-    return tuple(affine_to_spacing(affine))

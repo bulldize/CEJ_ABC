@@ -4,6 +4,8 @@ set -euo pipefail
 ROOT_DIR=$(cd -- "$(dirname "$0")/.." && pwd)
 CONFIG_PATH=${1:-configs/unsup_mae.yaml}
 export PYTHONPATH="$ROOT_DIR"
+export MPLCONFIGDIR="$ROOT_DIR/outputs/.mpl_cache"
+mkdir -p "$MPLCONFIGDIR"
 
 PY_BIN="$ROOT_DIR/.venv/bin/python"
 if [ ! -x "$PY_BIN" ]; then
