@@ -61,6 +61,18 @@ eval:
 
 viz:
   enable_2d: false
+  enable_3d: true
   num_slices: 4
   max_cases: 5
   max_teeth_per_case: 8
+  max_render_dim: 96
+  mesh_step: 1
+  slice_opacity: 0.82
+  tooth_opacity: 0.18
+  heatmap_opacity: 0.35
+  prior_opacity: 0.2
+  heatmap_iso_threshold: 0.3
+  pred_heatmap_iso_threshold: 0.3
+  prior_iso_threshold: 0.5
+  curve_max_points: 12000
+  show_prior_3d: true

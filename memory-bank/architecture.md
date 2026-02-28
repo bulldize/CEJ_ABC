@@ -8,7 +8,7 @@ Modules:
 - preprocess_unsup: TF_008 unsupervised ROI preprocessing
 - infer: prediction, postprocess, stitch-back (optional sliding window, divisible padding)
 - eval: metrics (Point-to-Curve, SR@tau) with affine spacing fallback
-- viz: ROI check, pseudo-GT, inference, error maps
+- viz: interactive 3D HTML viewer (Slicer-like MPR slices + surfaces) and optional 2D overlays
 - postprocess: threshold, intersection, skeletonize, largest component (MONAI LCC), priors
 - utils.mask: patch-wise mask generator for masked reconstruction
 
@@ -17,4 +17,4 @@ Coordinate Convention:
 - External annotations must align to this world space before converting to voxel coordinates.
 
 MONAI Integration:
-- Local MONAI repo is staged under `MONAI/` and injected via `src/__init__.py` for imports.
+- Use installed `monai` package from environment (`requirements.txt`), no in-repo MONAI source checkout.

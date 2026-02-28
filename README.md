@@ -11,10 +11,14 @@ pip install -r requirements.txt
 
 # run the full pipeline (preprocess -> train -> infer -> eval -> viz)
 bash scripts/run_all.sh
+
+# regenerate interactive 3D viewers only
+python -m src.viz --config configs/default.yaml
 ```
 
 If `data/raw_tf008/` is empty, the script will prepare a TF_008 case from `data/TF_008` (no synthetic data).
 Matplotlib cache is stored under `outputs/.mpl_cache` to avoid permission warnings.
+3D viewer index is written to `outputs/viz/3d/index.html` (Slicer-like MPR + surface overlays).
 
 ## Unsupervised Pretrain (Masked Reconstruction)
 
@@ -109,6 +113,10 @@ outputs/
     metrics_summary.json
     metrics_per_tooth.csv
   viz/
+    3d/
+      index.html
+      {case_id}/tooth_{tooth_id}/viewer.html
+    # optional 2D outputs (when viz.enable_2d=true)
     roi/
     prior/
     pseudo_gt/
@@ -123,6 +131,7 @@ outputs/
 
 ## Updates
 
+- 2026-03-01: Removed in-repo `MONAI/` source checkout; project now uses installed `monai` package from `requirements.txt`.
 - 2026-02-11: Supervised pipeline `scripts/run_all.sh` fully passes on TF_008 after MONAI integration.
 - 2026-02-11: Default raw dir is `data/raw_tf008`, with TF_008 auto-prepare from `data/TF_008`.
 - 2026-02-11: Unsupervised pipeline `scripts/run_all_unsup.sh` passes on TF_008.
@@ -152,6 +161,7 @@ python -m src.viz --config configs/default.yaml
 - For .npy inputs, provide `meta.json` with `spacing` and `affine`.
 - `preprocess.resample_to_target` is off by default; enable it to resample to `target_spacing_mm`.
 - The default config uses placeholder values from the PRD and tech-route spec.
+- `src.viz` defaults to interactive 3D HTML output (`viz.enable_3d=true`) and keeps 2D overlays optional (`viz.enable_2d=false`).
 - Coordinate convention: all external annotations are aligned to the world coordinate system defined by `A.nii.gz` sform/qform (affine) before converting to voxel space.
 - Preprocess auto-detects CEJ point coordinates as `world_ras` or `world_lps` using the A volume affine and records the choice in `mark_meta.json`.
 - TODO: confirm external software import format and add export option for points/curves.

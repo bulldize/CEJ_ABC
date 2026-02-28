@@ -146,3 +146,18 @@
 
 下一个会话只做的一件事：
 补齐 TF_008 A 体数据并重跑监督冒烟，通过后进入无监督对齐。
+
+---
+
+更新（2026-03-01）：
+- Completed: 移除本地 `MONAI/` 源码目录，改为环境内 `monai` 包依赖。
+- Completed: 删除 `src/__init__.py` 中本地 MONAI `PYTHONPATH` 注入逻辑。
+- Completed: 冒烟验证改为“无本地 MONAI 目录”前提执行。
+- Completed: 冒烟通过：`pytest tests`、监督链路 `preprocess/train/infer/eval/viz`、无监督链路 `preprocess_unsup/pretrain_mae`。
+
+更新（2026-03-01, visualization）：
+- Completed: `src.viz` 增加交互式 3D 可视化（Plotly HTML）：MPR 三正交切片、牙体表面、GT/Pred 热图等值面、预测曲线点云、GT 点误差着色。
+- Completed: 默认关闭 2D、开启 3D（`configs/default.yaml`）。
+
+更新（2026-03-01, docs）：
+- Completed: README、memory-bank、doc/specs 已同步到当前可视化方案：默认 3D viewer、2D 可选、输出索引为 `outputs/viz/3d/index.html`。

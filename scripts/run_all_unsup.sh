@@ -7,7 +7,7 @@ export PYTHONPATH="$ROOT_DIR"
 export MPLCONFIGDIR="$ROOT_DIR/outputs/.mpl_cache"
 mkdir -p "$MPLCONFIGDIR"
 
-PY_BIN="$ROOT_DIR/.venv/bin/python"
+PY_BIN=${PY_BIN:-"$ROOT_DIR/.venv/bin/python"}
 if [ ! -x "$PY_BIN" ]; then
   PY_BIN="python3"
 fi
