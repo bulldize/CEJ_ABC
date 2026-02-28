@@ -9,6 +9,7 @@ from monai.inferers import sliding_window_inference
 from monai.transforms import DivisiblePad
 
 from src.datasets.io import load_volume, save_volume
+from src.datasets.raw_cases import collect_raw_case_map
 from src.datasets.transforms import normalize_intensity
 from src.models.unet3d import UNet3D
 from src.postprocess.skeleton import extract_curve
@@ -72,6 +73,7 @@ def main():
         return
 
     infer_root = ensure_dir(os.path.join(cfg["data"]["output_dir"], "infer"))
+    raw_case_map = collect_raw_case_map(cfg["data"])
 
     # collect per-case curves/heatmaps for stitching
     curves_by_case = {}
@@ -161,9 +163,14 @@ def main():
 
     # stitch to full
     for case_id, curves in curves_by_case.items():
-        raw_case_dir = os.path.join(cfg["data"]["raw_dir"], case_id)
-        b_path = os.path.join(raw_case_dir, cfg["data"]["raw_b_name"])
-        meta_path = os.path.join(raw_case_dir, cfg["data"]["raw_meta_name"])
+        case_rec = raw_case_map.get(case_id, None)
+        if case_rec is None:
+            logger.warning("raw case record not found for case=%s, skip stitching", case_id)
+            continue
+        b_path = case_rec["b_path"]
+        meta_path = case_rec.get("meta_path", None)
+        if meta_path and not os.path.exists(meta_path):
+            meta_path = None
         if not os.path.exists(b_path):
             logger.warning("raw label not found for case=%s, skip stitching (%s)", case_id, b_path)
             continue

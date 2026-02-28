@@ -1,11 +1,11 @@
 import argparse
-import glob
 import json
 import os
 import numpy as np
 from scipy.ndimage import zoom
 
 from src.datasets.io import load_volume, save_volume
+from src.datasets.raw_cases import collect_raw_cases
 from src.datasets.points import load_points, get_points_for_tooth, ensure_voxel_points, save_points
 from src.datasets.mark_points import ensure_mark_points
 from src.datasets.roi import crop_roi
@@ -43,46 +43,34 @@ def resample_roi(A_roi, T_roi, points_roi, spacing, target_spacing):
     return A_rs, T_rs, pts_rs, target, True, scale
 
 
-def _resolve_nifti_path(path):
-    if not os.path.isdir(path):
-        return path
-    base = os.path.basename(path)
-    candidate = os.path.join(path, base)
-    if os.path.exists(candidate):
-        return candidate
-    for name in os.listdir(path):
-        if name.endswith(".nii") or name.endswith(".nii.gz"):
-            return os.path.join(path, name)
-    return path
-
-
-def preprocess_case(case_dir, cfg):
-    raw_a = os.path.join(case_dir, cfg["data"]["raw_a_name"])
-    raw_b = os.path.join(case_dir, cfg["data"]["raw_b_name"])
-    raw_points = os.path.join(case_dir, cfg["data"]["raw_points_name"])
-    raw_meta = os.path.join(case_dir, cfg["data"]["raw_meta_name"])
-
-    raw_a = _resolve_nifti_path(raw_a)
-    raw_b = _resolve_nifti_path(raw_b)
+def preprocess_case(case_rec, cfg):
+    case_id = case_rec["case_id"]
+    case_dir = case_rec.get("case_dir", None)
+    raw_a = case_rec["a_path"]
+    raw_b = case_rec["b_path"]
+    raw_points = case_rec.get("points_path", "")
+    raw_meta = case_rec.get("meta_path", None)
+    if raw_meta and not os.path.exists(raw_meta):
+        raw_meta = None
 
     A, spacing, affine = load_volume(raw_a, meta_path=raw_meta, dtype=np.float32)
     B, spacing_b, affine_b = load_volume(raw_b, meta_path=raw_meta, dtype=np.int16)
     if A.shape != B.shape:
-        logger.error("shape mismatch A%s vs B%s for case=%s", A.shape, B.shape, os.path.basename(case_dir))
+        logger.error("shape mismatch A%s vs B%s for case=%s", A.shape, B.shape, case_id)
         return
     if not np.allclose(spacing, spacing_b, atol=1e-3):
-        logger.warning("spacing mismatch A%s vs B%s for case=%s", spacing, spacing_b, os.path.basename(case_dir))
+        logger.warning("spacing mismatch A%s vs B%s for case=%s", spacing, spacing_b, case_id)
     if not np.allclose(affine, affine_b, atol=1e-3):
-        logger.warning("affine mismatch for case=%s", os.path.basename(case_dir))
+        logger.warning("affine mismatch for case=%s", case_id)
 
-    case_id = os.path.basename(case_dir)
-    try:
-        converted = ensure_mark_points(case_dir, case_id, A.shape, affine, cfg)
-        if converted:
-            logger.info("converted cej_points_ras.xlsx for case=%s", case_id)
-    except Exception as e:
-        logger.error("failed to convert cej_points_ras.xlsx for case=%s: %s", case_id, e)
-        raise
+    if case_dir:
+        try:
+            converted = ensure_mark_points(case_dir, case_id, A.shape, affine, cfg)
+            if converted:
+                logger.info("converted cej_points_ras.xlsx for case=%s", case_id)
+        except Exception as e:
+            logger.error("failed to convert cej_points_ras.xlsx for case=%s: %s", case_id, e)
+            raise
 
     B = map_pulp_to_tooth(B)
     tooth_labels = get_tooth_labels(B)
@@ -175,8 +163,21 @@ def preprocess_case(case_dir, cfg):
         save_volume(os.path.join(tooth_dir, f"A_t.{fmt}"), A_roi, affine=None, spacing=spacing)
         save_volume(os.path.join(tooth_dir, f"T_t.{fmt}"), T_roi.astype(np.uint8), affine=None, spacing=spacing)
 
-        dense_pts = fit_curve_and_sample(pts_roi, spacing, cfg["preprocess"]["dense_sample_step_mm"])
-        H_GT = generate_heatmap_from_points(A_roi.shape, dense_pts, spacing, cfg["preprocess"]["sigma_mm"])
+        dense_pts = fit_curve_and_sample(
+            pts_roi,
+            spacing,
+            cfg["preprocess"]["dense_sample_step_mm"],
+            closed=bool(cfg["preprocess"].get("curve_closed", True)),
+            smooth=float(cfg["preprocess"].get("curve_smooth", 0.0)),
+        )
+        H_GT = generate_heatmap_from_points(
+            A_roi.shape,
+            dense_pts,
+            spacing,
+            cfg["preprocess"]["sigma_mm"],
+            connect_points=True,
+            close_loop=bool(cfg["preprocess"].get("curve_closed", True)),
+        )
         save_volume(os.path.join(tooth_dir, f"H_GT.{fmt}"), H_GT.astype(np.float32), affine=None, spacing=spacing)
         save_points(
             os.path.join(tooth_dir, "points.json"),
@@ -221,15 +222,13 @@ def main():
     args = parser.parse_args()
 
     cfg = load_config(args.config)
-    raw_dir = cfg["data"]["raw_dir"]
-    case_dirs = [d for d in glob.glob(os.path.join(raw_dir, "*")) if os.path.isdir(d)]
-
-    if not case_dirs:
-        logger.warning("no cases found in %s", raw_dir)
+    cases = collect_raw_cases(cfg["data"])
+    if not cases:
+        logger.warning("no cases found for data.raw_dir=%s", cfg["data"]["raw_dir"])
         return
 
-    for case_dir in case_dirs:
-        preprocess_case(case_dir, cfg)
+    for case_rec in cases:
+        preprocess_case(case_rec, cfg)
 
 
 if __name__ == "__main__":

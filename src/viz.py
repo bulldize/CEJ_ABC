@@ -10,6 +10,7 @@ from scipy.spatial import cKDTree
 from src.datasets.io import load_volume
 from src.datasets.points import get_points_for_tooth, load_points
 from src.postprocess.priors import compute_geometric_prior
+from src.postprocess.skeleton import extract_curve, extract_curve_from_heatmap_peak
 from src.utils.config import ensure_dir, load_config
 from src.utils.log import get_logger
 
@@ -213,7 +214,7 @@ def _add_mpr_slices(fig, A, spacing, opacity=0.85):
             colorscale="Gray",
             opacity=float(opacity),
             showscale=False,
-            name="Axial Slice",
+            name="轴位切片",
             hoverinfo="skip",
         )
     )
@@ -230,7 +231,7 @@ def _add_mpr_slices(fig, A, spacing, opacity=0.85):
             colorscale="Gray",
             opacity=float(opacity),
             showscale=False,
-            name="Coronal Slice",
+            name="冠状切片",
             hoverinfo="skip",
         )
     )
@@ -247,13 +248,13 @@ def _add_mpr_slices(fig, A, spacing, opacity=0.85):
             colorscale="Gray",
             opacity=float(opacity),
             showscale=False,
-            name="Sagittal Slice",
+            name="矢状切片",
             hoverinfo="skip",
         )
     )
 
 
-def _add_curve_points(fig, curve_mask, spacing, max_points=12000):
+def _add_curve_points(fig, curve_mask, spacing, max_points=12000, color="#00E5FF", name="推理曲线"):
     curve_pts = np.array(np.where(curve_mask > 0)).T.astype(np.float32)
     if curve_pts.shape[0] == 0:
         return
@@ -268,30 +269,113 @@ def _add_curve_points(fig, curve_mask, spacing, max_points=12000):
             y=curve_mm[:, 1],
             z=curve_mm[:, 2],
             mode="markers",
-            marker=dict(size=2, color="#00FFFF", opacity=0.9),
-            name="Pred Curve",
+            marker=dict(size=2, color=color, opacity=0.9),
+            name=name,
             hoverinfo="skip",
         )
     )
 
 
-def _add_gt_points(fig, points, spacing, distances=None):
+def _rasterize_polyline_to_mask(mask, points_xyz, close_loop=False):
+    if points_xyz is None:
+        return
+    pts = np.asarray(points_xyz, dtype=np.float32)
+    if pts.ndim != 2 or pts.shape[0] == 0 or pts.shape[1] != 3:
+        return
+
+    shape = np.array(mask.shape, dtype=np.int32)
+
+    def _mark(p):
+        q = np.round(p).astype(np.int32)
+        if np.all(q >= 0) and np.all(q < shape):
+            mask[q[0], q[1], q[2]] = 1
+
+    _mark(pts[0])
+    for i in range(pts.shape[0] - 1):
+        p0 = pts[i]
+        p1 = pts[i + 1]
+        delta = np.abs(p1 - p0)
+        n = int(np.ceil(np.max(delta))) + 1
+        n = max(2, n)
+        seg = np.linspace(p0, p1, n)
+        for p in seg:
+            _mark(p)
+    if close_loop and pts.shape[0] > 2:
+        p0 = pts[-1]
+        p1 = pts[0]
+        delta = np.abs(p1 - p0)
+        n = int(np.ceil(np.max(delta))) + 1
+        n = max(2, n)
+        seg = np.linspace(p0, p1, n)
+        for p in seg:
+            _mark(p)
+
+
+def _add_dense_interp_curve(
+    fig, points_vox, spacing, max_points=20000, color="#F500FF", name="插值曲线", close_loop=True
+):
+    if points_vox is None:
+        return
+    pts = np.asarray(points_vox, dtype=np.float32)
+    if pts.ndim != 2 or pts.shape[0] == 0 or pts.shape[1] != 3:
+        return
+    if pts.shape[0] > max_points:
+        keep = np.linspace(0, pts.shape[0] - 1, max_points, dtype=int)
+        pts = pts[keep]
+    spacing_arr = np.asarray(spacing, dtype=np.float32)
+    pts_mm = pts * spacing_arr
+    if close_loop and pts_mm.shape[0] > 2:
+        pts_mm = np.vstack([pts_mm, pts_mm[0:1]])
+    fig.add_trace(
+        _go.Scatter3d(
+            x=pts_mm[:, 0],
+            y=pts_mm[:, 1],
+            z=pts_mm[:, 2],
+            mode="lines+markers",
+            line=dict(color=color, width=4),
+            marker=dict(size=2, color=color, opacity=0.9),
+            name=name,
+            hoverinfo="skip",
+        )
+    )
+
+
+def _add_gt_points(
+    fig,
+    points,
+    spacing,
+    distances=None,
+    color="#FFD600",
+    name="标注点",
+    use_error_colormap=False,
+):
     if points is None or len(points) == 0:
         return
     pts = np.asarray(points, dtype=np.float32)
     spacing_arr = np.asarray(spacing, dtype=np.float32)
     pts_mm = pts * spacing_arr
 
-    if distances is None or len(distances) != len(points):
+    has_valid_dist = distances is not None and len(distances) == len(points)
+    if not has_valid_dist or not use_error_colormap:
+        customdata = None
+        hovertemplate = "x=%{x:.2f} y=%{y:.2f} z=%{z:.2f}<extra></extra>"
+        if has_valid_dist:
+            d = np.asarray(distances, dtype=np.float32)
+            customdata = d[:, None]
+            hovertemplate = (
+                "x=%{x:.2f} y=%{y:.2f} z=%{z:.2f}<br>"
+                "误差=%{customdata[0]:.3f}mm<extra></extra>"
+            )
         fig.add_trace(
             _go.Scatter3d(
                 x=pts_mm[:, 0],
                 y=pts_mm[:, 1],
                 z=pts_mm[:, 2],
                 mode="markers",
-                marker=dict(size=4, color="yellow", opacity=0.95),
-                name="GT Points",
-                hoverinfo="skip",
+                marker=dict(size=5, color=color, opacity=0.98),
+                name=name,
+                customdata=customdata,
+                hovertemplate=hovertemplate,
             )
         )
         return
@@ -310,11 +394,11 @@ def _add_gt_points(fig, points, spacing, distances=None):
                 colorscale="Turbo",
                 cmin=0.0,
                 cmax=float(np.nanpercentile(d_vis, 95)) if np.isfinite(d_vis).any() else 1.0,
-                colorbar=dict(title="Err (mm)"),
+                colorbar=dict(title="误差 (mm)"),
                 opacity=0.95,
             ),
-            name="GT Points (Error)",
-            hovertemplate="x=%{x:.2f} y=%{y:.2f} z=%{z:.2f}<br>err=%{marker.color:.3f}mm<extra></extra>",
+            name=f"{name}（误差着色）",
+            hovertemplate="x=%{x:.2f} y=%{y:.2f} z=%{z:.2f}<br>误差=%{marker.color:.3f}mm<extra></extra>",
         )
     )
 
@@ -331,6 +415,8 @@ def save_3d_viewer(
     cfg,
     H_pred=None,
     C_pred=None,
+    C_gt=None,
+    dense_curve_points=None,
     R=None,
     distances=None,
 ):
@@ -342,9 +428,23 @@ def save_3d_viewer(
     heatmap_opacity = float(viz_cfg.get("heatmap_opacity", 0.35))
     prior_opacity = float(viz_cfg.get("prior_opacity", 0.2))
     curve_max_points = int(viz_cfg.get("curve_max_points", 12000))
+    dense_interp_curve_max_points = int(viz_cfg.get("dense_interp_curve_max_points", 20000))
+    show_dense_interp_curve = bool(viz_cfg.get("show_dense_interp_curve", True))
+    dense_interp_curve_closed = bool(viz_cfg.get("dense_interp_curve_closed", True))
+    pseudo_gt_skeleton_max_points = int(viz_cfg.get("pseudo_gt_skeleton_max_points", 12000))
+    show_pseudo_gt_skeleton = bool(viz_cfg.get("show_pseudo_gt_skeleton", True))
+    use_error_colormap_for_gt_points = bool(viz_cfg.get("use_error_colormap_for_gt_points", False))
     heat_thr = float(viz_cfg.get("heatmap_iso_threshold", 0.30))
     pred_thr = float(viz_cfg.get("pred_heatmap_iso_threshold", 0.30))
     prior_thr = float(viz_cfg.get("prior_iso_threshold", 0.50))
+    color_tooth_surface = viz_cfg.get("color_tooth_surface", "#64B5F6")
+    color_gt_heatmap = viz_cfg.get("color_gt_heatmap", "#FFA726")
+    color_pred_heatmap = viz_cfg.get("color_pred_heatmap", "#FF5252")
+    color_prior = viz_cfg.get("color_prior", "#7E57C2")
+    color_pred_curve = viz_cfg.get("color_pred_curve", "#00E5FF")
+    color_dense_interp_curve = viz_cfg.get("color_dense_interp_curve", "#F500FF")
+    color_pseudo_gt_skeleton = viz_cfg.get("color_pseudo_gt_skeleton", "#76FF03")
+    color_gt_points = viz_cfg.get("color_gt_points", "#FFD600")
 
     step = _downsample_step(A.shape, max_dim)
     A_ds = _downsample_volume(A, step)
@@ -360,8 +460,8 @@ def save_3d_viewer(
     tooth_mesh = _make_mesh_trace_from_mask(
         T_ds,
         spacing_ds,
-        name="Tooth Surface",
-        color="#4FC3F7",
+        name="牙体表面",
+        color=color_tooth_surface,
         opacity=tooth_opacity,
         step=mesh_step,
     )
@@ -371,8 +471,8 @@ def save_3d_viewer(
     gt_mesh = _make_mesh_trace_from_mask(
         (H_gt_ds >= heat_thr).astype(np.uint8),
         spacing_ds,
-        name=f"GT Heatmap (>{heat_thr:.2f})",
-        color="#FFB74D",
+        name=f"伪GT热图 (>{heat_thr:.2f})",
+        color=color_gt_heatmap,
         opacity=heatmap_opacity,
         step=mesh_step,
     )
@@ -383,8 +483,8 @@ def save_3d_viewer(
         pred_mesh = _make_mesh_trace_from_mask(
             (H_pred_ds >= pred_thr).astype(np.uint8),
             spacing_ds,
-            name=f"Pred Heatmap (>{pred_thr:.2f})",
-            color="#EF5350",
+            name=f"推理热图 (>{pred_thr:.2f})",
+            color=color_pred_heatmap,
             opacity=heatmap_opacity,
             step=mesh_step,
         )
@@ -395,8 +495,8 @@ def save_3d_viewer(
         prior_mesh = _make_mesh_trace_from_mask(
             (R_ds >= prior_thr).astype(np.uint8),
             spacing_ds,
-            name=f"Geometric Prior (>{prior_thr:.2f})",
-            color="#AB47BC",
+            name=f"几何先验 (>{prior_thr:.2f})",
+            color=color_prior,
             opacity=prior_opacity,
             step=mesh_step,
         )
@@ -404,12 +504,48 @@ def save_3d_viewer(
             fig.add_trace(prior_mesh)
 
     if C_pred is not None:
-        _add_curve_points(fig, C_pred, spacing, max_points=curve_max_points)
+        _add_curve_points(
+            fig,
+            C_pred,
+            spacing,
+            max_points=curve_max_points,
+            color=color_pred_curve,
+            name="推理曲线",
+        )
 
-    _add_gt_points(fig, points, spacing, distances=distances)
+    if show_dense_interp_curve and dense_curve_points is not None:
+        _add_dense_interp_curve(
+            fig,
+            dense_curve_points,
+            spacing,
+            max_points=dense_interp_curve_max_points,
+            color=color_dense_interp_curve,
+            name="插值曲线",
+            close_loop=dense_interp_curve_closed,
+        )
+
+    if show_pseudo_gt_skeleton and C_gt is not None:
+        _add_curve_points(
+            fig,
+            C_gt,
+            spacing,
+            max_points=pseudo_gt_skeleton_max_points,
+            color=color_pseudo_gt_skeleton,
+            name="伪GT骨架",
+        )
+
+    _add_gt_points(
+        fig,
+        points,
+        spacing,
+        distances=distances,
+        color=color_gt_points,
+        name="标注点",
+        use_error_colormap=use_error_colormap_for_gt_points,
+    )
 
     fig.update_layout(
-        title=f"3D CEJ Viewer | case={case_id} tooth={tooth_id}",
+        title=f"CEJ 3D可视化 | 病例={case_id} 牙位={tooth_id}",
         template="plotly_dark",
         scene=dict(
             xaxis_title="X (mm)",
@@ -427,15 +563,15 @@ def save_3d_viewer(
 def _write_3d_index(index_path, records):
     lines = [
         "<!doctype html>",
-        "<html><head><meta charset='utf-8'><title>CEJ 3D Viewers</title></head><body>",
-        "<h2>CEJ 3D Viewers</h2>",
+        "<html><head><meta charset='utf-8'><title>CEJ 3D可视化索引</title></head><body>",
+        "<h2>CEJ 3D可视化索引</h2>",
         "<ul>",
     ]
     for rec in records:
         rel = rec["rel_path"].replace(os.sep, "/")
         lines.append(
-            f"<li>case={rec['case_id']} tooth={rec['tooth_id']} "
-            f"<a href='{rel}'>open viewer</a></li>"
+            f"<li>病例={rec['case_id']} 牙位={rec['tooth_id']} "
+            f"<a href='{rel}'>打开viewer</a></li>"
         )
     lines.extend(["</ul>", "</body></html>"])
     with open(index_path, "w", encoding="utf-8") as f:
@@ -474,6 +610,13 @@ def main():
     max_teeth = int(viz_cfg.get("max_teeth_per_case", 8))
     num_slices = int(viz_cfg.get("num_slices", 4))
     show_prior_3d = bool(viz_cfg.get("show_prior_3d", True))
+    pseudo_gt_skeleton_from_interp = bool(viz_cfg.get("pseudo_gt_skeleton_from_interp", False))
+    pseudo_gt_skeleton_from_heatmap_peak = bool(viz_cfg.get("pseudo_gt_skeleton_from_heatmap_peak", True))
+    pseudo_gt_peak_threshold = float(viz_cfg.get("pseudo_gt_peak_threshold", 0.999))
+    curve_closed = bool(cfg.get("preprocess", {}).get("curve_closed", True))
+    pseudo_gt_skeleton_threshold = float(
+        viz_cfg.get("pseudo_gt_skeleton_threshold", cfg["infer"]["threshold_theta"])
+    )
 
     selected = []
     case_counter = {}
@@ -507,6 +650,18 @@ def main():
 
         points_data = load_points(os.path.join(tdir, "points.json"))
         pts = get_points_for_tooth(points_data, tooth_id)
+        dense_curve_points = None
+        dense_curve_path = os.path.join(tdir, "curve_dense_points.npy")
+        if os.path.exists(dense_curve_path):
+            try:
+                dense_curve_points = np.load(dense_curve_path).astype(np.float32)
+            except Exception as e:
+                logger.warning(
+                    "failed to load dense curve points case=%s tooth=%s: %s",
+                    case_id,
+                    tooth_id,
+                    e,
+                )
 
         R = None
         if enable_2d or (enable_3d and show_prior_3d):
@@ -526,11 +681,35 @@ def main():
         c_pred_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "C_pred.nii.gz")
         H_pred = None
         C_pred = None
+        C_gt = None
         d = None
         if os.path.exists(h_pred_path) and os.path.exists(c_pred_path):
             H_pred, _, _ = load_volume(h_pred_path, dtype=np.float32)
             C_pred, _, _ = load_volume(c_pred_path, dtype=np.uint8)
             d = compute_distances(pts, C_pred, spacing)
+
+        if enable_3d and bool(viz_cfg.get("show_pseudo_gt_skeleton", True)):
+            try:
+                if pseudo_gt_skeleton_from_interp and dense_curve_points is not None and len(dense_curve_points) > 0:
+                    C_gt = np.zeros_like(T, dtype=np.uint8)
+                    _rasterize_polyline_to_mask(C_gt, dense_curve_points, close_loop=curve_closed)
+                elif pseudo_gt_skeleton_from_heatmap_peak:
+                    C_gt = extract_curve_from_heatmap_peak(
+                        H,
+                        T,
+                        peak_threshold=pseudo_gt_peak_threshold,
+                        keep_lcc=False,
+                    )
+                else:
+                    C_gt = extract_curve(H, T, threshold=pseudo_gt_skeleton_threshold)
+            except Exception as e:
+                logger.warning(
+                    "failed to compute pseudo GT skeleton case=%s tooth=%s: %s",
+                    case_id,
+                    tooth_id,
+                    e,
+                )
+                C_gt = None
 
         if enable_2d:
             boundary = np.zeros_like(T)
@@ -592,6 +771,8 @@ def main():
                 cfg=cfg,
                 H_pred=H_pred,
                 C_pred=C_pred,
+                C_gt=C_gt,
+                dense_curve_points=dense_curve_points,
                 R=R if show_prior_3d else None,
                 distances=d,
             )

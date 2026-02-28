@@ -12,22 +12,55 @@ if [ ! -x "$PY_BIN" ]; then
   PY_BIN="python3"
 fi
 
-RAW_DIR=$("$PY_BIN" - <<PY
+CFG_LINE=$("$PY_BIN" - <<PY
 import yaml
+
 cfg = yaml.safe_load(open("${CONFIG_PATH}", "r"))
-print(cfg["data"]["raw_dir"])
+data = cfg["data"]
+
+def _str(v, default=""):
+    if v is None:
+        return default
+    return str(v)
+
+vals = [
+    _str(data.get("raw_dir", "")),
+    _str(data.get("raw_layout", "auto")).lower(),
+    _str(data.get("images_tr_dir", "")),
+    _str(data.get("labels_tr_dir", "")),
+    _str(data.get("raw_a_name", "A.nii.gz")),
+    _str(data.get("raw_b_name", "B.nii.gz")),
+]
+print("\t".join(vals))
 PY
 )
 
+IFS=$'\t' read -r RAW_DIR RAW_LAYOUT IMAGES_TR_DIR LABELS_TR_DIR RAW_A_NAME RAW_B_NAME <<< "$CFG_LINE"
+
+RAW_LAYOUT=${RAW_LAYOUT:-auto}
+RAW_A_NAME=${RAW_A_NAME:-A.nii.gz}
+RAW_B_NAME=${RAW_B_NAME:-B.nii.gz}
+
+if [ -z "$IMAGES_TR_DIR" ]; then
+  IMAGES_TR_DIR="$RAW_DIR/imagesTr"
+fi
+if [ -z "$LABELS_TR_DIR" ]; then
+  LABELS_TR_DIR="$RAW_DIR/labelsTr"
+fi
+
 CASE_DIR="$RAW_DIR/TF_008"
-A_DST="$CASE_DIR/A.nii.gz"
-B_DST="$CASE_DIR/B.nii.gz"
+A_DST="$CASE_DIR/$RAW_A_NAME"
+B_DST="$CASE_DIR/$RAW_B_NAME"
 
 NEED_PREPARE=0
-if [ ! -d "$RAW_DIR" ] || [ -z "$(ls -A "$RAW_DIR" 2>/dev/null)" ]; then
-  NEED_PREPARE=1
-elif [ ! -e "$A_DST" ] || [ ! -e "$B_DST" ]; then
-  NEED_PREPARE=1
+if [ "$RAW_LAYOUT" = "toothfairy3" ] || { [ "$RAW_LAYOUT" = "auto" ] && [ -d "$IMAGES_TR_DIR" ] && [ -d "$LABELS_TR_DIR" ]; }; then
+  NEED_PREPARE=0
+else
+  if [ ! -d "$RAW_DIR" ] || [ -z "$(ls -A "$RAW_DIR" 2>/dev/null)" ]; then
+    NEED_PREPARE=1
+  elif [ ! -e "$A_DST" ] || [ ! -e "$B_DST" ]; then
+    NEED_PREPARE=1
+  fi
 fi
 
 if [ "$NEED_PREPARE" -eq 1 ]; then
@@ -63,8 +96,8 @@ if not a_src.is_file():
 if not b_src.is_file():
     raise SystemExit(f"[run_all] missing label file: {b_src}")
 
-a_dst = case_dir / "A.nii.gz"
-b_dst = case_dir / "B.nii.gz"
+a_dst = case_dir / "${RAW_A_NAME}"
+b_dst = case_dir / "${RAW_B_NAME}"
 
 def ensure_link(src: Path, dst: Path):
     if dst.exists() or dst.is_symlink():

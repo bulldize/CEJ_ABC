@@ -10,6 +10,9 @@
 - Completed: Integrated cej_points_ras.xlsx conversion to voxel points.json + mark_meta.json in preprocess.
 - In Progress: Optional additional real-case validation.
 - Next: Run `bash scripts/run_all.sh` if deps are installed.
+- Completed (2026-03-01): Fixed `scripts/run_all.sh` to support macOS Bash 3.2 (removed `readarray` usage).
+- Completed (2026-03-01): Fixed ToothFairy3 auto-discovery crash when `images_tr_dir/labels_tr_dir` are null in config.
+- Completed (2026-03-01): Synced README + memory-bank + doc/specs docs with the latest raw-layout/export behavior.
 
 一句话目标：
 将每个 case 的标注坐标（cej_points_ras.xlsx）自动转换为体素 points.json，并生成 mark_meta.json 以规范坐标系映射。
@@ -161,3 +164,45 @@
 
 更新（2026-03-01, docs）：
 - Completed: README、memory-bank、doc/specs 已同步到当前可视化方案：默认 3D viewer、2D 可选、输出索引为 `outputs/viz/3d/index.html`。
+
+更新（2026-03-01, visualization+）：
+- Completed: 3D viewer 新增“伪GT骨架”图层（由 `H_GT` 骨架化提取），用于与推理曲线直接对照。
+
+更新（2026-03-01, medical-export）：
+- Completed: 新增 `src.export_pseudo_gt_full`，可导出全口（非 ROI）伪GT NIfTI 到新目录，供 3D Slicer 医学对接核验。
+
+更新（2026-03-01, interpolation-curve）：
+- Completed: HTML 3D viewer 新增“插值曲线”图层（来自 `curve_dense_points.npy`）。
+- Completed: 全口导出新增 `C_pseudo_gt_interp_curve_full.nii.gz` 与 `Y_pseudo_gt_review_full.nii.gz`，用于 Slicer 直接核验插值曲线。
+
+更新（2026-03-01, interpolation-fix）：
+- Completed: 修复插值穿牙问题：由“按 z 排序拟合”改为“拟合平面极角排序 + 闭合曲线插值（默认）”。
+
+更新（2026-03-01, slicer-seg-fix）：
+- Completed: 修复伪GT骨架导出过稀问题：导出阶段默认关闭骨架 `largest connected component` 截断。
+- Completed: 新增 Slicer 可读多类标签图 `Y_pseudo_gt_review_slicer_full.nii.gz`（int16）。
+- Completed: 新增加粗管状掩膜导出：`C_pseudo_gt_skeleton_tube_full.nii.gz`、`C_pseudo_gt_interp_curve_tube_full.nii.gz`、`P_manual_points_tube_full.nii.gz`。
+- Completed: NIfTI 写出显式设置 qform/sform，提升外部软件读入一致性。
+
+更新（2026-03-01, curve-skeleton-consistency）：
+- Completed: 改为“处理链路一致”而非覆盖式一致：热力图由插值曲线连续栅格化生成，骨架由热力图峰值反提。
+- Completed: 导出/可视化默认参数：
+  - `export_pseudo_gt.skeleton_from_heatmap_peak=true`
+  - `export_pseudo_gt.heatmap_peak_threshold=0.999`
+  - `viz.pseudo_gt_skeleton_from_heatmap_peak=true`
+- Completed: 导出写入一致性指标（equal/iou/dice）到 `export_meta.json` 并打印日志。
+
+更新（2026-03-01, slicer-visual-cleanup）：
+- Completed: 为避免 Slicer 中伪GT骨架与插值曲线表面重合导致花斑（z-fighting），导出默认改为非重叠环层：
+  - `2=内层骨架加粗`（0.6mm）
+  - `3=外层插值加粗壳层`（1.2mm 且去除与2重叠）
+- Completed: `Y_pseudo_gt_review_slicer_full.nii.gz` 改为纯净 1/2/3 三类，避免 `4 手工点`覆盖曲线导致显示破碎；
+  手工点保留在 `Y_pseudo_gt_review_with_points_full.nii.gz` 与 `P_manual_points_tube_full.nii.gz`。
+
+更新（2026-03-01, stability+docs）：
+- Completed: `scripts/run_all.sh` 兼容 macOS 默认 Bash 3.2（`IFS+read` 解析配置，避免 `readarray` 不可用）。
+- Completed: `src/datasets/raw_cases.py` 兼容 `images_tr_dir/labels_tr_dir/points_dir` 配置为 null，自动回落到 `{raw_dir}/imagesTr|labelsTr|pointsTr`。
+- Completed: 文档同步：
+  - README 补充 raw-layout 自动判别、Bash 兼容性、qform/sform 导出说明。
+  - `doc/specs/技术路线.md` 同步 ToothFairy3 布局支持与当前 TODO。
+  - memory-bank（architecture/implementation-plan/progress）同步当前状态。

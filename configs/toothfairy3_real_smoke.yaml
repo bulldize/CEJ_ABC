@@ -3,15 +3,15 @@ project:
   device: auto
 
 data:
-  raw_dir: data/raw_tf008
-  raw_layout: auto
-  images_tr_dir: null
-  labels_tr_dir: null
-  points_dir: null
+  raw_dir: /Users/bulldize/Desktop/temp/ToothFairy3
+  raw_layout: toothfairy3
+  images_tr_dir: /Users/bulldize/Desktop/temp/ToothFairy3/imagesTr
+  labels_tr_dir: /Users/bulldize/Desktop/temp/ToothFairy3/labelsTr
+  points_dir: /Users/bulldize/Desktop/temp/ToothFairy3/pointsTr
   meta_dir: null
-  max_cases: null
-  processed_dir: data/processed
-  output_dir: outputs
+  max_cases: 2
+  processed_dir: data/processed_real_smoke
+  output_dir: outputs_real_smoke
   raw_a_name: A.nii.gz
   raw_b_name: B.nii.gz
   raw_points_name: points.json
@@ -71,7 +71,7 @@ viz:
   enable_2d: false
   enable_3d: true
   num_slices: 4
-  max_cases: 5
+  max_cases: 2
   max_teeth_per_case: 8
   max_render_dim: 96
   mesh_step: 1

@@ -59,4 +59,7 @@ def save_volume(path, arr, affine=None, spacing=None, dtype=None):
             spacing = (1.0, 1.0, 1.0)
         affine = _default_affine(spacing)
     img = nib.Nifti1Image(arr, affine)
+    # Keep qform/sform consistent so external tools (e.g. 3D Slicer) read orientation reliably.
+    img.set_qform(affine, code=1)
+    img.set_sform(affine, code=1)
     nib.save(img, path)
