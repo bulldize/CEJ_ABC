@@ -14,7 +14,20 @@
 - `1`：牙体（tooth）
 - `2`：CEJ 曲线（由模型预测热力图后处理抽取得到的曲线体素）
 
-### 1.3 非 MVP（Roadmap）
+### 1.3 医学核验导出（Slicer 对照文件）
+除模型主输出 `Y` 外，MVP 还必须产出全口对照 NIfTI（单文件 0/1/2/3 标签）：
+
+- `CEJ_medical_compare_full.nii.gz`
+  - `1=牙齿本体`，`2=手工标点`，`3=伪GT插值曲线`
+- `CEJ_qc_compare_full.nii.gz`
+  - `1=牙齿本体`，`2=伪GT插值曲线`，`3=伪GT骨架`
+- `CEJ_model_compare_full.nii.gz`
+  - `1=牙齿本体`，`2=伪GT插值曲线`，`3=模型推理曲线`
+
+配套产物：
+- `export_meta.json`（segment 语义、体素统计、一致性指标）
+
+### 1.4 非 MVP（Roadmap）
 - 增加牙槽嵴顶（ABC）曲线、牙轴点、CEJ–ABC 距离展开 2D 图（本 PRD 不纳入验收）。
 
 ---
@@ -61,6 +74,18 @@ CEJ 是“每颗牙”概念，需得到每颗牙的实例掩码 `T_t`：
 - **统一坐标基准**：以 `A.nii.gz` 的 `sform/qform`（affine）为真实坐标系基准。
 - **对齐检查必须输出**：抽检若干 slice，叠加 `∂T_t` 与原始灰度 `A`，验证 `A` 与 `B` 像素级对齐。
 - **点落位检查必须输出**：统计 GT 点到牙体表面 `∂T_t` 的距离分布（mm），超出阈值的点需要报警/剔除（阈值作为配置项）。
+
+### 3.3 伪GT链路一致性门禁 (Mandatory)
+禁止“覆盖式”伪一致；必须通过处理链路保证：
+
+1. 手工点 `P_t` -> 插值曲线 `C_interp`
+2. `C_interp` -> 高斯管热力图 `H_GT`
+3. `H_GT` -> 骨架曲线 `C_skel`
+
+并在导出阶段执行门禁：
+- `IoU(C_interp, C_skel) >= 0.95`
+- `Dice(C_interp, C_skel) >= 0.97`
+- 任一牙位不达标，导出流程必须返回非零退出码并记录到 `export_meta.json`。
 
 ---
 
@@ -147,6 +172,8 @@ CEJ 是“每颗牙”概念，需得到每颗牙的实例掩码 `T_t`：
 4. **预测抽检（2D，可选）**: `A` + `Ĥ` + `Ĉ` (预测曲线)。
 5. **误差分布图**: GT 点颜色编码显示到 `Ĉ` 的距离（2D 或 3D）。
 6. **评估报告**: CSV 包含 per-tooth 的指标明细，输出 MeanDist、P95Dist、SR@τ（多档）。
+7. **Slicer 对照文件（Mandatory）**: 每个 case 输出 3 个 compare NIfTI + `export_meta.json`（见 1.3）。
+8. **细曲线默认策略（Mandatory）**: Slicer 导出默认不加粗（tube 半径默认 0.0）。
 
 ---
 

@@ -1,9 +1,20 @@
 # Implementation Plan
 
-1. Completed: Create project skeleton, config, schemas, scripts, and README.
-2. Completed: Implement data IO, ROI crop/stitch, points handling, heatmap generation.
-3. Completed: Implement model (3D U-Net), training, inference, postprocess, evaluation.
-4. Completed: Implement visualization/export (interactive 3D viewer + pseudo-GT full-mouth NIfTI export) and unit tests.
-5. Completed: Support both raw layouts (`case_dirs` and `toothfairy3`) with `raw_layout=auto`.
-6. Completed: Stabilize runner (`scripts/run_all.sh`) for macOS Bash 3.2 and custom raw filename config.
-7. Next: Run full real-data benchmark (beyond smoke) and lock target hyperparameters from evaluation reports.
+## Baseline (Done)
+
+1. Completed: End-to-end supervised CEJ pipeline (preprocess/train/infer/eval/viz) with MONAI runtime package.
+2. Completed: Raw data auto-discovery for `case_dirs` and ToothFairy3 `imagesTr/labelsTr`.
+3. Completed: Interactive 3D visualization workflow with fixed process legend and configurable colors.
+4. Completed: Full-mouth pseudo-GT compare export pipeline for medical/QC/model review.
+5. Completed: Thin-curve default export + consistency gate (IoU/Dice) with fail-fast behavior.
+6. Completed: Minimal export retention policy (only 3 compare NIfTI files + `export_meta.json` per case).
+
+## Current Focus
+
+1. In progress: Keep docs synchronized with current runtime/export contract (`README`, `memory-bank`, `doc/specs`).
+
+## Next Milestones
+
+1. Pending: Non-smoke training and evaluation baseline on real ToothFairy3 batch to improve `CEJ_model_compare_full.nii.gz` quality.
+2. Pending: Publish Colab-ready batch preprocess/infer instructions for ToothFairy3 structure.
+3. Optional: Add overlapping-segment export format (e.g., `.seg.nrrd`) if medical reviewers require independent visibility of fully overlapping curves.

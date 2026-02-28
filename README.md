@@ -12,6 +12,9 @@ pip install -r requirements.txt
 # run the full pipeline (preprocess -> train -> infer -> eval -> viz)
 bash scripts/run_all.sh
 
+# export full-mouth compare NIfTI set for medical/QC/model review
+python -m src.export_pseudo_gt_full --config configs/default.yaml
+
 # regenerate interactive 3D viewers only
 python -m src.viz --config configs/default.yaml
 ```
@@ -161,6 +164,12 @@ outputs/
     pseudo_gt/
     infer/
     error/
+  pseudo_gt_review_nifti/
+    {case_id}/
+      CEJ_medical_compare_full.nii.gz
+      CEJ_qc_compare_full.nii.gz
+      CEJ_model_compare_full.nii.gz
+      export_meta.json
 ```
 
 ## Key Assumptions
@@ -170,6 +179,9 @@ outputs/
 
 ## Updates
 
+- 2026-03-01: Full-mouth Slicer export contract now keeps only `CEJ_medical_compare_full.nii.gz` / `CEJ_qc_compare_full.nii.gz` / `CEJ_model_compare_full.nii.gz` + `export_meta.json`.
+- 2026-03-01: Export defaults switched to thin-curve mode (`*_tube_radius_mm=0.0`) with consistency gate (`IoU>=0.95`, `Dice>=0.97`, fail-fast).
+- 2026-03-01: 3D viewer now shows a fixed process legend and uses red predicted-curve color for stronger visibility.
 - 2026-03-01: `scripts/run_all.sh` is now Bash 3.2 compatible and honors custom `raw_a_name/raw_b_name` during TF_008 auto-prepare.
 - 2026-03-01: `src.preprocess`/`src.infer` now use unified raw-case discovery (`raw_layout: auto/case_dirs/toothfairy3`) with optional `max_cases`.
 - 2026-03-01: Removed in-repo `MONAI/` source checkout; project now uses installed `monai` package from `requirements.txt`.
@@ -214,16 +226,19 @@ python -m src.viz --config configs/toothfairy3_real_smoke.yaml
 - Dense curve fitting uses closed-loop interpolation by default (`preprocess.curve_closed=true`) for CEJ ring stability.
 - The default config uses placeholder values from the PRD and tech-route spec.
 - `src.viz` defaults to interactive 3D HTML output (`viz.enable_3d=true`) and keeps 2D overlays optional (`viz.enable_2d=false`).
-- 3D viewer legend is in Chinese with fixed category colors for quick reading: 推理曲线/推理热图/标注点/伪GT热图/伪GT骨架.
+- 3D viewer includes a fixed process legend (流程图例) in this order: `1 标注点` -> `2 插值曲线` -> `3 伪GT热图` -> `4 伪GT骨架` -> `5 推理热图` -> `6 推理曲线`.
 - Interpolated dense pseudo-GT curve is visible in 3D viewer as `插值曲线`, and included as the reference curve in Slicer compare exports.
 - 默认开启“流程一致”而非强制覆盖：热力图由插值曲线连续栅格化生成，骨架由热力图峰值（`>=0.999`）反提，保证 1→2→3 一致来源。
-- 默认 Slicer 导出为 3 个可对比 NIfTI（单文件内含对比标签 0/1/2/3）：`CEJ_medical_compare_full.nii.gz`、`CEJ_qc_compare_full.nii.gz`、`CEJ_model_compare_full.nii.gz`。
+- 默认 Slicer 导出为 3 个可对比 NIfTI（单文件内含标签 0/1/2/3）：`CEJ_medical_compare_full.nii.gz`、`CEJ_qc_compare_full.nii.gz`、`CEJ_model_compare_full.nii.gz`，并写出 `export_meta.json`。
 - 3 个对比文件定义：
   - `CEJ_medical_compare_full.nii.gz`：`1=牙齿本体`，`2=手工标点`，`3=插值曲线`
   - `CEJ_qc_compare_full.nii.gz`：`1=牙齿本体`，`2=插值曲线`，`3=伪GT骨架`
   - `CEJ_model_compare_full.nii.gz`：`1=牙齿本体`，`2=插值曲线`，`3=推理曲线`
+- 导出器会自动清理每个 case 目录中的历史导出文件，仅保留上述 3 个 compare NIfTI + `export_meta.json`。
 - 标签定义统一：`0=背景`，`1=牙齿本体`，`2=segment_2`，`3=segment_3`，每个文件的 segment 语义与体素统计见 `export_meta.json`。
-- 导出阶段包含一致性门禁（默认开启）：`IoU>=0.95` 且 `Dice>=0.97`；任一牙位不达标将返回非零退出码。
+- 导出阶段包含一致性门禁（默认开启）：`IoU>=0.95` 且 `Dice>=0.97`；任一牙位不达标将返回非零退出码（`SystemExit(2)`）。
+- Slicer 默认是“细曲线模式”（tube 半径均为 `0.0`，`nonoverlap_tubes_for_slicer=false`），不会额外加粗曲线。
+- 在 `CEJ_qc_compare_full.nii.gz` 中，若插值曲线与骨架完全重合，`3` 会覆盖 `2`（单标签体素限制），这属于预期行为。
 - NIfTI export now writes consistent qform/sform from source affine for better external-tool orientation consistency.
 - Coordinate convention: all external annotations are aligned to the world coordinate system defined by `A.nii.gz` sform/qform (affine) before converting to voxel space.
 - Preprocess auto-detects CEJ point coordinates as `world_ras` or `world_lps` using the A volume affine and records the choice in `mark_meta.json`.

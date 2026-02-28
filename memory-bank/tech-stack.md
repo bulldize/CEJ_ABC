@@ -10,3 +10,4 @@
 - Config: pyyaml
 - CLI: argparse
 - Tests: pytest
+- External QA tool target: 3D Slicer (NIfTI labelmap compare exports)
