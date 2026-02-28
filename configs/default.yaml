@@ -107,7 +107,10 @@ export_pseudo_gt:
   keep_lcc_for_skeleton: false
   skeleton_from_heatmap_peak: true
   heatmap_peak_threshold: 0.999
-  nonoverlap_tubes_for_slicer: true
-  skeleton_tube_radius_mm: 0.6
-  interp_tube_radius_mm: 1.2
-  points_tube_radius_mm: 1.0
+  nonoverlap_tubes_for_slicer: false
+  skeleton_tube_radius_mm: 0.0
+  interp_tube_radius_mm: 0.0
+  points_tube_radius_mm: 0.0
+  consistency_iou_min: 0.95
+  consistency_dice_min: 0.97
+  fail_on_consistency_violation: true

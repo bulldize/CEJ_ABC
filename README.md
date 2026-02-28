@@ -217,10 +217,11 @@ python -m src.viz --config configs/toothfairy3_real_smoke.yaml
 - 3D viewer legend is in Chinese with fixed category colors for quick reading: 推理曲线/推理热图/标注点/伪GT热图/伪GT骨架.
 - Interpolated dense pseudo-GT curve is also visible in 3D viewer as `插值曲线`, and exported for Slicer as `C_pseudo_gt_interp_curve_full.nii.gz`.
 - 默认开启“流程一致”而非强制覆盖：热力图由插值曲线连续栅格化生成，骨架由热力图峰值（`>=0.999`）反提，保证 1→2→3 一致来源。
-- 为避免 3D Slicer 表面渲染出现重合闪烁（z-fighting），默认导出非重叠环层：`2=内层骨架加粗`，`3=外层插值加粗壳层`。
-- Slicer review should use `Y_pseudo_gt_review_slicer_full.nii.gz` (int16 labelmap): `1=牙体`, `2=伪GT骨架(加粗内层)`, `3=插值曲线(加粗外层)`。
+- 默认 Slicer 导出为细曲线（非加粗）：`export_pseudo_gt.*_tube_radius_mm=0.0`，`2=伪GT骨架细曲线`，`3=插值细曲线`。
+- Slicer review should use `Y_pseudo_gt_review_slicer_full.nii.gz` (int16 labelmap): `1=牙体`, `2=伪GT骨架细曲线`, `3=插值细曲线`。
 - 若需同时看手工点，使用 `Y_pseudo_gt_review_with_points_full.nii.gz` 或单独加载 `P_manual_points_tube_full.nii.gz`。
 - Export also provides separate masks: `C_pseudo_gt_skeleton_tube_full.nii.gz`, `C_pseudo_gt_interp_curve_tube_full.nii.gz`, `P_manual_points_tube_full.nii.gz`.
+- 导出阶段包含一致性门禁（默认开启）：`IoU>=0.95` 且 `Dice>=0.97`；任一牙位不达标将返回非零退出码。
 - NIfTI export now writes consistent qform/sform from source affine for better external-tool orientation consistency.
 - Coordinate convention: all external annotations are aligned to the world coordinate system defined by `A.nii.gz` sform/qform (affine) before converting to voxel space.
 - Preprocess auto-detects CEJ point coordinates as `world_ras` or `world_lps` using the A volume affine and records the choice in `mark_meta.json`.

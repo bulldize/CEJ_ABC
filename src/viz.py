@@ -403,6 +403,29 @@ def _add_gt_points(
     )
 
 
+def _add_fixed_process_legend(fig, rows):
+    lines = ["<b>流程图例</b>"]
+    for row in rows:
+        label = row["label"] if row["present"] else f"{row['label']}（无）"
+        lines.append(f"<span style='color:{row['color']};font-weight:700'>■</span> {label}")
+    fig.add_annotation(
+        xref="paper",
+        yref="paper",
+        x=0.01,
+        y=0.99,
+        xanchor="left",
+        yanchor="top",
+        showarrow=False,
+        align="left",
+        text="<br>".join(lines),
+        bgcolor="rgba(0,0,0,0.60)",
+        bordercolor="rgba(255,255,255,0.30)",
+        borderwidth=1,
+        borderpad=6,
+        font=dict(size=12, color="#F5F5F5"),
+    )
+
+
 def save_3d_viewer(
     A,
     T,
@@ -534,6 +557,13 @@ def save_3d_viewer(
             name="伪GT骨架",
         )
 
+    has_gt_points = points is not None and len(points) > 0
+    has_interp_curve = bool(show_dense_interp_curve and dense_curve_points is not None and len(dense_curve_points) > 0)
+    has_gt_heatmap = bool(np.any(H_gt_ds >= heat_thr))
+    has_gt_skeleton = bool(show_pseudo_gt_skeleton and C_gt is not None and np.any(C_gt > 0))
+    has_pred_heatmap = bool(H_pred_ds is not None and np.any(H_pred_ds >= pred_thr))
+    has_pred_curve = bool(C_pred is not None and np.any(C_pred > 0))
+
     _add_gt_points(
         fig,
         points,
@@ -543,6 +573,16 @@ def save_3d_viewer(
         name="标注点",
         use_error_colormap=use_error_colormap_for_gt_points,
     )
+
+    process_legend_rows = [
+        {"label": "1 标注点", "color": color_gt_points, "present": has_gt_points},
+        {"label": "2 插值曲线", "color": color_dense_interp_curve, "present": has_interp_curve},
+        {"label": "3 伪GT热图", "color": color_gt_heatmap, "present": has_gt_heatmap},
+        {"label": "4 伪GT骨架", "color": color_pseudo_gt_skeleton, "present": has_gt_skeleton},
+        {"label": "5 推理热图", "color": color_pred_heatmap, "present": has_pred_heatmap},
+        {"label": "6 推理曲线", "color": color_pred_curve, "present": has_pred_curve},
+    ]
+    _add_fixed_process_legend(fig, process_legend_rows)
 
     fig.update_layout(
         title=f"CEJ 3D可视化 | 病例={case_id} 牙位={tooth_id}",

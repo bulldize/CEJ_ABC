@@ -9,6 +9,25 @@ except Exception:
 _keep_lcc = KeepLargestConnectedComponent(applied_labels=[1], is_onehot=False, connectivity=1)
 
 
+def compute_curve_overlap_metrics(mask_a, mask_b):
+    a = (np.asarray(mask_a) > 0)
+    b = (np.asarray(mask_b) > 0)
+    inter = int(np.logical_and(a, b).sum())
+    union = int(np.logical_or(a, b).sum())
+    vox_a = int(a.sum())
+    vox_b = int(b.sum())
+    denom_dice = vox_a + vox_b
+    return {
+        "equal_voxelwise": bool(np.array_equal(a, b)),
+        "intersection_voxels": inter,
+        "union_voxels": union,
+        "curve_a_voxels": vox_a,
+        "curve_b_voxels": vox_b,
+        "iou": float(inter / union) if union > 0 else 1.0,
+        "dice": float((2.0 * inter) / denom_dice) if denom_dice > 0 else 1.0,
+    }
+
+
 def extract_curve_from_heatmap_peak(mask_prob, tooth_mask=None, peak_threshold=0.999, keep_lcc=False):
     curve = (mask_prob >= float(peak_threshold)).astype(np.uint8)
     if tooth_mask is not None:

@@ -8,7 +8,11 @@ from scipy.ndimage import distance_transform_edt, zoom
 
 from src.datasets.io import load_volume, save_volume
 from src.datasets.raw_cases import collect_raw_case_map
-from src.postprocess.skeleton import extract_curve, extract_curve_from_heatmap_peak
+from src.postprocess.skeleton import (
+    compute_curve_overlap_metrics,
+    extract_curve,
+    extract_curve_from_heatmap_peak,
+)
 from src.utils.config import ensure_dir, load_config
 from src.utils.log import get_logger
 
@@ -134,6 +138,9 @@ def main():
     skeleton_tube_radius_mm = float(export_cfg.get("skeleton_tube_radius_mm", 0.6))
     interp_tube_radius_mm = float(export_cfg.get("interp_tube_radius_mm", 1.2))
     points_tube_radius_mm = float(export_cfg.get("points_tube_radius_mm", 1.0))
+    consistency_iou_min = float(export_cfg.get("consistency_iou_min", 0.95))
+    consistency_dice_min = float(export_cfg.get("consistency_dice_min", 0.97))
+    fail_on_consistency_violation = bool(export_cfg.get("fail_on_consistency_violation", True))
 
     tooth_dirs = sorted(glob.glob(os.path.join(processed_dir, "*", "tooth_*")))
     if not tooth_dirs:
@@ -214,6 +221,8 @@ def main():
         logger.warning("no pseudo-GT ROI found to export")
         return
 
+    all_violations = []
+
     for case_id, items in cases.items():
         case_rec = raw_case_map.get(case_id, None)
         if case_rec is None:
@@ -237,15 +246,36 @@ def main():
         C_full = np.zeros(A_full.shape, dtype=np.uint8)
         C_interp_full = np.zeros(A_full.shape, dtype=np.uint8)
         P_manual_full = np.zeros(A_full.shape, dtype=np.uint8)
+        per_tooth_consistency = []
+        case_violations = []
         for it in items:
             _stitch_patch_max(H_full, it["heatmap"], it["origin"])
             _stitch_patch_binary_or(C_full, it["curve"], it["origin"])
             dense_curve_roi = it.get("dense_curve_roi", None)
+            interp_roi = np.zeros_like(it["tooth_mask"], dtype=np.uint8)
             if dense_curve_roi is not None and len(dense_curve_roi) > 0:
-                interp_roi = np.zeros_like(it["tooth_mask"], dtype=np.uint8)
                 _rasterize_polyline_to_mask(interp_roi, dense_curve_roi, close_loop=curve_closed)
                 interp_roi = interp_roi * (it["tooth_mask"] > 0).astype(np.uint8)
                 _stitch_patch_binary_or(C_interp_full, interp_roi, it["origin"])
+
+            tooth_metrics = compute_curve_overlap_metrics(it["curve"], interp_roi)
+            tooth_metrics["tooth_id"] = int(it["tooth_id"])
+            tooth_metrics["passes_threshold"] = bool(
+                tooth_metrics["iou"] >= consistency_iou_min and tooth_metrics["dice"] >= consistency_dice_min
+            )
+            if not tooth_metrics["passes_threshold"]:
+                case_violations.append(
+                    {
+                        "case_id": case_id,
+                        "tooth_id": int(it["tooth_id"]),
+                        "iou": float(tooth_metrics["iou"]),
+                        "dice": float(tooth_metrics["dice"]),
+                        "curve_a_voxels": int(tooth_metrics["curve_a_voxels"]),
+                        "curve_b_voxels": int(tooth_metrics["curve_b_voxels"]),
+                    }
+                )
+            per_tooth_consistency.append(tooth_metrics)
+
             manual_points_roi = it.get("manual_points_roi", None)
             if manual_points_roi is not None and len(manual_points_roi) > 0:
                 origin = np.asarray(it["origin"], dtype=np.float32)
@@ -265,12 +295,10 @@ def main():
             C_interp_tube_full = np.logical_and(C_interp_tube_full > 0, C_skeleton_tube_full == 0).astype(np.uint8)
         P_manual_tube_full = _dilate_mask_mm(P_manual_full, spacing, points_tube_radius_mm)
 
-        inter = np.logical_and(C_full > 0, C_interp_full > 0).sum()
-        union = np.logical_or(C_full > 0, C_interp_full > 0).sum()
-        sum_ab = (C_full > 0).sum() + (C_interp_full > 0).sum()
-        curve_iou = float(inter / union) if union > 0 else 1.0
-        curve_dice = float((2.0 * inter) / sum_ab) if sum_ab > 0 else 1.0
-        curve_equal = bool(np.array_equal(C_full, C_interp_full))
+        case_metrics = compute_curve_overlap_metrics(C_full, C_interp_full)
+        curve_iou = float(case_metrics["iou"])
+        curve_dice = float(case_metrics["dice"])
+        curve_equal = bool(case_metrics["equal_voxelwise"])
 
         Y_pseudo = np.zeros(A_full.shape, dtype=np.int16)
         Y_pseudo[(B_tooth >= 10)] = 1
@@ -286,6 +314,14 @@ def main():
         Y_pseudo_review_with_points[P_manual_tube_full > 0] = 4
         vals, counts = np.unique(Y_pseudo_review, return_counts=True)
         label_stats = {int(v): int(c) for v, c in zip(vals, counts)}
+
+        skeleton_curve_label = (
+            "pseudo_gt_skeleton_thin_curve" if skeleton_tube_radius_mm <= 0 else "pseudo_gt_skeleton_tube"
+        )
+        interp_curve_label = (
+            "pseudo_gt_interpolated_thin_curve" if interp_tube_radius_mm <= 0 else "pseudo_gt_interpolated_curve_tube"
+        )
+        manual_points_label = "manual_mark_points_thin" if points_tube_radius_mm <= 0 else "manual_mark_points_tube"
 
         out_case_dir = ensure_dir(os.path.join(out_root, case_id))
         save_volume(os.path.join(out_case_dir, "A_full.nii.gz"), A_full, affine=affine, spacing=spacing, dtype=np.float32)
@@ -382,10 +418,16 @@ def main():
                 "interpolated_curve": interp_tube_radius_mm,
                 "manual_points": points_tube_radius_mm,
             },
+            "consistency_thresholds": {
+                "iou_min": consistency_iou_min,
+                "dice_min": consistency_dice_min,
+                "fail_on_consistency_violation": fail_on_consistency_violation,
+            },
             "curve_consistency": {
-                "equal_voxelwise": curve_equal,
-                "iou": curve_iou,
-                "dice": curve_dice,
+                "case_level": case_metrics,
+                "per_tooth": per_tooth_consistency,
+                "n_violations": len(case_violations),
+                "violation_tooth_ids": [int(v["tooth_id"]) for v in case_violations],
             },
             "volumes": [
                 "A_full.nii.gz",
@@ -402,19 +444,25 @@ def main():
                 "Y_pseudo_gt_review_slicer_full.nii.gz",
                 "Y_pseudo_gt_review_with_points_full.nii.gz",
             ],
-            "label_definition_Y_pseudo_gt_full": {"0": "background", "1": "tooth", "2": "pseudo_gt_skeleton_tube"},
+            "label_definition_Y_pseudo_gt_full": {"0": "background", "1": "tooth", "2": skeleton_curve_label},
             "label_definition_Y_pseudo_gt_review_full": {
                 "0": "background",
                 "1": "tooth",
-                "2": "pseudo_gt_skeleton_tube",
-                "3": "pseudo_gt_interpolated_curve_tube",
+                "2": skeleton_curve_label,
+                "3": interp_curve_label,
+            },
+            "label_definition_Y_pseudo_gt_review_slicer_full": {
+                "0": "background",
+                "1": "tooth",
+                "2": skeleton_curve_label,
+                "3": interp_curve_label,
             },
             "label_definition_Y_pseudo_gt_review_with_points_full": {
                 "0": "background",
                 "1": "tooth",
-                "2": "pseudo_gt_skeleton_tube",
-                "3": "pseudo_gt_interpolated_curve_tube",
-                "4": "manual_mark_points_tube",
+                "2": skeleton_curve_label,
+                "3": interp_curve_label,
+                "4": manual_points_label,
             },
         }
         with open(os.path.join(out_case_dir, "export_meta.json"), "w", encoding="utf-8") as f:
@@ -433,8 +481,28 @@ def main():
             curve_iou,
             curve_dice,
         )
+        if case_violations:
+            all_violations.extend(case_violations)
+            logger.error(
+                "curve consistency violations case=%s | %s",
+                case_id,
+                ", ".join(
+                    [
+                        f"tooth_{v['tooth_id']}(iou={v['iou']:.4f},dice={v['dice']:.4f},a={v['curve_a_voxels']},b={v['curve_b_voxels']})"
+                        for v in case_violations
+                    ]
+                ),
+            )
 
     logger.info("done. output root: %s", out_root)
+    if fail_on_consistency_violation and all_violations:
+        logger.error(
+            "consistency gate failed: %d violating teeth (iou>=%.3f and dice>=%.3f required)",
+            len(all_violations),
+            consistency_iou_min,
+            consistency_dice_min,
+        )
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":
