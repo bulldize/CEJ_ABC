@@ -254,7 +254,7 @@ def _add_mpr_slices(fig, A, spacing, opacity=0.85):
     )
 
 
-def _add_curve_points(fig, curve_mask, spacing, max_points=12000, color="#00E5FF", name="推理曲线"):
+def _add_curve_points(fig, curve_mask, spacing, max_points=12000, color="#00E5FF", name="推理曲线", marker_size=2):
     curve_pts = np.array(np.where(curve_mask > 0)).T.astype(np.float32)
     if curve_pts.shape[0] == 0:
         return
@@ -269,7 +269,7 @@ def _add_curve_points(fig, curve_mask, spacing, max_points=12000, color="#00E5FF
             y=curve_mm[:, 1],
             z=curve_mm[:, 2],
             mode="markers",
-            marker=dict(size=2, color=color, opacity=0.9),
+            marker=dict(size=marker_size, color=color, opacity=0.9),
             name=name,
             hoverinfo="skip",
         )
@@ -534,6 +534,7 @@ def save_3d_viewer(
             max_points=curve_max_points,
             color=color_pred_curve,
             name="推理曲线",
+            marker_size=3,
         )
 
     if show_dense_interp_curve and dense_curve_points is not None:

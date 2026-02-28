@@ -2,6 +2,7 @@ import argparse
 import glob
 import json
 import os
+import shutil
 
 import numpy as np
 from scipy.ndimage import distance_transform_edt, zoom
@@ -17,6 +18,28 @@ from src.utils.config import ensure_dir, load_config
 from src.utils.log import get_logger
 
 logger = get_logger("export_pseudo_gt_full")
+
+MINIMAL_EXPORT_FILES = {
+    "CEJ_medical_compare_full.nii.gz",
+    "CEJ_qc_compare_full.nii.gz",
+    "CEJ_model_compare_full.nii.gz",
+    "export_meta.json",
+}
+
+
+def _build_three_segment_compare(tooth_mask, segment2_mask, segment3_mask):
+    tooth = (np.asarray(tooth_mask) > 0)
+    seg2 = (np.asarray(segment2_mask) > 0)
+    seg3 = (np.asarray(segment3_mask) > 0)
+    out = np.zeros(tooth.shape, dtype=np.uint8)
+    out[tooth] = 1
+    out[seg2] = 2
+    out[seg3] = 3
+    vals, cnts = np.unique(out, return_counts=True)
+    return out, {
+        "label_counts": {int(v): int(c) for v, c in zip(vals, cnts)},
+        "segment2_segment3_overlap_voxels": int(np.logical_and(seg2, seg3).sum()),
+    }
 
 
 def map_pulp_to_tooth(B):
@@ -123,6 +146,9 @@ def main():
     cfg = load_config(args.config)
     out_root = args.out_dir or os.path.join(cfg["data"]["output_dir"], "pseudo_gt_review_nifti")
     out_root = ensure_dir(out_root)
+    root_ds_store = os.path.join(out_root, ".DS_Store")
+    if os.path.exists(root_ds_store):
+        os.remove(root_ds_store)
 
     processed_dir = cfg["data"]["processed_dir"]
     raw_case_map = collect_raw_case_map(cfg["data"])
@@ -241,15 +267,14 @@ def main():
         A_full, spacing, affine = load_volume(a_path, meta_path=meta_path, dtype=np.float32)
         B_full, _, _ = load_volume(b_path, meta_path=meta_path, dtype=np.int16)
         B_tooth = map_pulp_to_tooth(B_full)
+        tooth_mask_full = (B_tooth >= 10).astype(np.uint8)
 
-        H_full = np.zeros(A_full.shape, dtype=np.float32)
         C_full = np.zeros(A_full.shape, dtype=np.uint8)
         C_interp_full = np.zeros(A_full.shape, dtype=np.uint8)
         P_manual_full = np.zeros(A_full.shape, dtype=np.uint8)
         per_tooth_consistency = []
         case_violations = []
         for it in items:
-            _stitch_patch_max(H_full, it["heatmap"], it["origin"])
             _stitch_patch_binary_or(C_full, it["curve"], it["origin"])
             dense_curve_roi = it.get("dense_curve_roi", None)
             interp_roi = np.zeros_like(it["tooth_mask"], dtype=np.uint8)
@@ -289,119 +314,67 @@ def main():
                     ):
                         P_manual_full[q[0], q[1], q[2]] = 1
 
-        C_skeleton_tube_full = _dilate_mask_mm(C_full, spacing, skeleton_tube_radius_mm)
-        C_interp_tube_full = _dilate_mask_mm(C_interp_full, spacing, interp_tube_radius_mm)
-        if nonoverlap_tubes:
-            C_interp_tube_full = np.logical_and(C_interp_tube_full > 0, C_skeleton_tube_full == 0).astype(np.uint8)
-        P_manual_tube_full = _dilate_mask_mm(P_manual_full, spacing, points_tube_radius_mm)
-
         case_metrics = compute_curve_overlap_metrics(C_full, C_interp_full)
         curve_iou = float(case_metrics["iou"])
         curve_dice = float(case_metrics["dice"])
         curve_equal = bool(case_metrics["equal_voxelwise"])
 
-        Y_pseudo = np.zeros(A_full.shape, dtype=np.int16)
-        Y_pseudo[(B_tooth >= 10)] = 1
-        Y_pseudo[C_skeleton_tube_full > 0] = 2
+        pred_curve_full = np.zeros_like(C_full, dtype=np.uint8)
+        pred_full_path = os.path.join(cfg["data"]["output_dir"], "infer", case_id, "Y_pred.nii.gz")
+        if os.path.exists(pred_full_path):
+            pred_full_y, _, _ = load_volume(pred_full_path, dtype=np.uint8)
+            if pred_full_y.shape != C_full.shape:
+                pred_full_y = resize_to_shape(pred_full_y, C_full.shape, order=0)
+            pred_curve_full = (pred_full_y == 2).astype(np.uint8)
+        else:
+            logger.warning("prediction not found for case=%s, model compare will contain reference only", case_id)
 
-        Y_pseudo_review = np.zeros(A_full.shape, dtype=np.int16)
-        Y_pseudo_review[(B_tooth >= 10)] = 1
-        Y_pseudo_review[C_skeleton_tube_full > 0] = 2
-        Y_pseudo_review[C_interp_tube_full > 0] = 3
-
-        # Optional version with manual points embedded as label 4.
-        Y_pseudo_review_with_points = Y_pseudo_review.copy()
-        Y_pseudo_review_with_points[P_manual_tube_full > 0] = 4
-        vals, counts = np.unique(Y_pseudo_review, return_counts=True)
-        label_stats = {int(v): int(c) for v, c in zip(vals, counts)}
-
-        skeleton_curve_label = (
-            "pseudo_gt_skeleton_thin_curve" if skeleton_tube_radius_mm <= 0 else "pseudo_gt_skeleton_tube"
+        medical_compare, medical_stats = _build_three_segment_compare(
+            tooth_mask_full,
+            P_manual_full,
+            C_interp_full,
         )
-        interp_curve_label = (
-            "pseudo_gt_interpolated_thin_curve" if interp_tube_radius_mm <= 0 else "pseudo_gt_interpolated_curve_tube"
+        qc_compare, qc_stats = _build_three_segment_compare(
+            tooth_mask_full,
+            C_interp_full,
+            C_full,
         )
-        manual_points_label = "manual_mark_points_thin" if points_tube_radius_mm <= 0 else "manual_mark_points_tube"
+        model_compare, model_stats = _build_three_segment_compare(
+            tooth_mask_full,
+            C_interp_full,
+            pred_curve_full,
+        )
 
         out_case_dir = ensure_dir(os.path.join(out_root, case_id))
-        save_volume(os.path.join(out_case_dir, "A_full.nii.gz"), A_full, affine=affine, spacing=spacing, dtype=np.float32)
-        save_volume(os.path.join(out_case_dir, "B_tooth_full.nii.gz"), B_tooth.astype(np.int16), affine=affine, spacing=spacing, dtype=np.int16)
+        for stale_name in os.listdir(out_case_dir):
+            if stale_name in MINIMAL_EXPORT_FILES:
+                continue
+            stale_path = os.path.join(out_case_dir, stale_name)
+            if os.path.isdir(stale_path):
+                shutil.rmtree(stale_path)
+            else:
+                os.remove(stale_path)
+
         save_volume(
-            os.path.join(out_case_dir, "H_pseudo_gt_full.nii.gz"),
-            H_full,
-            affine=affine,
-            spacing=spacing,
-            dtype=np.float32,
-        )
-        save_volume(
-            os.path.join(out_case_dir, "C_pseudo_gt_skeleton_full.nii.gz"),
-            C_full,
-            affine=affine,
-            spacing=spacing,
-            dtype=np.uint8,
-        )
-        save_volume(
-            os.path.join(out_case_dir, "C_pseudo_gt_skeleton_tube_full.nii.gz"),
-            C_skeleton_tube_full,
+            os.path.join(out_case_dir, "CEJ_medical_compare_full.nii.gz"),
+            medical_compare,
             affine=affine,
             spacing=spacing,
             dtype=np.uint8,
         )
         save_volume(
-            os.path.join(out_case_dir, "C_pseudo_gt_interp_curve_full.nii.gz"),
-            C_interp_full,
+            os.path.join(out_case_dir, "CEJ_qc_compare_full.nii.gz"),
+            qc_compare,
             affine=affine,
             spacing=spacing,
             dtype=np.uint8,
         )
         save_volume(
-            os.path.join(out_case_dir, "C_pseudo_gt_interp_curve_tube_full.nii.gz"),
-            C_interp_tube_full,
+            os.path.join(out_case_dir, "CEJ_model_compare_full.nii.gz"),
+            model_compare,
             affine=affine,
             spacing=spacing,
             dtype=np.uint8,
-        )
-        save_volume(
-            os.path.join(out_case_dir, "P_manual_points_full.nii.gz"),
-            P_manual_full,
-            affine=affine,
-            spacing=spacing,
-            dtype=np.uint8,
-        )
-        save_volume(
-            os.path.join(out_case_dir, "P_manual_points_tube_full.nii.gz"),
-            P_manual_tube_full,
-            affine=affine,
-            spacing=spacing,
-            dtype=np.uint8,
-        )
-        save_volume(
-            os.path.join(out_case_dir, "Y_pseudo_gt_full.nii.gz"),
-            Y_pseudo,
-            affine=affine,
-            spacing=spacing,
-            dtype=np.int16,
-        )
-        save_volume(
-            os.path.join(out_case_dir, "Y_pseudo_gt_review_full.nii.gz"),
-            Y_pseudo_review,
-            affine=affine,
-            spacing=spacing,
-            dtype=np.int16,
-        )
-        save_volume(
-            os.path.join(out_case_dir, "Y_pseudo_gt_review_slicer_full.nii.gz"),
-            Y_pseudo_review,
-            affine=affine,
-            spacing=spacing,
-            dtype=np.int16,
-        )
-        save_volume(
-            os.path.join(out_case_dir, "Y_pseudo_gt_review_with_points_full.nii.gz"),
-            Y_pseudo_review_with_points,
-            affine=affine,
-            spacing=spacing,
-            dtype=np.int16,
         )
 
         meta = {
@@ -429,50 +402,41 @@ def main():
                 "n_violations": len(case_violations),
                 "violation_tooth_ids": [int(v["tooth_id"]) for v in case_violations],
             },
-            "volumes": [
-                "A_full.nii.gz",
-                "B_tooth_full.nii.gz",
-                "H_pseudo_gt_full.nii.gz",
-                "C_pseudo_gt_skeleton_full.nii.gz",
-                "C_pseudo_gt_skeleton_tube_full.nii.gz",
-                "C_pseudo_gt_interp_curve_full.nii.gz",
-                "C_pseudo_gt_interp_curve_tube_full.nii.gz",
-                "P_manual_points_full.nii.gz",
-                "P_manual_points_tube_full.nii.gz",
-                "Y_pseudo_gt_full.nii.gz",
-                "Y_pseudo_gt_review_full.nii.gz",
-                "Y_pseudo_gt_review_slicer_full.nii.gz",
-                "Y_pseudo_gt_review_with_points_full.nii.gz",
-            ],
-            "label_definition_Y_pseudo_gt_full": {"0": "background", "1": "tooth", "2": skeleton_curve_label},
-            "label_definition_Y_pseudo_gt_review_full": {
+            "volumes": sorted(list(MINIMAL_EXPORT_FILES - {"export_meta.json"})),
+            "compare_label_definition": {
                 "0": "background",
-                "1": "tooth",
-                "2": skeleton_curve_label,
-                "3": interp_curve_label,
+                "1": "tooth_body",
+                "2": "segment_2",
+                "3": "segment_3",
             },
-            "label_definition_Y_pseudo_gt_review_slicer_full": {
-                "0": "background",
-                "1": "tooth",
-                "2": skeleton_curve_label,
-                "3": interp_curve_label,
-            },
-            "label_definition_Y_pseudo_gt_review_with_points_full": {
-                "0": "background",
-                "1": "tooth",
-                "2": skeleton_curve_label,
-                "3": interp_curve_label,
-                "4": manual_points_label,
+            "compare_files": {
+                "CEJ_medical_compare_full.nii.gz": {
+                    "segment_1": "tooth_body",
+                    "segment_2": "manual_points",
+                    "segment_3": "pseudo_gt_interpolated_curve",
+                    "voxel_stats": medical_stats,
+                },
+                "CEJ_qc_compare_full.nii.gz": {
+                    "segment_1": "tooth_body",
+                    "segment_2": "pseudo_gt_interpolated_curve",
+                    "segment_3": "pseudo_gt_skeleton",
+                    "voxel_stats": qc_stats,
+                },
+                "CEJ_model_compare_full.nii.gz": {
+                    "segment_1": "tooth_body",
+                    "segment_2": "pseudo_gt_interpolated_curve",
+                    "segment_3": "predicted_curve",
+                    "voxel_stats": model_stats,
+                },
             },
         }
         with open(os.path.join(out_case_dir, "export_meta.json"), "w", encoding="utf-8") as f:
             json.dump(meta, f, ensure_ascii=False, indent=2)
 
         logger.info(
-            "exported full-mouth pseudo-GT NIfTI for case=%s -> %s | Y_review labels=%s",
+            "exported CEJ compare NIfTI set for case=%s -> %s",
             case_id,
             out_case_dir,
-            label_stats,
         )
         logger.info(
             "curve consistency case=%s | equal=%s iou=%.6f dice=%.6f",

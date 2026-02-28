@@ -88,7 +88,7 @@ viz:
   color_tooth_surface: "#64B5F6"
   color_gt_heatmap: "#FFA726"
   color_pred_heatmap: "#FF5252"
-  color_pred_curve: "#00E5FF"
+  color_pred_curve: "#FF1744"
   color_dense_interp_curve: "#F500FF"
   color_pseudo_gt_skeleton: "#76FF03"
   color_gt_points: "#FFD600"
