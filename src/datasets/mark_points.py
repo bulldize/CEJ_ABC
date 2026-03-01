@@ -45,7 +45,11 @@ def _find_tooth_col(df: pd.DataFrame) -> str:
     for c in cols:
         if "tooth" in str(c).lower():
             return c
-    raise ValueError("cannot find tooth id column in cej_points_ras.xlsx")
+    for c in cols:
+        lc = str(c).lower()
+        if lc in {"group", "grp"} or "group" in lc:
+            return c
+    raise ValueError("cannot find tooth id column (expected one of: 牙位/tooth/group)")
 
 
 def _read_scan_boundary(scan_path: str) -> np.ndarray:
