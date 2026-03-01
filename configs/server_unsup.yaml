@@ -1,0 +1,54 @@
+project:
+  seed: 42
+  device: auto
+unsup:
+  source_dir: data/TF_008
+  source_a_name: ToothFairy3F_008_volume.nii
+  source_b_name: ToothFairy3F_008label.nii
+  case_id: TF_008
+  processed_dir: /root/cej_runs/run_unsup_001/processed
+  output_dir: /root/cej_runs/run_unsup_001/unsup
+  processed_format: nii.gz
+  use_tooth_mask_channel: true
+  use_label_mask: true
+  map_pulp_to_tooth: true
+  tooth_label_min: 10
+  tooth_label_max: 99
+  fallback_single_tooth: true
+  min_tooth_voxels: 0
+preprocess:
+  roi_padding_mm: 8.0
+  target_spacing_mm:
+  - 0.5
+  - 0.5
+  - 0.5
+  resample_to_target: false
+  intensity_clip_percentiles:
+  - 1.0
+  - 99.0
+  intensity_norm: zscore
+model_unsup:
+  in_channels: 2
+  out_channels: 1
+  base_channels: 16
+  depth: 4
+  num_res_units: 2
+  norm: batch
+train_unsup:
+  epochs: 20
+  batch_size: 1
+  lr: 0.001
+  num_workers: 4
+  loss: masked_mse
+  mask_ratio: 0.75
+  mask_patch_size:
+  - 8
+  - 8
+  - 8
+  mask_fill: 0.0
+  max_steps: null
+finetune:
+  enable: false
+  config: configs/default.yaml
+  pretrained_ckpt: outputs/unsup/pretrain/checkpoints/last.pt
+  pretrained_strict: false

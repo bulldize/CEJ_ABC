@@ -43,6 +43,20 @@ def build_unsup_loss(cfg):
     raise NotImplementedError(f"unsupported loss: {loss_name}")
 
 
+def _read_last_epoch(metrics_path: str):
+    if not os.path.exists(metrics_path):
+        return None
+    last = None
+    with open(metrics_path, "r", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            try:
+                last = int(row["epoch"])
+            except (KeyError, TypeError, ValueError):
+                continue
+    return last
+
+
 def train_one_epoch(model, loader, optimizer, device, cfg):
     model.train()
     total = 0.0
@@ -128,18 +142,46 @@ def main():
 
     out_dir = ensure_dir(os.path.join(cfg["unsup"]["output_dir"], "pretrain"))
     ckpt_dir = ensure_dir(os.path.join(out_dir, "checkpoints"))
+    ckpt_path = os.path.join(ckpt_dir, "last.pt")
 
     metrics_path = os.path.join(out_dir, "metrics.csv")
-    with open(metrics_path, "w", newline="") as f:
+
+    # Auto-resume from the latest checkpoint when available.
+    start_epoch = 0
+    if os.path.exists(ckpt_path):
+        ckpt = torch.load(ckpt_path, map_location=device)
+        if "model" in ckpt:
+            model.load_state_dict(ckpt["model"], strict=True)
+        if "optimizer" in ckpt:
+            optimizer.load_state_dict(ckpt["optimizer"])
+        if "epoch" in ckpt:
+            start_epoch = int(ckpt["epoch"]) + 1
+        else:
+            last_epoch = _read_last_epoch(metrics_path)
+            if last_epoch is not None:
+                start_epoch = int(last_epoch) + 1
+        logger.info("resume from checkpoint %s (start_epoch=%d)", ckpt_path, start_epoch)
+
+    append_metrics = start_epoch > 0 and os.path.exists(metrics_path)
+    mode = "a" if append_metrics else "w"
+    num_epochs = int(cfg["train_unsup"]["epochs"])
+    end_epoch = start_epoch + num_epochs
+
+    with open(metrics_path, mode, newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["epoch", "loss"])
-        for epoch in range(cfg["train_unsup"]["epochs"]):
+        if not append_metrics:
+            writer.writerow(["epoch", "loss"])
+        for epoch in range(start_epoch, end_epoch):
             loss = train_one_epoch(model, loader, optimizer, device, cfg)
             writer.writerow([epoch, loss])
+            f.flush()
+
+            torch.save(
+                {"model": model.state_dict(), "optimizer": optimizer.state_dict(), "epoch": epoch},
+                ckpt_path,
+            )
             logger.info("epoch %d loss %.6f", epoch, loss)
 
-    ckpt_path = os.path.join(ckpt_dir, "last.pt")
-    torch.save({"model": model.state_dict()}, ckpt_path)
     logger.info("saved checkpoint %s", ckpt_path)
 
 
