@@ -24,6 +24,14 @@
 - 预处理成功生成 ROI 数据
 - 预训练脚本可运行 1 个 epoch / 1 个 step 并产出 checkpoint
 - 输出位置：`outputs/unsup/pretrain/checkpoints/last.pt`
+- 支持断点续跑：再次启动时自动从 `last.pt` + `metrics.csv` 继续。
+
+## 当前云端执行状态（2026-03-03）
+
+- 已完成无监督预训练到 `epoch=120`（run: `/root/cej_runs/run_unsup_001`）。
+- 指标文件：`/root/cej_runs/run_unsup_001/unsup/pretrain/metrics.csv`
+- checkpoint：`/root/cej_runs/run_unsup_001/unsup/pretrain/checkpoints/last.pt`
+- 当前 checkpoint 保留策略：仅保留 `last.pt`（后续可扩展为每 N epoch 保留快照）。
 
 ## 配置入口
 见 `configs/unsup_mae.yaml`：
@@ -44,3 +52,4 @@
 ## 更新记录
 - 2026-02-11：`run_all_unsup.sh`（TF_008）冒烟跑通，输出 `outputs/unsup/pretrain/checkpoints/last.pt`。
 - 2026-03-01：文档状态同步；将“MONAI 无监督流程跑通”从 TODO 移至已完成，下一步聚焦多病例基线与指标。
+- 2026-03-03：`src.pretrain_mae.py` 已支持 checkpoint/optimizer/metrics 续跑逻辑，云端无监督训练已跑至 120 epoch。

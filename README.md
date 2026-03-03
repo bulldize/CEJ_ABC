@@ -46,6 +46,58 @@ Notes:
 - Pretrain output checkpoint: `outputs/unsup/pretrain/checkpoints/last.pt`
 - To finetune, enable `finetune.enable: true` in `configs/unsup_mae.yaml` or pass `--pretrained` to `src.train`.
 
+## Manual Annotation Incremental Pipeline (ToothFairy3)
+
+For cloud/server runs with continuously uploaded manual CEJ points, use the resumable pipeline below.
+
+1) Incremental manual preprocess overwrite (skip unchanged cases):
+
+```bash
+python scripts/run_manual_preprocess_resume.py \
+  --manual-root /root/手工标注1 \
+  --toothfairy-root /root/ToothFairy3 \
+  --run-root /root/cej_runs/run_unsup_001 \
+  --base-config configs/server_preprocess.yaml \
+  --repo-dir /root/workspace/CEJ_ABC \
+  --rerun-on-source-update
+```
+
+2) Force rerun specific failed/mismatched cases (example: 021/023):
+
+```bash
+python scripts/run_manual_preprocess_resume.py \
+  --manual-root /root/手工标注1 \
+  --toothfairy-root /root/ToothFairy3 \
+  --run-root /root/cej_runs/run_unsup_001 \
+  --base-config configs/server_preprocess.yaml \
+  --repo-dir /root/workspace/CEJ_ABC \
+  --force-cases ToothFairy3F_021,ToothFairy3F_023
+```
+
+3) Verify all manual points are used (Excel rows vs processed points):
+
+```bash
+python scripts/check_manual_points_usage.py \
+  --manual-root /root/手工标注1 \
+  --toothfairy-root /root/ToothFairy3 \
+  --processed-root /root/cej_runs/run_unsup_001/processed \
+  --output-csv /root/cej_runs/run_unsup_001/manual_points_usage_report.csv \
+  --output-json /root/cej_runs/run_unsup_001/manual_points_usage_report.json \
+  --fail-on-mismatch
+```
+
+4) One-shot end-to-end automation (overwrite preprocess -> usage check -> supervised train/infer/viz/eval):
+
+```bash
+python scripts/run_manual_supervised_pipeline.py \
+  --repo-dir /root/workspace/CEJ_ABC \
+  --manual-root /root/手工标注1 \
+  --toothfairy-root /root/ToothFairy3 \
+  --run-root /root/cej_runs/run_unsup_001 \
+  --sup-run-root /root/cej_runs/run_sup_manual6_002 \
+  --pretrained-ckpt /root/cej_runs/run_sup_manual6_001/outputs/train/checkpoints/last.pt
+```
+
 ## Data Layout
 
 ### Raw (Case-Directory Layout)
@@ -172,6 +224,10 @@ outputs/
       export_meta.json
 ```
 
+For cloud/manual-upload workflows (`run_root=/root/cej_runs/run_unsup_001`), point-usage reports are written as:
+- `/root/cej_runs/run_unsup_001/manual_points_usage_report.csv`
+- `/root/cej_runs/run_unsup_001/manual_points_usage_report.json`
+
 ## Key Assumptions
 
 - Array axis order is (X, Y, Z) with voxel indices [x, y, z].
@@ -179,6 +235,10 @@ outputs/
 
 ## Updates
 
+- 2026-03-03: Added resumable manual preprocess overwrite (`scripts/run_manual_preprocess_resume.py` with `--force-cases`) and manual point usage checker (`scripts/check_manual_points_usage.py`).
+- 2026-03-03: Added one-shot automation `scripts/run_manual_supervised_pipeline.py` for upload->overwrite preprocess->usage gate->supervised train/infer/viz/eval.
+- 2026-03-03: Cloud run `run_sup_manual6_002` completed with all manual points consumed (`all_used=true`, 6/6 cases), new 3D viewers under `/root/cej_runs/run_sup_manual6_002/outputs/viz/3d`.
+- 2026-03-03: Added training log doc `doc/training_records/2026-03-03_run_sup_manual6_002.md`.
 - 2026-03-01: Full-mouth Slicer export contract now keeps only `CEJ_medical_compare_full.nii.gz` / `CEJ_qc_compare_full.nii.gz` / `CEJ_model_compare_full.nii.gz` + `export_meta.json`.
 - 2026-03-01: Export defaults switched to thin-curve mode (`*_tube_radius_mm=0.0`) with consistency gate (`IoU>=0.95`, `Dice>=0.97`, fail-fast).
 - 2026-03-01: 3D viewer now shows a fixed process legend and uses red predicted-curve color for stronger visibility.

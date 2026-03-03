@@ -1,48 +1,68 @@
 # Progress
 
-## Current Snapshot (2026-03-01)
+## Current Snapshot (2026-03-03)
 
-- Branch: `codex/cej-thin-slicer-consistency`
-- Latest status: default smoke pipeline passes (`run_all.sh`) and unit tests pass (`pytest -q`).
-- Export contract is now minimal and stable:
-  - `CEJ_medical_compare_full.nii.gz`
-  - `CEJ_qc_compare_full.nii.gz`
-  - `CEJ_model_compare_full.nii.gz`
-  - `export_meta.json`
-- Per-case export folders are auto-cleaned; only the four files above are kept.
+- Branch: `codex/manual-points-group-col`
+- Latest commit (before this doc sync): `8e1667c`
+- Runtime context: cloud server + ToothFairy3 full dataset + incremental manual CEJ uploads.
 
 ## Completed Milestones
 
-- Completed: Unified raw case discovery for both layouts (`case_dirs` and `toothfairy3`) with `raw_layout: auto`.
-- Completed: macOS Bash 3.2 compatibility for `scripts/run_all.sh` (no `readarray` dependency).
-- Completed: 3D viewer default path and workflow finalized (`outputs/viz/3d/index.html`).
-- Completed: 3D viewer fixed process legend and stronger predicted-curve color (`#FF1744`) for visibility.
-- Completed: Pseudo-GT processing chain locked as non-overwrite consistency flow:
-  - manual points -> interpolated curve -> heatmap -> pseudo-GT skeleton
-- Completed: Export consistency gate enabled by default:
-  - IoU >= 0.95
-  - Dice >= 0.97
-  - fail-fast on violation (`SystemExit(2)`).
-- Completed: Slicer default switched to thin-curve mode (tube radii all `0.0`, no thick shell by default).
-- Completed: Compare file segment semantics aligned for medical review, QC, and model evaluation:
-  - medical: `1=tooth`, `2=manual points`, `3=interpolated curve`
-  - qc: `1=tooth`, `2=interpolated curve`, `3=pseudo-GT skeleton`
-  - model: `1=tooth`, `2=interpolated curve`, `3=predicted curve`
+- Completed: ToothFairy3 batch preprocess resume (`scripts/run_preprocess_resume.py`), with case-level skip for already processed outputs.
+- Completed: Manual annotation preprocess resume (`scripts/run_manual_preprocess_resume.py`) with:
+  - source-change rerun (`--rerun-on-source-update`)
+  - forced overwrite for selected cases (`--force-cases`)
+- Completed: Manual Excel `group` column compatibility in CEJ mark conversion (`src/datasets/mark_points.py`).
+- Completed: Unsupervised pretrain resume support (`src/pretrain_mae.py`):
+  - auto-resume from `checkpoints/last.pt`
+  - optimizer state restore
+  - metrics append mode
+- Completed: Unsupervised run reached epoch 120:
+  - metrics: `/root/cej_runs/run_unsup_001/unsup/pretrain/metrics.csv`
+  - checkpoint: `/root/cej_runs/run_unsup_001/unsup/pretrain/checkpoints/last.pt`
+- Completed: Manual-point usage gate script:
+  - `scripts/check_manual_points_usage.py`
+  - verifies Excel valid rows vs processed kept points (+ per-tooth mismatch diagnostics)
+- Completed: One-shot automation pipeline for continuous manual uploads:
+  - `scripts/run_manual_supervised_pipeline.py`
+  - flow: preprocess overwrite -> usage gate -> supervised train -> infer -> viz -> eval
+
+## Latest Training Status
+
+### Manual Data Coverage
+
+- Manual source root: `/root/手工标注1`
+- Cases discovered: `008, 009, 010, 018, 021, 023`
+- Latest coverage check: all pass (`all_used=true`, 6/6)
+- Report:
+  - `/root/cej_runs/run_unsup_001/manual_points_usage_report.csv`
+  - `/root/cej_runs/run_unsup_001/manual_points_usage_report.json`
+
+### Supervised Fine-tune (Latest)
+
+- Run root: `/root/cej_runs/run_sup_manual6_002`
+- Init checkpoint: `/root/cej_runs/run_sup_manual6_001/outputs/train/checkpoints/last.pt`
+- Config: `/root/workspace/CEJ_ABC/configs/server_sup_manual_auto.yaml`
+- Train result:
+  - epochs: 20
+  - loss: `0.4984 -> 0.4520`
+  - checkpoint: `/root/cej_runs/run_sup_manual6_002/outputs/train/checkpoints/last.pt`
+- Eval summary:
+  - mean: `4.0264 mm`
+  - p95: `8.3479 mm`
+  - sr@1.0: `0.1112`
+  - sr@1.5: `0.1811`
+- 3D viz:
+  - `/root/cej_runs/run_sup_manual6_002/outputs/viz/3d/index.html`
 
 ## Validation Record
 
-- Passed: `pytest -q` (includes thin-curve export, consistency, and viz legend checks).
-- Passed: `bash scripts/run_all.sh` with `configs/default.yaml`.
-- Passed: `python -m src.export_pseudo_gt_full --config configs/default.yaml`.
-- Output verified under `outputs/pseudo_gt_review_nifti/<case_id>/` with the 3 compare NIfTI files + `export_meta.json`.
-
-## Known Notes
-
-- In `CEJ_qc_compare_full.nii.gz`, when interpolated curve and skeleton fully overlap, label `3` can visually hide label `2` at those voxels (single-label voxel format); this is expected.
-- `CEJ_model_compare_full.nii.gz` segment `3` quality depends on training maturity; smoke-level training is not clinically meaningful yet.
+- Passed: manual point usage gate for all 6 manual cases (`PASS_FULLY_USED`).
+- Passed: supervised retrain on updated labels (`run_sup_manual6_002`).
+- Passed: infer/viz/eval generation for all six cases with updated labels included (including TF21 tooth_37 and tooth_46).
 
 ## Next Actions
 
-- Next: Run non-smoke training schedule and regenerate model compare volumes for meaningful CEJ prediction quality.
-- Next: Prepare Colab-oriented ToothFairy3 batch preprocess/train/infer execution note (if batch run is prioritized).
-- Optional: If clinicians need simultaneously visible overlapping segments, add `.seg.nrrd` export alongside current NIfTI labelmaps.
+1. Add explicit train/val/test split config for manual-labeled small sets (currently train/eval are same processed set).
+2. Add checkpoint retention policy for unsupervised pretrain (e.g., keep every 20 epochs in addition to `last.pt`).
+3. Continue incremental manual-upload cycles using `scripts/run_manual_supervised_pipeline.py` as default entrypoint.

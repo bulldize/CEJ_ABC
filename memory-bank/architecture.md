@@ -1,16 +1,30 @@
 # Architecture
 
-## Core Modules
+## Core Python Modules
 
 - `src/datasets/*`: raw IO, ROI crop/stitch, CEJ points conversion, heatmap generation, MONAI dataset/transforms.
 - `src/datasets/raw_cases.py`: unified raw case discovery for `raw_layout: auto|case_dirs|toothfairy3`.
+- `src/datasets/mark_points.py`: Excel/mark-space CEJ point conversion (supports `牙位` / `tooth` / `group` columns).
 - `src/models/unet3d.py`: MONAI-based 3D UNet wrapper.
-- `src/train.py`: supervised training loop, checkpointing, metrics logging.
+- `src/preprocess.py`: supervised preprocess for tooth ROIs + pseudo-GT heatmap generation.
+- `src/pretrain_mae.py`: unsupervised masked-reconstruction pretrain with auto-resume.
+- `src/train.py`: supervised training loop, pretrained loading, checkpoint/metrics logging.
 - `src/infer.py`: per-tooth inference, postprocess, full-volume stitch-back.
 - `src/eval.py`: CEJ point-to-curve distance metrics (Mean/P95/SR@tau).
 - `src/viz.py`: interactive 3D viewer generation (MPR + surface + heatmaps + curves + process legend).
-- `src/export_pseudo_gt_full.py`: full-mouth compare export for medical/QC/model review and consistency gating.
-- `src/postprocess/skeleton.py`: heatmap-to-curve extraction and overlap consistency metrics (IoU/Dice).
+
+## Workflow Scripts (Operational Layer)
+
+- `scripts/run_preprocess_resume.py`: ToothFairy3 batch preprocess resume with case-level skip.
+- `scripts/run_manual_preprocess_resume.py`: manual annotation incremental overwrite:
+  - skip completed cases
+  - rerun on source update
+  - force rerun selected cases (`--force-cases`)
+- `scripts/check_manual_points_usage.py`: quality gate between manual Excel rows and processed points.
+- `scripts/run_manual_supervised_pipeline.py`: one-shot cloud workflow:
+  - manual preprocess overwrite
+  - usage quality gate
+  - supervised train/infer/viz/eval
 
 ## Data and Coordinate Contracts
 
@@ -28,6 +42,14 @@
   - thresholds: IoU >= 0.95, Dice >= 0.97
   - behavior: fail-fast when any tooth violates thresholds.
 
+## Manual Upload Runtime Contract
+
+1. New manual uploads are placed under `/root/手工标注1`.
+2. Preprocess overwrite uses source metadata (`size`, `mtime_ns`) to detect changed files.
+3. Usage gate must pass (`all_used=true`) before launching supervised fine-tune.
+4. Supervised run consumes only validated `PASS` cases via symlinked subset directory.
+5. Infer/viz/eval are generated under the supervised run root for traceability.
+
 ## Compare Export Contract (Per Case)
 
 - `CEJ_medical_compare_full.nii.gz`
@@ -38,15 +60,3 @@
   - `1=tooth_body`, `2=pseudo_gt_interpolated_curve`, `3=predicted_curve`
 - `export_meta.json`
   - includes compare definitions, voxel stats, and per-tooth consistency metrics.
-
-## Visualization Contract
-
-- Main entry: `outputs/viz/3d/index.html`.
-- Each viewer includes fixed process legend rows:
-  - `1 标注点`
-  - `2 插值曲线`
-  - `3 伪GT热图`
-  - `4 伪GT骨架`
-  - `5 推理热图` (if available)
-  - `6 推理曲线` (if available)
-- Predicted curve default color is red (`#FF1744`) for clearer contrast.

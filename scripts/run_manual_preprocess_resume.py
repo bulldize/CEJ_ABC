@@ -77,6 +77,17 @@ def parse_max_cases(raw: Optional[str]) -> Optional[int]:
     return v if v > 0 else None
 
 
+def parse_force_cases(raw: Optional[str]) -> set:
+    if raw in (None, "", "null", "None"):
+        return set()
+    items = []
+    for x in str(raw).replace(";", ",").split(","):
+        s = x.strip()
+        if s:
+            items.append(s)
+    return set(items)
+
+
 def choose_existing_path(candidates: List[Path]) -> Optional[Path]:
     for p in candidates:
         if p.exists():
@@ -306,6 +317,11 @@ def main() -> int:
         action="store_true",
         help="If source xlsx changed since last successful run, rerun even when processed outputs already exist.",
     )
+    parser.add_argument(
+        "--force-cases",
+        default="",
+        help="Comma-separated case_ids to rerun regardless of existing processed outputs.",
+    )
     args = parser.parse_args()
 
     repo_dir = Path(args.repo_dir).resolve()
@@ -337,8 +353,11 @@ def main() -> int:
     max_cases = parse_max_cases(args.max_cases)
     if max_cases is not None:
         cases = cases[:max_cases]
+    force_cases = parse_force_cases(args.force_cases)
 
     print(f"[INFO] discovered_manual_dirs={len(cases)}")
+    if force_cases:
+        print(f"[INFO] force_cases={sorted(force_cases)}")
 
     for rec in cases:
         case_id = rec.get("case_id")
@@ -357,9 +376,12 @@ def main() -> int:
         case_processed_dir = processed_dir / case_id
         current_source_meta = rec.get("source_meta", {})
         prev_source_meta = source_meta_map.get(case_id)
+        force_rerun = case_id in force_cases
 
         if has_tooth_outputs(case_processed_dir):
-            if args.rerun_on_source_update and prev_source_meta is not None and prev_source_meta != current_source_meta:
+            if force_rerun:
+                print(f"[RERUN] case={case_id} forced by --force-cases")
+            elif args.rerun_on_source_update and prev_source_meta is not None and prev_source_meta != current_source_meta:
                 print(f"[RERUN] case={case_id} source changed")
             else:
                 print(f"[SKIP] case={case_id} already processed")

@@ -4,17 +4,23 @@
 
 1. Completed: End-to-end supervised CEJ pipeline (preprocess/train/infer/eval/viz) with MONAI runtime package.
 2. Completed: Raw data auto-discovery for `case_dirs` and ToothFairy3 `imagesTr/labelsTr`.
-3. Completed: Interactive 3D visualization workflow with fixed process legend and configurable colors.
-4. Completed: Full-mouth pseudo-GT compare export pipeline for medical/QC/model review.
-5. Completed: Thin-curve default export + consistency gate (IoU/Dice) with fail-fast behavior.
-6. Completed: Minimal export retention policy (only 3 compare NIfTI files + `export_meta.json` per case).
+3. Completed: Interactive 3D visualization workflow with fixed process legend and per-case tooth viewers.
+4. Completed: Unsupervised pretrain MVP with resume support (`src.pretrain_mae`).
+5. Completed: Manual annotation incremental preprocess pipeline:
+   - resume + skip completed
+   - rerun on source update
+   - force rerun selected cases
+6. Completed: Manual point usage gate (`check_manual_points_usage.py`) to ensure Excel points are truly consumed by processed samples.
+7. Completed: One-shot automation pipeline for continuous upload scenarios (`run_manual_supervised_pipeline.py`).
 
 ## Current Focus
 
-1. In progress: Keep docs synchronized with current runtime/export contract (`README`, `memory-bank`, `doc/specs`).
+1. In progress: Keep docs/specs/memory synchronized with the cloud execution workflow and latest supervised baseline.
+2. In progress: Use updated manual labels as default supervised fine-tune source and regenerate infer/viz/eval artifacts per upload cycle.
 
 ## Next Milestones
 
-1. Pending: Non-smoke training and evaluation baseline on real ToothFairy3 batch to improve `CEJ_model_compare_full.nii.gz` quality.
-2. Pending: Publish Colab-ready batch preprocess/infer instructions for ToothFairy3 structure.
-3. Optional: Add overlapping-segment export format (e.g., `.seg.nrrd`) if medical reviewers require independent visibility of fully overlapping curves.
+1. Pending: Add explicit `train/val/test` split support for manual-labeled datasets (current flow evaluates on the same processed pool).
+2. Pending: Add epoch-interval checkpoint retention for unsupervised pretrain (e.g., keep `epoch_020.pt`, `epoch_040.pt`, ... + `last.pt`).
+3. Pending: Add lightweight experiment tracker summary (run ID, init ckpt, epochs, final loss, eval summary, artifact paths) to reduce manual bookkeeping.
+4. Optional: Add CI smoke for manual usage gate script and forced-rerun path.
