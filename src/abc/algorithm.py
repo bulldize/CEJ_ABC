@@ -29,11 +29,17 @@ DEFAULT_EXTRACT_CFG = {
     "flip_axis_selection_for_upper": False,
     "flip_axis_selection_for_lower": True,
     "use_spline_interp": False,
+    "spline_periodic": False,
     "spline_points": 240,
     "spline_smooth": 1.0,
     "spline_outlier_mad_k": 3.0,
     "spline_outlier_min_thr_mm": 0.4,
     "spline_outlier_max_iter": 2,
+    "ref_band_pre_mm": 1.5,
+    "ref_band_post_mm": 1.2,
+    "ref_band_min_keep_ratio": 0.35,
+    "main_segment_jump_ratio": 3.5,
+    "main_segment_min_step_mm": 1.0,
 }
 
 
@@ -280,7 +286,7 @@ def _replace_local_residual_outliers(points_mm, mad_k=3.0, min_thr_mm=0.4, max_i
     return pts
 
 
-def _fit_periodic_spline(points_mm, n_points=240, smooth=1.0):
+def _fit_spline(points_mm, n_points=240, smooth=1.0, periodic=False):
     pts = np.asarray(points_mm, dtype=np.float32)
     if pts.ndim != 2 or pts.shape[0] < 6 or pts.shape[1] != 3:
         return pts
@@ -298,14 +304,82 @@ def _fit_periodic_spline(points_mm, n_points=240, smooth=1.0):
         tck, _ = splprep(
             [pts[:, 0], pts[:, 1], pts[:, 2]],
             s=float(smooth),
-            per=True,
+            per=bool(periodic),
         )
-        u_new = np.linspace(0.0, 1.0, int(max(32, n_points)), endpoint=False)
+        endpoint = not bool(periodic)
+        u_new = np.linspace(0.0, 1.0, int(max(32, n_points)), endpoint=endpoint)
         x_new, y_new, z_new = splev(u_new, tck)
         out = np.stack([x_new, y_new, z_new], axis=1).astype(np.float32)
         return out
     except Exception:
         return pts
+
+
+def _largest_component_mask(mask):
+    lbl, n_comp = label(np.asarray(mask) > 0)
+    if n_comp <= 1:
+        return (lbl > 0).astype(np.uint8)
+    ids, counts = np.unique(lbl[lbl > 0], return_counts=True)
+    keep = int(ids[int(np.argmax(counts))])
+    return (lbl == keep).astype(np.uint8)
+
+
+def _mask_to_mm_points(mask, spacing_xyz):
+    vox = np.array(np.where(np.asarray(mask) > 0)).T.astype(np.float32)
+    if vox.shape[0] == 0:
+        return np.zeros((0, 3), dtype=np.float32)
+    spacing = np.asarray(spacing_xyz, dtype=np.float32)
+    return vox * spacing[None, :]
+
+
+def _filter_points_by_reference_band_mm(points_mm, ref_points_mm, max_dist_mm, min_keep_ratio=0.35):
+    pts = np.asarray(points_mm, dtype=np.float32)
+    ref = np.asarray(ref_points_mm, dtype=np.float32)
+    if pts.ndim != 2 or pts.shape[0] == 0 or pts.shape[1] != 3:
+        return pts
+    if ref.ndim != 2 or ref.shape[0] == 0 or ref.shape[1] != 3:
+        return pts
+    if float(max_dist_mm) <= 0:
+        return pts
+
+    tree = cKDTree(ref)
+    dist, _ = tree.query(pts, k=1)
+    keep = np.isfinite(dist) & (dist <= float(max_dist_mm))
+    kept = pts[keep]
+
+    min_keep = max(8, int(np.ceil(pts.shape[0] * float(min_keep_ratio))))
+    if kept.shape[0] < min_keep:
+        return pts
+    return kept
+
+
+def _keep_longest_contiguous_segment(points_mm, jump_ratio=3.5, min_step_mm=1.0):
+    pts = np.asarray(points_mm, dtype=np.float32)
+    if pts.ndim != 2 or pts.shape[0] < 4 or pts.shape[1] != 3:
+        return pts
+
+    seg = np.linalg.norm(pts[1:] - pts[:-1], axis=1)
+    nz = seg[np.isfinite(seg) & (seg > 1e-6)]
+    if nz.size == 0:
+        return pts
+    thr = max(float(min_step_mm), float(np.median(nz)) * float(jump_ratio))
+
+    best_s = 0
+    best_e = pts.shape[0] - 1
+    cur_s = 0
+    for i in range(seg.shape[0]):
+        if float(seg[i]) > thr:
+            cur_e = i
+            if (cur_e - cur_s) > (best_e - best_s):
+                best_s, best_e = cur_s, cur_e
+            cur_s = i + 1
+    if (pts.shape[0] - 1 - cur_s) > (best_e - best_s):
+        best_s, best_e = cur_s, pts.shape[0] - 1
+
+    out = pts[best_s : best_e + 1]
+    if out.shape[0] < 8:
+        return pts
+    return out
 
 
 def _is_upper_tooth(tooth_id):
@@ -460,6 +534,18 @@ def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None, tooth_id=None)
             max_iter=int(params.get("axis_outlier_max_iter", 2)),
         )
 
+    # Build a robust reference band from pre-spline main component.
+    sampled_vox_pre = sampled_mm / spacing[None, :]
+    pre_mask = rasterize_closed_curve(sampled_vox_pre, tooth.shape)
+    pre_main = _largest_component_mask(pre_mask)
+    ref_main_mm = _mask_to_mm_points(pre_main, spacing)
+    sampled_mm = _filter_points_by_reference_band_mm(
+        sampled_mm,
+        ref_main_mm,
+        max_dist_mm=float(params.get("ref_band_pre_mm", 1.5)),
+        min_keep_ratio=float(params.get("ref_band_min_keep_ratio", 0.35)),
+    )
+
     final_points_mm = sampled_mm
     if bool(params.get("use_spline_interp", False)):
         final_points_mm = _replace_local_residual_outliers(
@@ -468,10 +554,22 @@ def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None, tooth_id=None)
             min_thr_mm=float(params.get("spline_outlier_min_thr_mm", 0.4)),
             max_iter=int(params.get("spline_outlier_max_iter", 2)),
         )
-        final_points_mm = _fit_periodic_spline(
+        final_points_mm = _fit_spline(
             final_points_mm,
             n_points=int(params.get("spline_points", 240)),
             smooth=float(params.get("spline_smooth", 1.0)),
+            periodic=bool(params.get("spline_periodic", False)),
+        )
+        final_points_mm = _filter_points_by_reference_band_mm(
+            final_points_mm,
+            ref_main_mm,
+            max_dist_mm=float(params.get("ref_band_post_mm", 1.2)),
+            min_keep_ratio=float(params.get("ref_band_min_keep_ratio", 0.35)),
+        )
+        final_points_mm = _keep_longest_contiguous_segment(
+            final_points_mm,
+            jump_ratio=float(params.get("main_segment_jump_ratio", 3.5)),
+            min_step_mm=float(params.get("main_segment_min_step_mm", 1.0)),
         )
 
     points_vox = final_points_mm / spacing[None, :]
@@ -492,6 +590,7 @@ def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None, tooth_id=None)
         "n_curve_points": int(points_vox.shape[0]),
         "sample_points_before_spline": int(sampled_mm.shape[0]),
         "used_spline_interp": bool(params.get("use_spline_interp", False)),
+        "spline_periodic": bool(params.get("spline_periodic", False)),
         "axis_flip_applied": bool(not prefer_high_axis),
         "axis": axis.astype(np.float32).tolist(),
         "centroid_mm": centroid.astype(np.float32).tolist(),
