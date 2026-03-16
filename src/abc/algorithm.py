@@ -5,6 +5,7 @@ from scipy.ndimage import (
     gaussian_filter1d,
     label,
 )
+from scipy.interpolate import splprep, splev
 from scipy.spatial import cKDTree
 
 
@@ -25,6 +26,14 @@ DEFAULT_EXTRACT_CFG = {
     "axis_outlier_mad_k": 3.0,
     "axis_outlier_min_thr_mm": 0.6,
     "axis_outlier_max_iter": 2,
+    "flip_axis_selection_for_upper": False,
+    "flip_axis_selection_for_lower": True,
+    "use_spline_interp": False,
+    "spline_points": 240,
+    "spline_smooth": 1.0,
+    "spline_outlier_mad_k": 3.0,
+    "spline_outlier_min_thr_mm": 0.4,
+    "spline_outlier_max_iter": 2,
 }
 
 
@@ -77,7 +86,7 @@ def _compute_local_frame(tooth_mask, spacing_xyz):
     return centroid.astype(np.float32), axis.astype(np.float32), u.astype(np.float32), v.astype(np.float32)
 
 
-def _pick_points_by_angle(candidates_mm, centroid_mm, axis, u, v, bins):
+def _pick_points_by_angle(candidates_mm, centroid_mm, axis, u, v, bins, prefer_high_axis=True):
     rel = candidates_mm - centroid_mm[None, :]
     coord_u = rel @ u
     coord_v = rel @ v
@@ -93,7 +102,10 @@ def _pick_points_by_angle(candidates_mm, centroid_mm, axis, u, v, bins):
         idx = np.where(theta_bin == b)[0]
         if idx.size == 0:
             continue
-        best = idx[int(np.argmax(coord_axis[idx]))]
+        if prefer_high_axis:
+            best = idx[int(np.argmax(coord_axis[idx]))]
+        else:
+            best = idx[int(np.argmin(coord_axis[idx]))]
         sampled[b] = candidates_mm[best]
 
     missing = np.where(np.isnan(sampled[:, 0]))[0]
@@ -104,7 +116,10 @@ def _pick_points_by_angle(candidates_mm, centroid_mm, axis, u, v, bins):
             if d_theta.size == 0:
                 continue
             near = np.argsort(d_theta)[: min(24, d_theta.size)]
-            best = near[int(np.argmax(coord_axis[near]))]
+            if prefer_high_axis:
+                best = near[int(np.argmax(coord_axis[near]))]
+            else:
+                best = near[int(np.argmin(coord_axis[near]))]
             sampled[b] = candidates_mm[best]
 
     return sampled
@@ -234,6 +249,81 @@ def _suppress_axis_projection_outliers(
     return pts
 
 
+def _replace_local_residual_outliers(points_mm, mad_k=3.0, min_thr_mm=0.4, max_iter=2):
+    pts = np.asarray(points_mm, dtype=np.float32).copy()
+    if pts.ndim != 2 or pts.shape[0] < 6 or pts.shape[1] != 3:
+        return pts
+
+    n = int(pts.shape[0])
+    mad_k = max(1.0, float(mad_k))
+    min_thr = max(0.0, float(min_thr_mm))
+    max_iter = max(0, int(max_iter))
+
+    for _ in range(max_iter):
+        prev = np.roll(pts, 1, axis=0)
+        nxt = np.roll(pts, -1, axis=0)
+        mid = 0.5 * (prev + nxt)
+        residual = np.linalg.norm(pts - mid, axis=1)
+        med = float(np.median(residual))
+        mad = float(np.median(np.abs(residual - med)))
+        thr = max(min_thr, med + mad_k * 1.4826 * mad)
+
+        bad = np.where(residual > thr)[0]
+        if bad.size == 0:
+            break
+
+        updated = pts.copy()
+        for i in bad:
+            updated[i] = mid[i]
+        pts = updated
+
+    return pts
+
+
+def _fit_periodic_spline(points_mm, n_points=240, smooth=1.0):
+    pts = np.asarray(points_mm, dtype=np.float32)
+    if pts.ndim != 2 or pts.shape[0] < 6 or pts.shape[1] != 3:
+        return pts
+
+    # Remove duplicated consecutive points to reduce spline fitting failure.
+    keep = [0]
+    for i in range(1, pts.shape[0]):
+        if float(np.linalg.norm(pts[i] - pts[keep[-1]])) > 1e-4:
+            keep.append(i)
+    pts = pts[np.asarray(keep, dtype=np.int32)]
+    if pts.shape[0] < 6:
+        return pts
+
+    try:
+        tck, _ = splprep(
+            [pts[:, 0], pts[:, 1], pts[:, 2]],
+            s=float(smooth),
+            per=True,
+        )
+        u_new = np.linspace(0.0, 1.0, int(max(32, n_points)), endpoint=False)
+        x_new, y_new, z_new = splev(u_new, tck)
+        out = np.stack([x_new, y_new, z_new], axis=1).astype(np.float32)
+        return out
+    except Exception:
+        return pts
+
+
+def _is_upper_tooth(tooth_id):
+    try:
+        tid = int(tooth_id)
+    except Exception:
+        return False
+    return 11 <= tid <= 28
+
+
+def _is_lower_tooth(tooth_id):
+    try:
+        tid = int(tooth_id)
+    except Exception:
+        return False
+    return 31 <= tid <= 48
+
+
 def rasterize_closed_curve(points_vox, shape):
     mask = np.zeros(shape, dtype=np.uint8)
     if points_vox is None:
@@ -276,7 +366,7 @@ def count_components(mask):
     return int(n_comp)
 
 
-def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None):
+def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None, tooth_id=None):
     params = dict(DEFAULT_EXTRACT_CFG)
     if cfg:
         params.update(cfg)
@@ -324,6 +414,15 @@ def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None):
         }
     cand_mm = cand_vox.astype(np.float32) * spacing[None, :]
 
+    prefer_high_axis = True
+    # Keep backward compatibility for older key while supporting corrected lower-jaw default.
+    flip_upper = bool(params.get("flip_axis_selection_for_upper", False))
+    flip_lower = bool(params.get("flip_axis_selection_for_lower", False))
+    if flip_upper and _is_upper_tooth(tooth_id):
+        prefer_high_axis = False
+    if flip_lower and _is_lower_tooth(tooth_id):
+        prefer_high_axis = False
+
     sampled_mm = _pick_points_by_angle(
         cand_mm,
         centroid,
@@ -331,6 +430,7 @@ def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None):
         u,
         v,
         bins=int(params["angular_bins"]),
+        prefer_high_axis=prefer_high_axis,
     )
     sampled_mm = _smooth_points_ring(sampled_mm, sigma_bins=float(params["smooth_sigma_bins"]))
 
@@ -360,7 +460,21 @@ def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None):
             max_iter=int(params.get("axis_outlier_max_iter", 2)),
         )
 
-    points_vox = sampled_mm / spacing[None, :]
+    final_points_mm = sampled_mm
+    if bool(params.get("use_spline_interp", False)):
+        final_points_mm = _replace_local_residual_outliers(
+            final_points_mm,
+            mad_k=float(params.get("spline_outlier_mad_k", 3.0)),
+            min_thr_mm=float(params.get("spline_outlier_min_thr_mm", 0.4)),
+            max_iter=int(params.get("spline_outlier_max_iter", 2)),
+        )
+        final_points_mm = _fit_periodic_spline(
+            final_points_mm,
+            n_points=int(params.get("spline_points", 240)),
+            smooth=float(params.get("spline_smooth", 1.0)),
+        )
+
+    points_vox = final_points_mm / spacing[None, :]
     curve_mask = rasterize_closed_curve(points_vox, tooth.shape)
 
     if bool(params["keep_lcc"]):
@@ -372,10 +486,13 @@ def extract_abc_curve(A_roi, T_roi, B_roi, spacing_xyz, cfg=None):
 
     meta = {
         "status": "ok",
-        "curve_length_mm": curve_length_mm(sampled_mm),
+        "curve_length_mm": curve_length_mm(final_points_mm),
         "n_components": count_components(curve_mask),
         "n_inner_wall_candidates": int(cand_vox.shape[0]),
         "n_curve_points": int(points_vox.shape[0]),
+        "sample_points_before_spline": int(sampled_mm.shape[0]),
+        "used_spline_interp": bool(params.get("use_spline_interp", False)),
+        "axis_flip_applied": bool(not prefer_high_axis),
         "axis": axis.astype(np.float32).tolist(),
         "centroid_mm": centroid.astype(np.float32).tolist(),
     }

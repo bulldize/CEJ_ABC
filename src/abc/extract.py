@@ -89,6 +89,7 @@ def main():
             B_roi,
             spacing_xyz=spacing,
             cfg=cfg.get("abc_extract", {}),
+            tooth_id=tooth_id,
         )
 
         out_tooth_dir = ensure_dir(os.path.join(infer_root, case_id, f"tooth_{tooth_id}"))

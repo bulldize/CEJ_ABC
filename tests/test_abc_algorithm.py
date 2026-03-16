@@ -89,3 +89,38 @@ def test_suppress_axis_projection_outliers_removes_z_spikes():
     )
     assert float(abs(out[8, 2] - 12.0)) < float(abs(ring[8, 2] - 12.0))
     assert float(abs(out[21, 2] - 12.0)) < float(abs(ring[21, 2] - 12.0))
+
+
+def test_extract_abc_curve_with_spline_outputs_configured_points():
+    shape = (48, 48, 48)
+    xx, yy, zz = np.meshgrid(
+        np.arange(shape[0]),
+        np.arange(shape[1]),
+        np.arange(shape[2]),
+        indexing="ij",
+    )
+    cx, cy = 24, 24
+    tooth = ((xx - cx) ** 2 + (yy - cy) ** 2 <= 6 ** 2) & (zz >= 10) & (zz <= 38)
+    bone_outer = ((xx - cx) ** 2 + (yy - cy) ** 2 <= 8 ** 2) & (zz >= 14) & (zz <= 34)
+    bone_inner = ((xx - cx) ** 2 + (yy - cy) ** 2 <= 7 ** 2) & (zz >= 14) & (zz <= 34)
+    bone = np.logical_and(bone_outer, np.logical_not(bone_inner))
+    A = (zz.astype(np.float32) / float(shape[2])).astype(np.float32)
+
+    _, points, meta = extract_abc_curve(
+        A,
+        tooth.astype(np.uint8),
+        bone.astype(np.uint8),
+        spacing_xyz=(1.0, 1.0, 1.0),
+        tooth_id=34,
+        cfg={
+            "angular_bins": 72,
+            "use_spline_interp": True,
+            "spline_points": 200,
+            "spline_smooth": 1.0,
+            "flip_axis_selection_for_upper": False,
+            "flip_axis_selection_for_lower": True,
+        },
+    )
+    assert points.shape[0] == 200
+    assert bool(meta["used_spline_interp"]) is True
+    assert bool(meta["axis_flip_applied"]) is True

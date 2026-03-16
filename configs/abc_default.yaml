@@ -39,6 +39,14 @@ abc_extract:
   axis_outlier_mad_k: 3.0
   axis_outlier_min_thr_mm: 0.6
   axis_outlier_max_iter: 2
+  flip_axis_selection_for_upper: false
+  flip_axis_selection_for_lower: true
+  use_spline_interp: true
+  spline_points: 240
+  spline_smooth: 1.0
+  spline_outlier_mad_k: 3.0
+  spline_outlier_min_thr_mm: 0.4
+  spline_outlier_max_iter: 2
 
 abc_export:
   keep_minimal_files: true
