@@ -1,0 +1,54 @@
+project:
+  seed: 42
+  device: auto
+
+data:
+  raw_dir: data/raw_tf008
+  raw_layout: auto
+  images_tr_dir: null
+  labels_tr_dir: null
+  points_dir: null
+  meta_dir: null
+  max_cases: null
+  processed_dir: data/processed_abc
+  output_dir: outputs/abc
+  raw_a_name: A.nii.gz
+  raw_b_name: B.nii.gz
+  raw_meta_name: meta.json
+  processed_format: nii.gz
+
+abc_preprocess:
+  roi_padding_mm: 8.0
+  target_spacing_mm: [0.5, 0.5, 0.5]
+  resample_to_target: false
+
+abc_extract:
+  pdl_threshold_mm: 1.5
+  angular_bins: 180
+  smooth_sigma_bins: 2.0
+  gradient_snap: true
+  gradient_weight: 1.0
+  snap_radius_mm: 1.5
+  min_tooth_voxels: 64
+  keep_lcc: true
+  jump_outlier_suppression: true
+  jump_outlier_ratio: 3.5
+  jump_outlier_max_iter: 3
+  axis_outlier_suppression: true
+  axis_outlier_window: 5
+  axis_outlier_mad_k: 3.0
+  axis_outlier_min_thr_mm: 0.6
+  axis_outlier_max_iter: 2
+
+abc_export:
+  keep_minimal_files: true
+
+abc_viz:
+  max_cases: 5
+  max_teeth_per_case: 32
+  dense_curve_keep_dist_vox: 0.0
+  dense_curve_break_jump_ratio: 4.0
+  dense_curve_break_min_jump_vox: 4.0
+  dense_curve_axis_tail_mad_k: 3.0
+  dense_curve_axis_tail_min_outliers: 4
+  dense_curve_axis_tail_asymmetry_ratio: 1.5

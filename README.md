@@ -26,6 +26,27 @@ The script is compatible with macOS default Bash (3.2), no `readarray` dependenc
 Matplotlib cache is stored under `outputs/.mpl_cache` to avoid permission warnings.
 3D viewer index is written to `outputs/viz/3d/index.html` (Slicer-like MPR + surface overlays).
 
+## ABC Recognition MVP (Rule-Driven, ROI-Based)
+
+Parallel ABC pipeline (independent from CEJ training/inference) based on `doc/specs/ABC识别.md`.
+
+```bash
+# one-shot ABC pipeline
+bash scripts/run_all_abc.sh
+
+# or run step-by-step
+python -m src.abc_preprocess --config configs/abc_default.yaml
+python -m src.abc_extract --config configs/abc_default.yaml
+python -m src.abc_export --config configs/abc_default.yaml
+python -m src.abc_viz --config configs/abc_default.yaml
+python -m src.abc_eval --config configs/abc_default.yaml
+```
+
+ABC notes:
+- This MVP currently ignores CEJ channel in compare export (`segment_2` reserved/empty).
+- ABC outputs use independent paths and do not overwrite CEJ outputs.
+- ABC 3D viewer index is written to `outputs/abc/viz/3d/index.html`.
+
 ## Unsupervised Pretrain (Masked Reconstruction)
 
 MVP skeleton for MAE-style masked reconstruction pretrain on tooth ROIs.
@@ -170,6 +191,31 @@ outputs/
       CEJ_qc_compare_full.nii.gz
       CEJ_model_compare_full.nii.gz
       export_meta.json
+
+ABC outputs (separate root):
+
+```
+outputs/abc/
+  eval/
+    metrics_per_tooth.csv
+    metrics_summary.json
+  infer/
+    metrics_per_tooth.csv
+    {case_id}/
+      Y_ABC_pred.nii.gz
+      ABC_curve_full.nii.gz
+      tooth_{tooth_id}/
+        C_ABC.nii.gz
+        abc_curve_points_vox.npy
+        abc_meta.json
+  pseudo_gt_review_nifti/
+    {case_id}/
+      ABC_medical_compare_full.nii.gz
+      ABC_model_compare_full.nii.gz
+      export_meta.json
+  viz/
+    3d/index.html
+```
 ```
 
 ## Key Assumptions
