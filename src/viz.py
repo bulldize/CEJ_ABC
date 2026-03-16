@@ -720,13 +720,17 @@ def main():
 
         h_pred_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "H_pred.nii.gz")
         c_pred_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "C_pred.nii.gz")
+        c_pred_fit_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "C_pred_fit.nii.gz")
         H_pred = None
         C_pred = None
         C_gt = None
         d = None
-        if os.path.exists(h_pred_path) and os.path.exists(c_pred_path):
+        if os.path.exists(h_pred_path) and (os.path.exists(c_pred_fit_path) or os.path.exists(c_pred_path)):
             H_pred, _, _ = load_volume(h_pred_path, dtype=np.float32)
-            C_pred, _, _ = load_volume(c_pred_path, dtype=np.uint8)
+            if os.path.exists(c_pred_fit_path):
+                C_pred, _, _ = load_volume(c_pred_fit_path, dtype=np.uint8)
+            else:
+                C_pred, _, _ = load_volume(c_pred_path, dtype=np.uint8)
             d = compute_distances(pts, C_pred, spacing)
 
         if enable_3d and bool(viz_cfg.get("show_pseudo_gt_skeleton", True)):
