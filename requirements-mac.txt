@@ -1,0 +1,16 @@
+# macOS / Apple Silicon runtime dependencies.
+# Install PyTorch from the official macOS wheel index if needed:
+#   python -m pip install torch torchvision torchaudio
+numpy
+scipy
+scikit-image
+nibabel
+torch
+monai
+pandas
+openpyxl
+matplotlib
+plotly
+pyyaml
+tqdm
+pytest

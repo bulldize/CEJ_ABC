@@ -16,7 +16,12 @@ def get_device(cfg_device):
     if cfg_device == "auto":
         try:
             import torch
-            return "cuda" if torch.cuda.is_available() else "cpu"
+            if torch.cuda.is_available():
+                return "cuda"
+            mps_backend = getattr(torch.backends, "mps", None)
+            if mps_backend is not None and mps_backend.is_available():
+                return "mps"
+            return "cpu"
         except Exception:
             return "cpu"
     return cfg_device
