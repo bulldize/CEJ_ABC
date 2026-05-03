@@ -228,7 +228,7 @@ def main():
         # Keep all skeleton components by default for prediction. Keeping only the
         # largest connected component tends to collapse CEJ to a few points.
         # Optionally disable tooth-mask constraint for debugging/visual analysis.
-        constrain_to_tooth = bool(infer_cfg.get("constrain_curve_to_tooth_mask", True))
+        constrain_to_tooth = bool(infer_cfg.get("constrain_curve_to_tooth_mask", False))
         curve_tooth_mask = T if constrain_to_tooth else np.ones_like(T, dtype=np.uint8)
         C_pred_raw = extract_curve(
             H_pred,

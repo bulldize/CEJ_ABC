@@ -1,11 +1,13 @@
 import json
 import os
 import re
+from pathlib import Path
 from typing import Dict, Tuple
 
 import numpy as np
 import pandas as pd
 
+from src.datasets.manual_points_source import find_xyz_cols, find_tooth_col, load_manual_points_table
 from src.datasets.points import save_points
 from src.utils.log import get_logger
 from src.utils.geometry import world_to_vox
@@ -13,48 +15,9 @@ from src.utils.geometry import world_to_vox
 
 logger = get_logger("mark_points")
 
-
-def _find_xyz_cols(df: pd.DataFrame) -> Tuple[str, str, str]:
-    cols = list(df.columns)
-    lower = {c: str(c).lower() for c in cols}
-
-    def pick_by_patterns(patterns):
-        for p in patterns:
-            for c, lc in lower.items():
-                if re.search(p, lc):
-                    return c
-        return None
-
-    x_col = pick_by_patterns([r"position\s*\[0\]", r"\bx\b"])
-    y_col = pick_by_patterns([r"position\s*\[1\]", r"\by\b"])
-    z_col = pick_by_patterns([r"position\s*\[2\]", r"\bz\b"])
-    if x_col and y_col and z_col:
-        return x_col, y_col, z_col
-
-    num_cols = [c for c in cols if np.issubdtype(df[c].dtype, np.number)]
-    if len(num_cols) >= 3:
-        return num_cols[0], num_cols[1], num_cols[2]
-    raise ValueError("cannot find x/y/z columns in excel file")
-
-
-def _find_tooth_col(df: pd.DataFrame) -> str:
-    cols = list(df.columns)
-    for c in cols:
-        if "牙位" in str(c):
-            return c
-    for c in cols:
-        if "tooth" in str(c).lower():
-            return c
-    for c in cols:
-        lc = str(c).lower()
-        if lc in {"group", "grp"} or "group" in lc:
-            return c
-    raise ValueError("cannot find tooth id column (expected one of: 牙位/tooth/group)")
-
-
 def _read_scan_boundary(scan_path: str) -> np.ndarray:
     df = pd.read_excel(scan_path)
-    x_col, y_col, z_col = _find_xyz_cols(df)
+    x_col, y_col, z_col = find_xyz_cols(df)
     pts = df[[x_col, y_col, z_col]].to_numpy(dtype=np.float32)
     if pts.shape[0] < 8:
         logger.warning("scan boundary has %d points, expected 8", pts.shape[0])
@@ -115,15 +78,7 @@ def _count_in_bounds(points_by_tooth: Dict[str, np.ndarray], shape: Tuple[int, i
 
 
 def _read_cej_points(cej_path: str):
-    df = pd.read_excel(cej_path)
-    tooth_col = _find_tooth_col(df)
-    x_col, y_col, z_col = _find_xyz_cols(df)
-    order_col = None
-    for c in df.columns:
-        if "点位" in str(c):
-            order_col = c
-            break
-    return df, tooth_col, x_col, y_col, z_col, order_col
+    return load_manual_points_table(Path(cej_path))
 
 
 def _group_points_by_tooth(df: pd.DataFrame, tooth_col: str, x_col: str, y_col: str, z_col: str, order_col=None):
@@ -157,12 +112,20 @@ def ensure_mark_points(case_dir: str, case_id: str, shape, affine_world: np.ndar
             if os.path.exists(fallback):
                 cej_path = fallback
             else:
-                # no cej points available -> ensure empty points.json for unsupervised cases
-                raw_points_path = os.path.join(case_dir, raw_points_name)
-                if not os.path.exists(raw_points_path):
-                    save_points(raw_points_path, case_id, "voxel", "full", {})
-                return False
-    df, tooth_col, x_col, y_col, z_col, order_col = _read_cej_points(cej_path)
+                mrk_json_candidates = [
+                    os.path.join(case_dir, name)
+                    for name in os.listdir(case_dir)
+                    if name.endswith(".mrk.json")
+                ]
+                if mrk_json_candidates:
+                    cej_path = case_dir
+                else:
+                    # no cej points available -> ensure empty points.json for unsupervised cases
+                    raw_points_path = os.path.join(case_dir, raw_points_name)
+                    if not os.path.exists(raw_points_path):
+                        save_points(raw_points_path, case_id, "voxel", "full", {})
+                    return False
+    df, tooth_col, x_col, y_col, z_col, order_col, source_info = _read_cej_points(cej_path)
     points_by_tooth_mark = _group_points_by_tooth(df, tooth_col, x_col, y_col, z_col, order_col)
 
     scan_pts = _read_scan_boundary(scan_path) if os.path.exists(scan_path) else None
@@ -195,10 +158,33 @@ def ensure_mark_points(case_dir: str, case_id: str, shape, affine_world: np.ndar
     best_world = max(world_candidates, key=lambda x: (x[3] / max(x[2], 1), x[3]))
     best_world_ratio = best_world[3] / max(best_world[2], 1)
 
+    preferred_world_mode = None
+    if source_info.get("source_format") == "slicer_mrk_json":
+        coord_values = {
+            str(v).upper()
+            for v in df.get("coord_system", pd.Series(dtype=str)).dropna().astype(str).tolist()
+        }
+        if coord_values == {"LPS"}:
+            preferred_world_mode = "world_lps"
+        elif coord_values == {"RAS"}:
+            preferred_world_mode = "world_ras"
+
     conversion_mode = None
     points_by_tooth_vox: Dict[str, np.ndarray] = {}
     total = inb = 0
-    if best_world_ratio >= 0.5:
+    if preferred_world_mode in {"world_ras", "world_lps"}:
+        for mode_name, mode_points, mode_total, mode_inb in world_candidates:
+            if mode_name == preferred_world_mode:
+                conversion_mode = mode_name
+                points_by_tooth_vox = mode_points
+                total = mode_total
+                inb = mode_inb
+                logger.info(
+                    "case=%s using %s from manual source hint (in-bounds %d/%d)",
+                    case_id, conversion_mode, inb, total
+                )
+                break
+    elif best_world_ratio >= 0.5:
         conversion_mode, points_by_tooth_vox, total, inb = best_world
         logger.info(
             "case=%s using %s with A affine (in-bounds %d/%d)",
@@ -232,6 +218,7 @@ def ensure_mark_points(case_dir: str, case_id: str, shape, affine_world: np.ndar
 
     mark_meta = {
         "case_id": case_id,
+        "source_format": source_info.get("source_format"),
         "scan_boundary_path": scan_path if scan_pts is not None else None,
         "cej_points_path": cej_path,
         "shape": [int(v) for v in shape],

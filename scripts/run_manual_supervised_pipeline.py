@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import datetime as dt
 import json
 import os
 import shutil
@@ -9,6 +10,10 @@ from pathlib import Path
 from typing import Dict, List, Sequence
 
 import yaml
+
+
+def now_iso() -> str:
+    return dt.datetime.now(dt.timezone.utc).isoformat()
 
 
 def parse_max_cases(raw: str):
@@ -30,6 +35,11 @@ def run_cmd(cmd: Sequence[str], cwd: Path) -> None:
 
 def load_json(path: Path) -> Dict:
     return json.loads(path.read_text())
+
+
+def write_json(path: Path, payload: Dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=False))
 
 
 def run_usage_check(
@@ -70,6 +80,49 @@ def collect_failed_case_ids(report_payload: Dict) -> List[str]:
         if case_id and not status.startswith("PASS"):
             failed.append(case_id)
     return sorted(set(failed))
+
+
+def index_report_cases(report_payload: Dict) -> List[Dict]:
+    rows = []
+    for rec in report_payload.get("cases", []):
+        case_id = str(rec.get("case_id", "")).strip()
+        manual_dir = str(rec.get("manual_dir", "")).strip()
+        if case_id and manual_dir:
+            rows.append(rec)
+    return rows
+
+
+def write_usage_markers(
+    report_payload: Dict,
+    manual_root: Path,
+    processed_root: Path,
+    run_root: Path,
+    sup_run_root: Path,
+    trained: bool,
+    pretrained_ckpt: str,
+) -> None:
+    rows = index_report_cases(report_payload)
+    report_path = run_root / "manual_points_usage_report.json"
+    for rec in rows:
+        manual_dir = manual_root / str(rec["manual_dir"])
+        case_id = str(rec["case_id"])
+        processed_dir = processed_root / case_id
+        payload = {
+            "updated_at": now_iso(),
+            "manual_dir": str(manual_dir),
+            "case_id": case_id,
+            "status": str(rec.get("status", "")),
+            "usage_report": str(report_path),
+            "preprocess_run_root": str(run_root),
+            "supervised_run_root": str(sup_run_root),
+            "selected_for_training": str(rec.get("status", "")).startswith("PASS"),
+            "trained": bool(trained),
+            "pretrained_ckpt": pretrained_ckpt,
+        }
+        if manual_dir.is_dir():
+            write_json(manual_dir / "cej_usage_status.json", payload)
+        if processed_dir.is_dir():
+            write_json(processed_dir / "cej_usage_status.json", payload)
 
 
 def run_manual_resume(
@@ -186,6 +239,12 @@ def render_supervised_config(
     train["pretrained_ckpt"] = pretrained_ckpt
     train["pretrained_strict"] = False
 
+    infer = cfg.setdefault("infer", {})
+    infer["constrain_curve_to_tooth_mask"] = False
+    infer["constrain_curve_to_tooth_surface"] = False
+    infer["keep_lcc_for_curve"] = False
+    infer["fit_pred_curve"] = True
+
     out_cfg_path.parent.mkdir(parents=True, exist_ok=True)
     out_cfg_path.write_text(yaml.safe_dump(cfg, sort_keys=False, allow_unicode=False))
     return out_cfg_path
@@ -286,6 +345,15 @@ def main() -> int:
     if failed_ids:
         print(f"[ERROR] still failed cases after force-rerun: {failed_ids}")
         print(f"[ERROR] usage report: {report_json}")
+        write_usage_markers(
+            report_payload=report,
+            manual_root=manual_root,
+            processed_root=processed_root,
+            run_root=run_root,
+            sup_run_root=sup_run_root,
+            trained=False,
+            pretrained_ckpt=args.pretrained_ckpt,
+        )
         return 3
 
     selected_cases = sorted(
@@ -297,6 +365,15 @@ def main() -> int:
     )
     if not selected_cases:
         print("[ERROR] no PASS cases available for supervised training")
+        write_usage_markers(
+            report_payload=report,
+            manual_root=manual_root,
+            processed_root=processed_root,
+            run_root=run_root,
+            sup_run_root=sup_run_root,
+            trained=False,
+            pretrained_ckpt=args.pretrained_ckpt,
+        )
         return 4
 
     print(f"[INFO] usage check all_used={summary.get('all_used')} selected_cases={len(selected_cases)}")
@@ -331,6 +408,15 @@ def main() -> int:
     if not args.skip_eval:
         run_cmd([args.python_exe, "-m", "src.eval", "--config", str(sup_cfg)], cwd=repo_dir)
 
+    write_usage_markers(
+        report_payload=report,
+        manual_root=manual_root,
+        processed_root=processed_root,
+        run_root=run_root,
+        sup_run_root=sup_run_root,
+        trained=not args.skip_train,
+        pretrained_ckpt=args.pretrained_ckpt,
+    )
     print("[INFO] pipeline completed")
     return 0
 

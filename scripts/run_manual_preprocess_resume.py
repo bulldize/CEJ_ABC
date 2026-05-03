@@ -14,6 +14,12 @@ from typing import Any, Dict, List, Optional, Tuple
 import pandas as pd
 import yaml
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.datasets.manual_points_source import detect_points_source, infer_prefix_from_source, is_mrk_source, list_mrk_json_files, source_meta
+
 
 def now_iso() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat()
@@ -45,17 +51,6 @@ def save_state(path: Path, state: Dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     state["updated_at"] = now_iso()
     path.write_text(json.dumps(state, ensure_ascii=False, indent=2, sort_keys=True))
-
-
-def file_meta(path: Optional[Path]) -> Optional[Dict[str, Any]]:
-    if path is None or not path.exists():
-        return None
-    st = path.stat()
-    return {
-        "path": str(path),
-        "size": int(st.st_size),
-        "mtime_ns": int(st.st_mtime_ns),
-    }
 
 
 def has_tooth_outputs(case_processed_dir: Path) -> bool:
@@ -95,15 +90,6 @@ def choose_existing_path(candidates: List[Path]) -> Optional[Path]:
     return None
 
 
-def detect_points_file(manual_case_dir: Path) -> Optional[Path]:
-    return choose_existing_path(
-        [
-            manual_case_dir / "cej_points_ras.xlsx",
-            manual_case_dir / "points.xlsx",
-        ]
-    )
-
-
 def detect_boundary_file(manual_case_dir: Path) -> Optional[Path]:
     return choose_existing_path(
         [
@@ -132,40 +118,6 @@ def parse_dir_case_hint(dir_name: str) -> Tuple[Optional[str], Optional[str]]:
         return None, normalize_sid(m.group(1))
 
     return None, None
-
-
-def find_tooth_col(df: pd.DataFrame) -> Optional[str]:
-    for c in df.columns:
-        if "牙位" in str(c):
-            return c
-    for c in df.columns:
-        if "tooth" in str(c).lower():
-            return c
-    for c in df.columns:
-        lc = str(c).lower()
-        if lc in {"group", "grp"} or "group" in lc:
-            return c
-    return None
-
-
-def infer_prefix_from_points(points_xlsx: Path) -> Optional[str]:
-    try:
-        df = pd.read_excel(points_xlsx, nrows=128)
-    except Exception:
-        return None
-    tooth_col = find_tooth_col(df)
-    if tooth_col is None:
-        return None
-
-    cnt = {"F": 0, "P": 0}
-    values = df[tooth_col].dropna().astype(str).head(128)
-    for v in values:
-        m = re.match(r"\s*([FP])[_\-]", v, flags=re.IGNORECASE)
-        if m:
-            cnt[m.group(1).upper()] += 1
-    if cnt["F"] == 0 and cnt["P"] == 0:
-        return None
-    return "F" if cnt["F"] >= cnt["P"] else "P"
 
 
 def case_files(tf_root: Path, case_id: str) -> Tuple[Optional[Path], Optional[Path]]:
@@ -242,15 +194,15 @@ def build_single_case_cfg(
 def discover_manual_cases(manual_root: Path, tf_root: Path, case_prefix: str) -> List[Dict[str, Any]]:
     cases: List[Dict[str, Any]] = []
     for d in sorted([p for p in manual_root.glob("*") if p.is_dir()]):
-        points_file = detect_points_file(d)
-        if points_file is None:
+        points_source = detect_points_source(d)
+        if points_source is None:
             continue
 
         prefix_hint, sid = parse_dir_case_hint(d.name)
         if sid is None:
             continue
 
-        inferred = infer_prefix_from_points(points_file)
+        inferred = infer_prefix_from_source(points_source)
         candidates = build_case_ids(sid, prefix_hint, inferred, case_prefix)
 
         chosen_case_id = None
@@ -268,7 +220,7 @@ def discover_manual_cases(manual_root: Path, tf_root: Path, case_prefix: str) ->
             cases.append(
                 {
                     "manual_dir": d,
-                    "points_file": points_file,
+                    "points_file": points_source,
                     "boundary_file": detect_boundary_file(d),
                     "case_id": None,
                     "error": f"missing_image_or_label_for_candidates:{','.join(candidates)}",
@@ -280,15 +232,15 @@ def discover_manual_cases(manual_root: Path, tf_root: Path, case_prefix: str) ->
         cases.append(
             {
                 "manual_dir": d,
-                "points_file": points_file,
+                "points_file": points_source,
                 "boundary_file": boundary_file,
                 "case_id": chosen_case_id,
                 "image_path": chosen_image,
                 "label_path": chosen_label,
                 "source_meta": {
                     "manual_dir": str(d),
-                    "points_file": file_meta(points_file),
-                    "boundary_file": file_meta(boundary_file),
+                    "points_file": source_meta(points_source),
+                    "boundary_file": source_meta(boundary_file) if boundary_file is not None else None,
                     "sid": sid,
                 },
             }
@@ -403,7 +355,13 @@ def main() -> int:
 
             link_or_copy(rec["image_path"], one_case_dir / "A.nii.gz")
             link_or_copy(rec["label_path"], one_case_dir / "B.nii.gz")
-            link_or_copy(rec["points_file"], one_case_dir / "cej_points_ras.xlsx")
+
+            points_source = Path(rec["points_file"])
+            if is_mrk_source(points_source):
+                for mrk_path in list_mrk_json_files(points_source):
+                    link_or_copy(mrk_path, one_case_dir / mrk_path.name)
+            else:
+                link_or_copy(points_source, one_case_dir / "cej_points_ras.xlsx")
 
             boundary_for_cfg: Optional[Path] = None
             if rec.get("boundary_file") is not None:

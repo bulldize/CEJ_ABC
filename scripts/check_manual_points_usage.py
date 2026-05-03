@@ -3,10 +3,17 @@ import argparse
 import csv
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.datasets.manual_points_source import detect_points_source, find_tooth_col, find_xyz_cols, infer_prefix_from_source, load_manual_points_dataframe
 
 
 def choose_existing_path(candidates: List[Path]) -> Optional[Path]:
@@ -14,15 +21,6 @@ def choose_existing_path(candidates: List[Path]) -> Optional[Path]:
         if p.exists():
             return p
     return None
-
-
-def detect_points_file(manual_case_dir: Path) -> Optional[Path]:
-    return choose_existing_path(
-        [
-            manual_case_dir / "cej_points_ras.xlsx",
-            manual_case_dir / "points.xlsx",
-        ]
-    )
 
 
 def normalize_sid(raw: str) -> str:
@@ -42,63 +40,6 @@ def parse_dir_case_hint(dir_name: str) -> Tuple[Optional[str], Optional[str]]:
         return None, normalize_sid(m.group(1))
 
     return None, None
-
-
-def find_tooth_col(df: pd.DataFrame) -> Optional[str]:
-    for c in df.columns:
-        if "牙位" in str(c):
-            return c
-    for c in df.columns:
-        if "tooth" in str(c).lower():
-            return c
-    for c in df.columns:
-        lc = str(c).lower()
-        if lc in {"group", "grp"} or "group" in lc:
-            return c
-    return None
-
-
-def find_xyz_cols(df: pd.DataFrame) -> Tuple[str, str, str]:
-    cols = list(df.columns)
-    lower = {c: str(c).lower() for c in cols}
-
-    def pick_by_patterns(patterns: List[str]) -> Optional[str]:
-        for p in patterns:
-            for c, lc in lower.items():
-                if re.search(p, lc):
-                    return c
-        return None
-
-    x_col = pick_by_patterns([r"position\s*\[0\]", r"\bx\b"])
-    y_col = pick_by_patterns([r"position\s*\[1\]", r"\by\b"])
-    z_col = pick_by_patterns([r"position\s*\[2\]", r"\bz\b"])
-    if x_col and y_col and z_col:
-        return x_col, y_col, z_col
-
-    num_cols = [c for c in cols if pd.api.types.is_numeric_dtype(df[c])]
-    if len(num_cols) >= 3:
-        return num_cols[0], num_cols[1], num_cols[2]
-    raise ValueError("cannot find x/y/z columns in excel file")
-
-
-def infer_prefix_from_points(points_xlsx: Path) -> Optional[str]:
-    try:
-        df = pd.read_excel(points_xlsx, nrows=128)
-    except Exception:
-        return None
-    tooth_col = find_tooth_col(df)
-    if tooth_col is None:
-        return None
-
-    cnt = {"F": 0, "P": 0}
-    values = df[tooth_col].dropna().astype(str).head(128)
-    for v in values:
-        m = re.match(r"\s*([FP])[_\-]", v, flags=re.IGNORECASE)
-        if m:
-            cnt[m.group(1).upper()] += 1
-    if cnt["F"] == 0 and cnt["P"] == 0:
-        return None
-    return "F" if cnt["F"] >= cnt["P"] else "P"
 
 
 def build_case_ids(
@@ -194,8 +135,8 @@ def collect_filter_stats(case_processed_dir: Path) -> Dict[str, int]:
     return stats
 
 
-def read_excel_counts(points_file: Path) -> Tuple[int, int, int, Dict[str, int]]:
-    df = pd.read_excel(points_file)
+def read_manual_counts(points_file: Path) -> Tuple[int, int, int, Dict[str, int]]:
+    df = load_manual_points_dataframe(points_file)
     total_rows = int(len(df))
     tooth_col = find_tooth_col(df)
     x_col, y_col, z_col = find_xyz_cols(df)
@@ -228,12 +169,12 @@ def run_check(args: argparse.Namespace) -> Tuple[List[Dict[str, object]], Dict[s
         manual_dirs = manual_dirs[: int(args.max_cases)]
 
     for d in manual_dirs:
-        points_file = detect_points_file(d)
+        points_file = detect_points_source(d)
         if points_file is None:
             continue
 
         prefix_hint, sid = parse_dir_case_hint(d.name)
-        inferred_prefix = infer_prefix_from_points(points_file)
+        inferred_prefix = infer_prefix_from_source(points_file)
         if sid is None:
             results.append(
                 {
@@ -268,7 +209,7 @@ def run_check(args: argparse.Namespace) -> Tuple[List[Dict[str, object]], Dict[s
             )
             continue
 
-        excel_total, excel_valid, excel_invalid, excel_by_tooth = read_excel_counts(points_file)
+        excel_total, excel_valid, excel_invalid, excel_by_tooth = read_manual_counts(points_file)
         case_processed_dir = processed_root / chosen_case_id
         processed_kept, processed_by_tooth = count_processed_points(case_processed_dir)
         filter_stats = collect_filter_stats(case_processed_dir)
