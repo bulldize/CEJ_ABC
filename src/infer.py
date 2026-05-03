@@ -4,7 +4,7 @@ import json
 import os
 import numpy as np
 import torch
-from scipy.ndimage import zoom
+from scipy.ndimage import distance_transform_edt, zoom
 from monai.inferers import sliding_window_inference
 from monai.transforms import DivisiblePad
 
@@ -16,6 +16,7 @@ from src.models.unet3d import UNet3D
 from src.postprocess.skeleton import extract_curve
 from src.postprocess.priors import compute_geometric_prior
 from src.postprocess.stitch import stitch_curve_to_full, build_full_output
+from src.utils.geometry import tooth_surface
 from src.utils.config import load_config, ensure_dir, get_device
 from src.utils.log import get_logger
 
@@ -103,6 +104,26 @@ def _fit_pred_curve_mask(
     if int(fit_mask.sum()) == 0:
         return curve_mask.astype(np.uint8), dense_pts.astype(np.float32)
     return fit_mask.astype(np.uint8), dense_pts.astype(np.float32)
+
+
+def _project_curve_to_tooth_surface(curve_mask, tooth_mask):
+    curve = np.asarray(curve_mask) > 0
+    tooth = np.asarray(tooth_mask) > 0
+    if curve.sum() == 0 or tooth.sum() == 0:
+        return np.asarray(curve_mask, dtype=np.uint8)
+
+    surface = tooth_surface(tooth.astype(np.uint8))
+    if surface.sum() == 0:
+        return np.asarray(curve_mask, dtype=np.uint8)
+
+    # For each curve voxel, snap to the nearest tooth-surface voxel.
+    _, nearest = distance_transform_edt(~surface, return_indices=True)
+    out = np.zeros_like(curve_mask, dtype=np.uint8)
+    sx = nearest[0][curve]
+    sy = nearest[1][curve]
+    sz = nearest[2][curve]
+    out[sx, sy, sz] = 1
+    return out.astype(np.uint8)
 
 
 def main():
@@ -206,9 +227,12 @@ def main():
 
         # Keep all skeleton components by default for prediction. Keeping only the
         # largest connected component tends to collapse CEJ to a few points.
+        # Optionally disable tooth-mask constraint for debugging/visual analysis.
+        constrain_to_tooth = bool(infer_cfg.get("constrain_curve_to_tooth_mask", True))
+        curve_tooth_mask = T if constrain_to_tooth else np.ones_like(T, dtype=np.uint8)
         C_pred_raw = extract_curve(
             H_pred,
-            T,
+            curve_tooth_mask,
             threshold=float(infer_cfg.get("threshold_theta", 0.3)),
             keep_lcc=bool(infer_cfg.get("keep_lcc_for_curve", False)),
         )
@@ -238,11 +262,20 @@ def main():
                 ),
                 min_points=int(infer_cfg.get("fit_pred_curve_min_points", 8)),
             )
+        if bool(infer_cfg.get("constrain_curve_to_tooth_surface", False)):
+            C_pred_fit = _project_curve_to_tooth_surface(C_pred_fit, T)
 
         out_dir = ensure_dir(os.path.join(infer_root, case_id, f"tooth_{tooth_id}"))
         save_volume(os.path.join(out_dir, "H_pred.nii.gz"), H_pred.astype(np.float32), affine=affine, spacing=spacing)
         save_volume(os.path.join(out_dir, "C_pred.nii.gz"), C_pred_raw.astype(np.uint8), affine=affine, spacing=spacing)
         save_volume(os.path.join(out_dir, "C_pred_fit.nii.gz"), C_pred_fit.astype(np.uint8), affine=affine, spacing=spacing)
+        if bool(infer_cfg.get("constrain_curve_to_tooth_surface", False)):
+            save_volume(
+                os.path.join(out_dir, "C_pred_surface.nii.gz"),
+                C_pred_fit.astype(np.uint8),
+                affine=affine,
+                spacing=spacing,
+            )
         np.save(os.path.join(out_dir, "curve_pred_dense_points.npy"), pred_dense_pts.astype(np.float32))
 
         # handle resampled ROI for stitching
