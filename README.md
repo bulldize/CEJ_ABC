@@ -1,10 +1,13 @@
-# CEJ 本地推理 Runtime
+# CEJ / PDL 本地 Runtime
 
-本仓库已经瘦身为 CEJ 本地推理 runtime，只保留这条链路：
+本仓库已经瘦身为本地 runtime，当前保留两条链路：
 
 ```text
 原始 CBCT + 原始牙齿 segmentation + CEJ checkpoint -> CEJ 推理曲线 -> 3D 可视化
+原始 CBCT + 原始牙齿 segmentation -> PDL 曲线/边界 -> 3D 可视化
 ```
+
+## CEJ Runtime
 
 本地 runtime 根目录在 Git 仓库外、项目根目录内：
 
@@ -50,3 +53,52 @@ runtime/cej/raw/{case_id}/
 `A.nii.gz` 是 CBCT，`B.nii.gz` 是牙齿 segmentation。`B.nii.gz` 中 `>=100` 的牙髓标签会自动映射回牙位标签 `label % 100`。
 
 `src/datasets/raw_cases.py` 仍支持 ToothFairy3 的 `imagesTr/labelsTr` 格式，但新的本地 runtime 数据必须放在 `/Users/bulldize/Desktop/华西口腔_CEJ_ABC/runtime/cej` 下。
+
+## PDL Runtime
+
+PDL runtime 与 CEJ 并列，根目录为：
+
+```text
+/Users/bulldize/Desktop/华西口腔_CEJ_ABC/runtime/pdl/
+  raw/
+  processed/
+  outputs/
+  configs/
+```
+
+推荐 raw 病例格式同 CEJ：
+
+```text
+runtime/pdl/raw/{case_id}/
+  A.nii.gz
+  B.nii.gz
+```
+
+默认配置位于：
+
+```text
+/Users/bulldize/Desktop/华西口腔_CEJ_ABC/runtime/pdl/configs/pdl_runtime.yaml
+```
+
+运行：
+
+```bash
+cd /Users/bulldize/Desktop/华西口腔_CEJ_ABC/codes
+source .venv/bin/activate
+
+python -m src.pdl_preprocess --config /Users/bulldize/Desktop/华西口腔_CEJ_ABC/runtime/pdl/configs/pdl_runtime.yaml
+python -m src.pdl_extract --config /Users/bulldize/Desktop/华西口腔_CEJ_ABC/runtime/pdl/configs/pdl_runtime.yaml
+python -m src.pdl_viz --config /Users/bulldize/Desktop/华西口腔_CEJ_ABC/runtime/pdl/configs/pdl_runtime.yaml
+```
+
+也可以使用脚本：
+
+```bash
+scripts/run_all_pdl.sh
+```
+
+PDL preprocess 会从全口 segmentation 生成每牙 `A_t`、`T_t`、`B_t` 和 `roi_meta.json`。PDL extraction 输出每牙 `pdl_boundary_curve.npy/.ply`、`PDL_meta.json`、`anchorage_area.json`，3D 索引输出到：
+
+```text
+/Users/bulldize/Desktop/华西口腔_CEJ_ABC/runtime/pdl/outputs/pdl_boundary/viz/3d/index.html
+```

@@ -3,6 +3,7 @@
 #   python -m pip install torch torchvision torchaudio
 numpy
 scipy
+networkx
 scikit-image
 nibabel
 torch
@@ -14,3 +15,5 @@ plotly
 pyyaml
 tqdm
 pytest
+trimesh
+open3d
