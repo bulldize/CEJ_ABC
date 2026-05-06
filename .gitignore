@@ -4,6 +4,10 @@ doc/archive/*
 data/*
 !data/README.md
 outputs/
+../runtime/cej/models/*
+../runtime/cej/raw/*
+../runtime/cej/processed/*
+../runtime/cej/outputs/*
 __pycache__/
 .pytest_cache/
 .venv/

@@ -4,30 +4,22 @@ import json
 import os
 import numpy as np
 import torch
-from scipy.ndimage import distance_transform_edt, zoom
+from scipy.ndimage import zoom
 from monai.inferers import sliding_window_inference
 from monai.transforms import DivisiblePad
 
-from src.datasets.heatmap import fit_curve_and_sample
 from src.datasets.io import load_volume, save_volume
 from src.datasets.raw_cases import collect_raw_case_map
+from src.datasets.runtime_roi import map_pulp_to_tooth, preprocess_raw_cases_for_inference
 from src.datasets.transforms import normalize_intensity
 from src.models.unet3d import UNet3D
-from src.postprocess.skeleton import extract_curve
+from src.postprocess.skeleton import postprocess_prediction_curve
 from src.postprocess.priors import compute_geometric_prior
 from src.postprocess.stitch import stitch_curve_to_full, build_full_output
-from src.utils.geometry import tooth_surface
 from src.utils.config import load_config, ensure_dir, get_device
 from src.utils.log import get_logger
 
 logger = get_logger("infer")
-
-
-def map_pulp_to_tooth(B):
-    B = B.copy()
-    mask = B >= 100
-    B[mask] = B[mask] % 100
-    return B
 
 
 def resize_to_shape(vol, shape):
@@ -43,87 +35,43 @@ def resize_to_shape(vol, shape):
     return out
 
 
-def _rasterize_polyline_to_mask(mask, points_xyz, close_loop=False):
-    pts = np.asarray(points_xyz, dtype=np.float32)
-    if pts.ndim != 2 or pts.shape[0] == 0 or pts.shape[1] != 3:
-        return
-
-    shape = np.asarray(mask.shape, dtype=np.int32)
-
-    def _mark(p):
-        q = np.round(p).astype(np.int32)
-        if np.all(q >= 0) and np.all(q < shape):
-            mask[q[0], q[1], q[2]] = 1
-
-    _mark(pts[0])
-    for i in range(pts.shape[0] - 1):
-        p0 = pts[i]
-        p1 = pts[i + 1]
-        n = int(np.ceil(np.max(np.abs(p1 - p0)))) + 1
-        n = max(2, n)
-        for p in np.linspace(p0, p1, n):
-            _mark(p)
-
-    if close_loop and pts.shape[0] > 2:
-        p0 = pts[-1]
-        p1 = pts[0]
-        n = int(np.ceil(np.max(np.abs(p1 - p0)))) + 1
-        n = max(2, n)
-        for p in np.linspace(p0, p1, n):
-            _mark(p)
+def _resolve_checkpoint_path(cfg):
+    ckpt_path = cfg.get("model", {}).get("checkpoint_path")
+    if ckpt_path:
+        return ckpt_path
+    return os.path.join(cfg["data"]["output_dir"], "train", "checkpoints", "last.pt")
 
 
-def _fit_pred_curve_mask(
-    curve_mask,
-    spacing,
-    step_mm,
-    closed,
-    smooth,
-    min_points,
-):
-    pts = np.argwhere(curve_mask > 0).astype(np.float32)
-    if pts.shape[0] < max(2, int(min_points)):
-        return curve_mask.astype(np.uint8), np.zeros((0, 3), dtype=np.float32)
-
-    try:
-        dense_pts = fit_curve_and_sample(
-            pts,
-            spacing=np.asarray(spacing, dtype=np.float32),
-            step_mm=float(step_mm),
-            closed=bool(closed),
-            smooth=float(smooth),
-        )
-    except Exception:
-        return curve_mask.astype(np.uint8), np.zeros((0, 3), dtype=np.float32)
-
-    if dense_pts.ndim != 2 or dense_pts.shape[0] < 2:
-        return curve_mask.astype(np.uint8), np.zeros((0, 3), dtype=np.float32)
-
-    fit_mask = np.zeros_like(curve_mask, dtype=np.uint8)
-    _rasterize_polyline_to_mask(fit_mask, dense_pts, close_loop=bool(closed))
-    if int(fit_mask.sum()) == 0:
-        return curve_mask.astype(np.uint8), dense_pts.astype(np.float32)
-    return fit_mask.astype(np.uint8), dense_pts.astype(np.float32)
+def _collect_tooth_dirs(cfg):
+    processed_dir = cfg["data"]["processed_dir"]
+    fmt = cfg["data"].get("processed_format", "nii.gz")
+    tooth_dirs = []
+    for tdir in sorted(glob.glob(os.path.join(processed_dir, "*", "tooth_*"))):
+        if (
+            os.path.exists(os.path.join(tdir, "roi_meta.json"))
+            and os.path.exists(os.path.join(tdir, f"A_t.{fmt}"))
+            and os.path.exists(os.path.join(tdir, f"T_t.{fmt}"))
+        ):
+            tooth_dirs.append(tdir)
+    return tooth_dirs
 
 
-def _project_curve_to_tooth_surface(curve_mask, tooth_mask):
-    curve = np.asarray(curve_mask) > 0
-    tooth = np.asarray(tooth_mask) > 0
-    if curve.sum() == 0 or tooth.sum() == 0:
-        return np.asarray(curve_mask, dtype=np.uint8)
+def _ensure_runtime_rois(cfg):
+    infer_cfg = cfg.get("infer", {})
+    if bool(infer_cfg.get("force_runtime_preprocess", False)):
+        logger.info("force_runtime_preprocess=true; preparing inference-only ROIs from raw cases")
+        preprocess_raw_cases_for_inference(cfg)
 
-    surface = tooth_surface(tooth.astype(np.uint8))
-    if surface.sum() == 0:
-        return np.asarray(curve_mask, dtype=np.uint8)
+    tooth_dirs = _collect_tooth_dirs(cfg)
+    if tooth_dirs:
+        return tooth_dirs
 
-    # For each curve voxel, snap to the nearest tooth-surface voxel.
-    _, nearest = distance_transform_edt(~surface, return_indices=True)
-    out = np.zeros_like(curve_mask, dtype=np.uint8)
-    sx = nearest[0][curve]
-    sy = nearest[1][curve]
-    sz = nearest[2][curve]
-    out[sx, sy, sz] = 1
-    return out.astype(np.uint8)
+    if bool(infer_cfg.get("auto_runtime_preprocess", True)):
+        logger.info("no processed tooth ROIs found; preparing inference-only ROIs from raw cases")
+        preprocess_raw_cases_for_inference(cfg)
+        tooth_dirs = _collect_tooth_dirs(cfg)
+
+    return tooth_dirs
 
 
 def main():
@@ -144,7 +92,7 @@ def main():
         norm=cfg["model"].get("norm", "batch"),
     ).to(device)
 
-    ckpt_path = os.path.join(cfg["data"]["output_dir"], "train", "checkpoints", "last.pt")
+    ckpt_path = _resolve_checkpoint_path(cfg)
     if not os.path.exists(ckpt_path):
         logger.warning("checkpoint not found: %s", ckpt_path)
         return
@@ -152,8 +100,7 @@ def main():
     model.load_state_dict(ckpt["model"])
     model.eval()
 
-    processed_dir = cfg["data"]["processed_dir"]
-    tooth_dirs = sorted(glob.glob(os.path.join(processed_dir, "*", "tooth_*")))
+    tooth_dirs = _ensure_runtime_rois(cfg)
     if not tooth_dirs:
         logger.warning("no processed teeth found")
         return
@@ -225,45 +172,16 @@ def main():
             )
             H_pred = H_pred * R
 
-        # Keep all skeleton components by default for prediction. Keeping only the
-        # largest connected component tends to collapse CEJ to a few points.
-        # Optionally disable tooth-mask constraint for debugging/visual analysis.
-        constrain_to_tooth = bool(infer_cfg.get("constrain_curve_to_tooth_mask", False))
-        curve_tooth_mask = T if constrain_to_tooth else np.ones_like(T, dtype=np.uint8)
-        C_pred_raw = extract_curve(
+        curve_cfg = {
+            **cfg.get("preprocess", {}),
+            **infer_cfg,
+        }
+        C_pred_raw, C_pred_fit, pred_dense_pts = postprocess_prediction_curve(
             H_pred,
-            curve_tooth_mask,
-            threshold=float(infer_cfg.get("threshold_theta", 0.3)),
-            keep_lcc=bool(infer_cfg.get("keep_lcc_for_curve", False)),
+            T,
+            spacing,
+            curve_cfg,
         )
-        C_pred_fit = C_pred_raw
-        pred_dense_pts = np.zeros((0, 3), dtype=np.float32)
-        if bool(infer_cfg.get("fit_pred_curve", True)):
-            C_pred_fit, pred_dense_pts = _fit_pred_curve_mask(
-                C_pred_raw,
-                spacing=spacing,
-                step_mm=float(
-                    infer_cfg.get(
-                        "fit_pred_curve_step_mm",
-                        cfg.get("preprocess", {}).get("dense_sample_step_mm", 0.2),
-                    )
-                ),
-                closed=bool(
-                    infer_cfg.get(
-                        "fit_pred_curve_closed",
-                        cfg.get("preprocess", {}).get("curve_closed", True),
-                    )
-                ),
-                smooth=float(
-                    infer_cfg.get(
-                        "fit_pred_curve_smooth",
-                        cfg.get("preprocess", {}).get("curve_smooth", 0.0),
-                    )
-                ),
-                min_points=int(infer_cfg.get("fit_pred_curve_min_points", 8)),
-            )
-        if bool(infer_cfg.get("constrain_curve_to_tooth_surface", False)):
-            C_pred_fit = _project_curve_to_tooth_surface(C_pred_fit, T)
 
         out_dir = ensure_dir(os.path.join(infer_root, case_id, f"tooth_{tooth_id}"))
         save_volume(os.path.join(out_dir, "H_pred.nii.gz"), H_pred.astype(np.float32), affine=affine, spacing=spacing)

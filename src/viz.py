@@ -8,7 +8,6 @@ from monai.data.utils import affine_to_spacing
 from scipy.spatial import cKDTree
 
 from src.datasets.io import load_volume
-from src.datasets.points import get_points_for_tooth, load_points
 from src.postprocess.priors import compute_geometric_prior
 from src.postprocess.skeleton import extract_curve, extract_curve_from_heatmap_peak
 from src.utils.config import ensure_dir, load_config
@@ -429,13 +428,13 @@ def _add_fixed_process_legend(fig, rows):
 def save_3d_viewer(
     A,
     T,
-    H_gt,
     spacing,
-    points,
     case_id,
     tooth_id,
     out_html,
     cfg,
+    H_gt=None,
+    points=None,
     H_pred=None,
     C_pred=None,
     C_gt=None,
@@ -472,7 +471,7 @@ def save_3d_viewer(
     step = _downsample_step(A.shape, max_dim)
     A_ds = _downsample_volume(A, step)
     T_ds = _downsample_volume(T, step)
-    H_gt_ds = _downsample_volume(H_gt, step)
+    H_gt_ds = _downsample_volume(H_gt, step) if H_gt is not None else None
     H_pred_ds = _downsample_volume(H_pred, step) if H_pred is not None else None
     R_ds = _downsample_volume(R, step) if R is not None else None
     spacing_ds = tuple(np.asarray(spacing, dtype=np.float32) * float(step))
@@ -491,16 +490,17 @@ def save_3d_viewer(
     if tooth_mesh is not None:
         fig.add_trace(tooth_mesh)
 
-    gt_mesh = _make_mesh_trace_from_mask(
-        (H_gt_ds >= heat_thr).astype(np.uint8),
-        spacing_ds,
-        name=f"伪GT热图 (>{heat_thr:.2f})",
-        color=color_gt_heatmap,
-        opacity=heatmap_opacity,
-        step=mesh_step,
-    )
-    if gt_mesh is not None:
-        fig.add_trace(gt_mesh)
+    if H_gt_ds is not None:
+        gt_mesh = _make_mesh_trace_from_mask(
+            (H_gt_ds >= heat_thr).astype(np.uint8),
+            spacing_ds,
+            name=f"伪GT热图 (>{heat_thr:.2f})",
+            color=color_gt_heatmap,
+            opacity=heatmap_opacity,
+            step=mesh_step,
+        )
+        if gt_mesh is not None:
+            fig.add_trace(gt_mesh)
 
     if H_pred_ds is not None:
         pred_mesh = _make_mesh_trace_from_mask(
@@ -560,7 +560,7 @@ def save_3d_viewer(
 
     has_gt_points = points is not None and len(points) > 0
     has_interp_curve = bool(show_dense_interp_curve and dense_curve_points is not None and len(dense_curve_points) > 0)
-    has_gt_heatmap = bool(np.any(H_gt_ds >= heat_thr))
+    has_gt_heatmap = bool(H_gt_ds is not None and np.any(H_gt_ds >= heat_thr))
     has_gt_skeleton = bool(show_pseudo_gt_skeleton and C_gt is not None and np.any(C_gt > 0))
     has_pred_heatmap = bool(H_pred_ds is not None and np.any(H_pred_ds >= pred_thr))
     has_pred_curve = bool(C_pred is not None and np.any(C_pred > 0))
@@ -575,14 +575,21 @@ def save_3d_viewer(
         use_error_colormap=use_error_colormap_for_gt_points,
     )
 
-    process_legend_rows = [
-        {"label": "1 标注点", "color": color_gt_points, "present": has_gt_points},
-        {"label": "2 插值曲线", "color": color_dense_interp_curve, "present": has_interp_curve},
-        {"label": "3 伪GT热图", "color": color_gt_heatmap, "present": has_gt_heatmap},
-        {"label": "4 伪GT骨架", "color": color_pseudo_gt_skeleton, "present": has_gt_skeleton},
-        {"label": "5 推理热图", "color": color_pred_heatmap, "present": has_pred_heatmap},
-        {"label": "6 推理曲线", "color": color_pred_curve, "present": has_pred_curve},
-    ]
+    if bool(viz_cfg.get("prediction_only", False)) or (not has_gt_points and H_gt_ds is None and C_gt is None):
+        process_legend_rows = [
+            {"label": "1 推理热图", "color": color_pred_heatmap, "present": has_pred_heatmap},
+            {"label": "2 推理曲线", "color": color_pred_curve, "present": has_pred_curve},
+            {"label": "3 拟合曲线", "color": color_dense_interp_curve, "present": has_interp_curve},
+        ]
+    else:
+        process_legend_rows = [
+            {"label": "1 标注点", "color": color_gt_points, "present": has_gt_points},
+            {"label": "2 插值曲线", "color": color_dense_interp_curve, "present": has_interp_curve},
+            {"label": "3 伪GT热图", "color": color_gt_heatmap, "present": has_gt_heatmap},
+            {"label": "4 伪GT骨架", "color": color_pseudo_gt_skeleton, "present": has_gt_skeleton},
+            {"label": "5 推理热图", "color": color_pred_heatmap, "present": has_pred_heatmap},
+            {"label": "6 推理曲线", "color": color_pred_curve, "present": has_pred_curve},
+        ]
     _add_fixed_process_legend(fig, process_legend_rows)
 
     fig.update_layout(
@@ -619,6 +626,27 @@ def _write_3d_index(index_path, records):
         f.write("\n".join(lines))
 
 
+def _load_optional_volume(path, dtype):
+    if not os.path.exists(path):
+        return None
+    arr, _, _ = load_volume(path, dtype=dtype)
+    return arr
+
+
+def _load_optional_points(path, tooth_id):
+    return np.zeros((0, 3), dtype=np.float32)
+
+
+def _load_optional_dense_points(path):
+    if not os.path.exists(path):
+        return None
+    try:
+        return np.load(path).astype(np.float32)
+    except Exception as e:
+        logger.warning("failed to load dense curve points %s: %s", path, e)
+        return None
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/default.yaml")
@@ -651,6 +679,7 @@ def main():
     max_teeth = int(viz_cfg.get("max_teeth_per_case", 8))
     num_slices = int(viz_cfg.get("num_slices", 4))
     show_prior_3d = bool(viz_cfg.get("show_prior_3d", True))
+    prediction_only = bool(viz_cfg.get("prediction_only", False))
     pseudo_gt_skeleton_from_interp = bool(viz_cfg.get("pseudo_gt_skeleton_from_interp", False))
     pseudo_gt_skeleton_from_heatmap_peak = bool(viz_cfg.get("pseudo_gt_skeleton_from_heatmap_peak", True))
     pseudo_gt_peak_threshold = float(viz_cfg.get("pseudo_gt_peak_threshold", 0.999))
@@ -687,22 +716,9 @@ def main():
         A, spacing, affine = load_volume(os.path.join(tdir, f"A_t.{fmt}"), dtype=np.float32)
         spacing = _ensure_spacing(spacing, affine)
         T, _, _ = load_volume(os.path.join(tdir, f"T_t.{fmt}"), dtype=np.uint8)
-        H, _, _ = load_volume(os.path.join(tdir, f"H_GT.{fmt}"), dtype=np.float32)
-
-        points_data = load_points(os.path.join(tdir, "points.json"))
-        pts = get_points_for_tooth(points_data, tooth_id)
-        dense_curve_points = None
-        dense_curve_path = os.path.join(tdir, "curve_dense_points.npy")
-        if os.path.exists(dense_curve_path):
-            try:
-                dense_curve_points = np.load(dense_curve_path).astype(np.float32)
-            except Exception as e:
-                logger.warning(
-                    "failed to load dense curve points case=%s tooth=%s: %s",
-                    case_id,
-                    tooth_id,
-                    e,
-                )
+        H = _load_optional_volume(os.path.join(tdir, f"H_GT.{fmt}"), dtype=np.float32)
+        pts = _load_optional_points(os.path.join(tdir, "points.json"), tooth_id)
+        dense_curve_points = _load_optional_dense_points(os.path.join(tdir, "curve_dense_points.npy"))
 
         R = None
         if enable_2d or (enable_3d and show_prior_3d):
@@ -733,7 +749,12 @@ def main():
                 C_pred, _, _ = load_volume(c_pred_path, dtype=np.uint8)
             d = compute_distances(pts, C_pred, spacing)
 
-        if enable_3d and bool(viz_cfg.get("show_pseudo_gt_skeleton", True)):
+        pred_dense_curve_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "curve_pred_dense_points.npy")
+        pred_dense_curve_points = _load_optional_dense_points(pred_dense_curve_path)
+        if pred_dense_curve_points is not None:
+            dense_curve_points = pred_dense_curve_points
+
+        if enable_3d and H is not None and not prediction_only and bool(viz_cfg.get("show_pseudo_gt_skeleton", True)):
             try:
                 if pseudo_gt_skeleton_from_interp and dense_curve_points is not None and len(dense_curve_points) > 0:
                     C_gt = np.zeros_like(T, dtype=np.uint8)
@@ -779,14 +800,15 @@ def main():
             )
 
             out_dir_pgt = ensure_dir(os.path.join(out_root, "pseudo_gt", case_id, f"tooth_{tooth_id}"))
-            save_overlay(
-                A,
-                overlay=H,
-                points=pts,
-                out_path=os.path.join(out_dir_pgt, "pseudo_gt.png"),
-                title="pseudo_gt",
-                num_slices=num_slices,
-            )
+            if H is not None:
+                save_overlay(
+                    A,
+                    overlay=H,
+                    points=pts,
+                    out_path=os.path.join(out_dir_pgt, "pseudo_gt.png"),
+                    title="pseudo_gt",
+                    num_slices=num_slices,
+                )
 
             if H_pred is not None and C_pred is not None:
                 out_dir_inf = ensure_dir(os.path.join(out_root, "infer", case_id, f"tooth_{tooth_id}"))
@@ -807,13 +829,13 @@ def main():
             save_3d_viewer(
                 A=A,
                 T=T,
-                H_gt=H,
                 spacing=spacing,
-                points=pts,
                 case_id=case_id,
                 tooth_id=tooth_id,
                 out_html=out_html,
                 cfg=cfg,
+                H_gt=None if prediction_only else H,
+                points=np.zeros((0, 3), dtype=np.float32) if prediction_only else pts,
                 H_pred=H_pred,
                 C_pred=C_pred,
                 C_gt=C_gt,
