@@ -57,28 +57,41 @@ def summarize_metrics(distances, taus):
     return {"mean": mean, "p95": p95, "sr": sr}
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config", default="configs/default.yaml")
-    args = parser.parse_args()
+def _load_points_for_tooth(tdir, tooth_id):
+    points_path = os.path.join(tdir, "points.json")
+    points_data = load_points(points_path)
+    return get_points_for_tooth(points_data, tooth_id)
 
-    cfg = load_config(args.config)
-    taus = cfg["eval"]["eval_taus_mm"]
 
-    processed_dir = cfg["data"]["processed_dir"]
-    infer_dir = os.path.join(cfg["data"]["output_dir"], "infer")
+def _fallback_shape_spacing(tdir, processed_format):
+    for name, dtype in (("T_t", np.uint8), ("H_GT", np.float32), ("A_t", np.float32)):
+        path = os.path.join(tdir, f"{name}.{processed_format}")
+        if not os.path.exists(path):
+            continue
+        arr, spacing, affine = load_volume(path, dtype=dtype)
+        return arr.shape, _ensure_spacing(spacing, affine)
+    return (1, 1, 1), (1.0, 1.0, 1.0)
 
+
+def evaluate_predictions(
+    processed_dir,
+    infer_dir,
+    out_dir,
+    taus,
+    processed_format="nii.gz",
+    prediction_name="C_pred_fit.nii.gz",
+):
     tooth_dirs = sorted(glob.glob(os.path.join(processed_dir, "*", "tooth_*")))
     if not tooth_dirs:
-        logger.warning("no processed teeth found")
-        return
+        raise RuntimeError(f"no processed teeth found in {processed_dir}")
 
-    out_dir = ensure_dir(os.path.join(cfg["data"]["output_dir"], "eval"))
+    out_dir = ensure_dir(out_dir)
     per_tooth_csv = os.path.join(out_dir, "metrics_per_tooth.csv")
     summary_json = os.path.join(out_dir, "metrics_summary.json")
 
     rows = []
     all_dists = []
+    missing_prediction_count = 0
 
     for tdir in tooth_dirs:
         roi_meta_path = os.path.join(tdir, "roi_meta.json")
@@ -87,12 +100,32 @@ def main():
         case_id = roi_meta["case_id"]
         tooth_id = roi_meta["tooth_id"]
 
-        points_path = os.path.join(tdir, "points.json")
-        points_data = load_points(points_path)
-        pts = get_points_for_tooth(points_data, tooth_id)
+        pts = _load_points_for_tooth(tdir, tooth_id)
 
-        pred_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "C_pred.nii.gz")
+        pred_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", prediction_name)
         if not os.path.exists(pred_path):
+            shape, spacing = _fallback_shape_spacing(tdir, processed_format)
+            penalty = _missing_curve_penalty_mm(np.zeros(shape, dtype=np.uint8), spacing)
+            if len(pts) > 0:
+                d = np.full((len(pts),), penalty, dtype=np.float32)
+                all_dists.append(d)
+                metrics = summarize_metrics(d, taus)
+            else:
+                metrics = summarize_metrics(np.array([penalty], dtype=np.float32), taus)
+            missing_prediction_count += 1
+            row = {
+                "case_id": case_id,
+                "tooth_id": tooth_id,
+                "n_points": int(len(pts)),
+                "status": "missing_prediction",
+                "pred_path": pred_path,
+                "mean_dist_mm": metrics["mean"],
+                "p95_dist_mm": metrics["p95"],
+            }
+            for t in taus:
+                row[f"sr@{t}"] = metrics["sr"][str(t)]
+            rows.append(row)
+            logger.warning("missing prediction case=%s tooth=%s path=%s", case_id, tooth_id, pred_path)
             continue
 
         C_pred, spacing, affine = load_volume(pred_path, dtype=np.uint8)
@@ -104,6 +137,8 @@ def main():
             "case_id": case_id,
             "tooth_id": tooth_id,
             "n_points": int(len(pts)),
+            "status": "ok",
+            "pred_path": pred_path,
             "mean_dist_mm": metrics["mean"],
             "p95_dist_mm": metrics["p95"],
         }
@@ -114,7 +149,7 @@ def main():
             all_dists.append(d)
 
     # write per-tooth csv
-    fieldnames = ["case_id", "tooth_id", "n_points", "mean_dist_mm", "p95_dist_mm"] + [f"sr@{t}" for t in taus]
+    fieldnames = ["case_id", "tooth_id", "n_points", "status", "pred_path", "mean_dist_mm", "p95_dist_mm"] + [f"sr@{t}" for t in taus]
     with open(per_tooth_csv, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -127,11 +162,48 @@ def main():
     else:
         all_dists = np.array([], dtype=np.float32)
     summary = summarize_metrics(all_dists, taus)
+    summary.update(
+        {
+            "prediction_name": prediction_name,
+            "tooth_count": len(rows),
+            "missing_prediction_count": int(missing_prediction_count),
+            "failed_tooth_count": int(sum(1 for r in rows if r["status"] != "ok")),
+            "ok_tooth_count": int(sum(1 for r in rows if r["status"] == "ok")),
+        }
+    )
 
     with open(summary_json, "w") as f:
-        json.dump(summary, f)
+        json.dump(summary, f, indent=2)
 
     logger.info("saved metrics to %s", out_dir)
+    return {
+        "per_tooth_csv": per_tooth_csv,
+        "summary_json": summary_json,
+        "summary": summary,
+        "rows": rows,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default="configs/default.yaml")
+    args = parser.parse_args()
+
+    cfg = load_config(args.config)
+    taus = cfg["eval"]["eval_taus_mm"]
+
+    processed_dir = cfg["data"]["processed_dir"]
+    infer_dir = os.path.join(cfg["data"]["output_dir"], "infer")
+    out_dir = os.path.join(cfg["data"]["output_dir"], "eval")
+    prediction_name = cfg.get("eval", {}).get("prediction_name", "C_pred_fit.nii.gz")
+    evaluate_predictions(
+        processed_dir=processed_dir,
+        infer_dir=infer_dir,
+        out_dir=out_dir,
+        taus=taus,
+        processed_format=cfg["data"].get("processed_format", "nii.gz"),
+        prediction_name=prediction_name,
+    )
 
 
 if __name__ == "__main__":

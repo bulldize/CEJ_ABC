@@ -1,5 +1,5 @@
 import numpy as np
-from monai.transforms import ClipIntensityPercentiles, NormalizeIntensity, ScaleIntensity
+from monai.transforms import NormalizeIntensity, ScaleIntensity
 from monai.utils import convert_to_numpy
 
 
@@ -7,7 +7,9 @@ def normalize_intensity(volume, clip_percentiles=(1.0, 99.0), mode="zscore"):
     vol = volume.astype(np.float32)
     if clip_percentiles is not None:
         low, high = clip_percentiles
-        vol = ClipIntensityPercentiles(low, high)(vol)
+        lo = np.percentile(vol, float(low))
+        hi = np.percentile(vol, float(high))
+        vol = np.clip(vol, lo, hi)
     if mode == "zscore":
         vol = NormalizeIntensity(nonzero=False, channel_wise=False)(vol)
     elif mode == "minmax":

@@ -29,7 +29,7 @@ def _write_tooth(root, case_id, tooth_id, points, h_gt):
     return tooth_dir
 
 
-def test_supervised_dataset_skips_unlabeled_teeth(tmp_path):
+def test_supervised_dataset_skips_unlabeled_teeth_and_invalid_empty_heatmaps(tmp_path):
     processed_dir = tmp_path / "processed"
     h_labeled = np.zeros((4, 4, 4), dtype=np.float32)
     h_labeled[1, 1, 1] = 1.0
@@ -40,19 +40,29 @@ def test_supervised_dataset_skips_unlabeled_teeth(tmp_path):
         points=[[1.0, 1.0, 1.0]],
         h_gt=h_labeled,
     )
-    skipped_dir = _write_tooth(
+    invalid_dir = _write_tooth(
         processed_dir,
         "case_a",
         12,
+        points=[[1.0, 1.0, 1.0]],
+        h_gt=np.zeros((4, 4, 4), dtype=np.float32),
+    )
+    skipped_dir = _write_tooth(
+        processed_dir,
+        "case_a",
+        13,
         points=[],
         h_gt=np.zeros((4, 4, 4), dtype=np.float32),
     )
 
     audit = build_supervised_audit(str(processed_dir))
-    assert audit["total_tooth_dirs"] == 2
+    assert audit["total_tooth_dirs"] == 3
     assert audit["used_labeled_tooth_dirs"] == 1
     assert audit["skipped_unlabeled_tooth_dirs"] == 1
+    assert audit["invalid_tooth_dirs"] == 1
     assert audit["skipped_unlabeled_teeth"][0]["tooth_dir"] == str(skipped_dir)
+    assert audit["invalid_teeth"][0]["tooth_dir"] == str(invalid_dir)
+    assert audit["invalid_teeth"][0]["reason"] == "points_present_empty_h_gt"
 
     ds = ToothDataset(str(processed_dir), cache_rate=0.0)
     assert len(ds) == 1

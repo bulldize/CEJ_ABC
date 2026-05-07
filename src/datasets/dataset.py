@@ -17,12 +17,35 @@ from monai.transforms import (
     EnsureTyped,
     ConcatItemsd,
     CopyItemsd,
-    ClipIntensityPercentilesd,
+    MapTransform,
 )
 
 from src.datasets.io import load_volume
 from src.datasets.points import get_points_for_tooth, load_points
 from src.datasets.transforms import normalize_intensity
+
+
+class ClipIntensityPercentilesd(MapTransform):
+    def __init__(self, keys, lower, upper, allow_missing_keys=False):
+        super().__init__(keys, allow_missing_keys)
+        self.lower = float(lower)
+        self.upper = float(upper)
+
+    def __call__(self, data):
+        d = dict(data)
+        for key in self.key_iterator(d):
+            img = d[key]
+            if torch.is_tensor(img):
+                q = torch.as_tensor([self.lower / 100.0, self.upper / 100.0], device=img.device)
+                lo, hi = torch.quantile(img.float(), q)
+                if torch.isfinite(lo) and torch.isfinite(hi) and hi >= lo:
+                    d[key] = torch.clamp(img, min=float(lo.item()), max=float(hi.item()))
+                continue
+            arr = np.asarray(img)
+            lo, hi = np.percentile(arr, [self.lower, self.upper])
+            if np.isfinite(lo) and np.isfinite(hi) and hi >= lo:
+                d[key] = np.clip(arr, lo, hi)
+        return d
 
 
 def list_tooth_dirs(processed_dir):
@@ -82,8 +105,10 @@ def _empty_case_stats():
         "total_tooth_dirs": 0,
         "used_labeled_tooth_dirs": 0,
         "skipped_unlabeled_tooth_dirs": 0,
+        "invalid_tooth_dirs": 0,
         "used_teeth": [],
         "skipped_teeth": [],
+        "invalid_teeth": [],
     }
 
 
@@ -95,8 +120,10 @@ def build_supervised_audit(processed_dir, processed_format="nii.gz"):
         "total_tooth_dirs": 0,
         "used_labeled_tooth_dirs": 0,
         "skipped_unlabeled_tooth_dirs": 0,
+        "invalid_tooth_dirs": 0,
         "used_labeled_teeth": [],
         "skipped_unlabeled_teeth": [],
+        "invalid_teeth": [],
         "per_case": {},
     }
 
@@ -128,7 +155,7 @@ def build_supervised_audit(processed_dir, processed_format="nii.gz"):
         audit["total_tooth_dirs"] += 1
         case_stats["total_tooth_dirs"] += 1
 
-        if has_label_file and (has_points or has_h_gt_signal):
+        if has_h_gt_signal:
             record["reason"] = "labeled"
             audit["used_labeled_tooth_dirs"] += 1
             audit["used_labeled_teeth"].append(record)
@@ -138,6 +165,13 @@ def build_supervised_audit(processed_dir, processed_format="nii.gz"):
 
         if not has_label_file:
             record["reason"] = "missing_h_gt"
+        elif has_points:
+            record["reason"] = "points_present_empty_h_gt"
+            audit["invalid_tooth_dirs"] += 1
+            audit["invalid_teeth"].append(record)
+            case_stats["invalid_tooth_dirs"] += 1
+            case_stats["invalid_teeth"].append(tooth_label)
+            continue
         else:
             record["reason"] = "no_points_and_empty_h_gt"
         audit["skipped_unlabeled_tooth_dirs"] += 1
@@ -152,6 +186,7 @@ def build_supervised_audit(processed_dir, processed_format="nii.gz"):
     for stats in audit["per_case"].values():
         stats["used_teeth"] = sorted(stats["used_teeth"])
         stats["skipped_teeth"] = sorted(stats["skipped_teeth"])
+        stats["invalid_teeth"] = sorted(stats["invalid_teeth"])
     return audit
 
 
@@ -160,6 +195,8 @@ def write_supervised_audit(audit, out_dir):
     audit_path = os.path.join(out_dir, "supervised_dataset_audit.json")
     skipped_json_path = os.path.join(out_dir, "skipped_unlabeled_teeth.json")
     skipped_txt_path = os.path.join(out_dir, "skipped_unlabeled_teeth.txt")
+    invalid_json_path = os.path.join(out_dir, "invalid_labeled_teeth.json")
+    invalid_txt_path = os.path.join(out_dir, "invalid_labeled_teeth.txt")
 
     with open(audit_path, "w") as f:
         json.dump(audit, f, ensure_ascii=False, indent=2)
@@ -180,10 +217,29 @@ def write_supervised_audit(audit, out_dir):
                 )
                 + "\n"
             )
+    with open(invalid_json_path, "w") as f:
+        json.dump(audit.get("invalid_teeth", []), f, ensure_ascii=False, indent=2)
+    with open(invalid_txt_path, "w") as f:
+        for rec in audit.get("invalid_teeth", []):
+            f.write(
+                "\t".join(
+                    [
+                        str(rec["case_id"]),
+                        str(rec["tooth_id"]),
+                        str(rec["n_points"]),
+                        str(rec["h_gt_max"]),
+                        str(rec["reason"]),
+                        str(rec["tooth_dir"]),
+                    ]
+                )
+                + "\n"
+            )
     return {
         "audit": audit_path,
         "skipped_json": skipped_json_path,
         "skipped_txt": skipped_txt_path,
+        "invalid_json": invalid_json_path,
+        "invalid_txt": invalid_txt_path,
     }
 
 
@@ -199,6 +255,8 @@ def _build_supervised_items(processed_dir, processed_format="nii.gz", audit=None
             "mask": os.path.join(tdir, f"T_t.{fmt}"),
             "label": os.path.join(tdir, f"H_GT.{fmt}"),
             "tooth_dir": tdir,
+            "case_id": rec["case_id"],
+            "tooth_id": rec["tooth_id"],
         })
     return items
 

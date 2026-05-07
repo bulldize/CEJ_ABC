@@ -1,7 +1,8 @@
 import numpy as np
 from scipy.spatial import cKDTree
 
-from src.eval import compute_distances as eval_compute_distances
+from src.datasets.io import save_volume
+from src.eval import compute_distances as eval_compute_distances, evaluate_predictions
 
 
 def compute_distances(points_vox, curve_mask, spacing):
@@ -31,3 +32,30 @@ def test_eval_empty_curve_uses_finite_penalty():
     assert d.shape == (2,)
     assert np.all(np.isfinite(d))
     assert np.all(d > 1.5)
+
+
+def test_eval_missing_prediction_writes_failed_row_with_penalty(tmp_path):
+    processed_dir = tmp_path / "processed"
+    tooth_dir = processed_dir / "case_a" / "tooth_11"
+    tooth_dir.mkdir(parents=True)
+    shape = (5, 5, 5)
+    save_volume(str(tooth_dir / "A_t.nii.gz"), np.ones(shape, dtype=np.float32), spacing=(1.0, 1.0, 1.0))
+    save_volume(str(tooth_dir / "T_t.nii.gz"), np.ones(shape, dtype=np.uint8), spacing=(1.0, 1.0, 1.0))
+    save_volume(str(tooth_dir / "H_GT.nii.gz"), np.ones(shape, dtype=np.float32), spacing=(1.0, 1.0, 1.0))
+    (tooth_dir / "roi_meta.json").write_text('{"case_id": "case_a", "tooth_id": 11}')
+    (tooth_dir / "points.json").write_text(
+        '{"case_id": "case_a", "coord_type": "voxel", "space": "roi", "points": {"11": [[1, 1, 1]]}}'
+    )
+
+    result = evaluate_predictions(
+        processed_dir=str(processed_dir),
+        infer_dir=str(tmp_path / "infer"),
+        out_dir=str(tmp_path / "eval"),
+        taus=[1.0],
+        prediction_name="C_pred_fit.nii.gz",
+    )
+
+    assert result["summary"]["missing_prediction_count"] == 1
+    assert result["rows"][0]["status"] == "missing_prediction"
+    assert result["rows"][0]["p95_dist_mm"] > 1.0
+    assert (tmp_path / "eval" / "metrics_per_tooth.csv").exists()
