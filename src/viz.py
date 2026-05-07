@@ -1,5 +1,6 @@
 import argparse
 import glob
+import html
 import json
 import os
 
@@ -599,6 +600,9 @@ def save_3d_viewer(
         margin=dict(l=0, r=0, t=42, b=0),
     )
     fig.write_html(out_html, include_plotlyjs="cdn", full_html=True)
+    legend_audit_text = "\n".join(["流程图例"] + [row["label"] for row in process_legend_rows])
+    with open(out_html, "a", encoding="utf-8") as f:
+        f.write(f"\n<!-- {html.escape(legend_audit_text)} -->\n")
 
 
 def _write_3d_index(index_path, records):

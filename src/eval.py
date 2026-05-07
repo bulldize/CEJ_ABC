@@ -23,13 +23,24 @@ def _ensure_spacing(spacing, affine):
     return tuple(affine_to_spacing(affine))
 
 
+def _missing_curve_penalty_mm(curve_mask, spacing):
+    spacing = np.asarray(spacing, dtype=np.float32)
+    shape = np.asarray(curve_mask.shape, dtype=np.float32)
+    diag = np.maximum(shape - 1.0, 0.0) * spacing
+    penalty = float(np.linalg.norm(diag))
+    if penalty > 0.0 and np.isfinite(penalty):
+        return penalty
+    return float(np.max(spacing)) if spacing.size > 0 else 1.0
+
+
 def compute_distances(points_vox, curve_mask, spacing):
     if points_vox is None or len(points_vox) == 0:
         return np.array([], dtype=np.float32)
+    spacing = np.asarray(spacing, dtype=np.float32)
     curve_pts = np.array(np.where(curve_mask > 0)).T.astype(np.float32)
     if curve_pts.shape[0] == 0:
-        return np.full((len(points_vox),), np.inf, dtype=np.float32)
-    spacing = np.asarray(spacing, dtype=np.float32)
+        penalty = _missing_curve_penalty_mm(curve_mask, spacing)
+        return np.full((len(points_vox),), penalty, dtype=np.float32)
     curve_mm = curve_pts * spacing
     pts_mm = np.asarray(points_vox, dtype=np.float32) * spacing
     tree = cKDTree(curve_mm)
@@ -99,8 +110,8 @@ def main():
         for t in taus:
             row[f"sr@{t}"] = metrics["sr"][str(t)]
         rows.append(row)
-        if d.size > 0 and np.isfinite(d).any():
-            all_dists.append(d[np.isfinite(d)])
+        if d.size > 0:
+            all_dists.append(d)
 
     # write per-tooth csv
     fieldnames = ["case_id", "tooth_id", "n_points", "mean_dist_mm", "p95_dist_mm"] + [f"sr@{t}" for t in taus]

@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 from monai.losses import DiceCELoss, DiceLoss
 from monai.utils import set_determinism
 
-from src.datasets.dataset import ToothDataset
+from src.datasets.dataset import ToothDataset, write_supervised_audit
 from src.models.unet3d import UNet3D
 from src.utils.config import load_config, ensure_dir, get_device
 from src.utils.log import get_logger
@@ -68,6 +68,16 @@ def main():
         logger.warning("no processed teeth found")
         return
 
+    out_dir = ensure_dir(os.path.join(cfg["data"]["output_dir"], "train"))
+    audit_paths = write_supervised_audit(ds.audit, out_dir)
+    logger.info(
+        "supervised dataset audit total=%d used_labeled=%d skipped_unlabeled=%d audit=%s",
+        ds.audit["total_tooth_dirs"],
+        ds.audit["used_labeled_tooth_dirs"],
+        ds.audit["skipped_unlabeled_tooth_dirs"],
+        audit_paths["audit"],
+    )
+
     loader = DataLoader(ds, batch_size=cfg["train"]["batch_size"], shuffle=True, num_workers=cfg["train"]["num_workers"])
 
     model = UNet3D(
@@ -94,7 +104,6 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg["train"]["lr"])
     loss_fn = build_loss(cfg)
 
-    out_dir = ensure_dir(os.path.join(cfg["data"]["output_dir"], "train"))
     ckpt_dir = ensure_dir(os.path.join(out_dir, "checkpoints"))
 
     metrics_path = os.path.join(out_dir, "metrics.csv")

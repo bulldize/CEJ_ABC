@@ -144,7 +144,9 @@ def main():
         norm=cfg["model"].get("norm", "batch"),
     ).to(device)
 
-    ckpt_path = os.path.join(cfg["data"]["output_dir"], "train", "checkpoints", "last.pt")
+    ckpt_path = infer_cfg.get("ckpt_path") or os.path.join(
+        cfg["data"]["output_dir"], "train", "checkpoints", "last.pt"
+    )
     if not os.path.exists(ckpt_path):
         logger.warning("checkpoint not found: %s", ckpt_path)
         return
