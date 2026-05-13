@@ -1,7 +1,7 @@
 import numpy as np
 from monai.transforms import KeepLargestConnectedComponent
 from scipy.interpolate import splprep, splev
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import distance_transform_edt, label
 
 from src.utils.geometry import tooth_surface
 
@@ -11,6 +11,7 @@ except Exception:
     from skimage.morphology import skeletonize as _skeletonize
 
 _keep_lcc = KeepLargestConnectedComponent(applied_labels=[1], is_onehot=False, connectivity=1)
+_CONNECTIVITY_26 = np.ones((3, 3, 3), dtype=np.uint8)
 
 
 def compute_curve_overlap_metrics(mask_a, mask_b):
@@ -43,9 +44,124 @@ def extract_curve_from_heatmap_peak(mask_prob, tooth_mask=None, peak_threshold=0
     return curve.astype(np.uint8)
 
 
+def _filter_components(binary, min_voxels=8, max_components=4, keep_lcc=False):
+    binary = (np.asarray(binary) > 0)
+    if int(binary.sum()) == 0:
+        return binary.astype(np.uint8), {
+            "component_count": 0,
+            "component_count_kept": 0,
+            "largest_component_voxels": 0,
+            "largest_component_ratio": 0.0,
+            "candidate_voxels_after_components": 0,
+        }
+
+    labeled, n_components = label(binary, structure=_CONNECTIVITY_26)
+    if n_components == 0:
+        return np.zeros_like(binary, dtype=np.uint8), {
+            "component_count": 0,
+            "component_count_kept": 0,
+            "largest_component_voxels": 0,
+            "largest_component_ratio": 0.0,
+            "candidate_voxels_after_components": 0,
+        }
+
+    sizes = np.bincount(labeled.ravel())[1:]
+    order = np.argsort(sizes)[::-1]
+    min_voxels = max(1, int(min_voxels))
+    max_components = max(1, int(max_components))
+
+    if keep_lcc:
+        keep_labels = [int(order[0]) + 1]
+    else:
+        keep_labels = [int(i) + 1 for i in order[:max_components] if int(sizes[i]) >= min_voxels]
+        if not keep_labels:
+            keep_labels = [int(order[0]) + 1]
+
+    filtered = np.isin(labeled, keep_labels)
+    largest = int(sizes[order[0]]) if sizes.size else 0
+    kept_voxels = int(filtered.sum())
+    stats = {
+        "component_count": int(n_components),
+        "component_count_kept": int(len(keep_labels)),
+        "largest_component_voxels": largest,
+        "largest_component_ratio": float(largest / max(1, int(binary.sum()))),
+        "candidate_voxels_after_components": kept_voxels,
+    }
+    return filtered.astype(np.uint8), stats
+
+
+def _threshold_heatmap_candidates(mask_prob, tooth_mask, cfg):
+    prob = np.asarray(mask_prob, dtype=np.float32)
+    shape = prob.shape
+    tooth = (np.asarray(tooth_mask) > 0) if tooth_mask is not None else np.ones(shape, dtype=bool)
+    if tooth.shape != shape:
+        raise ValueError(f"tooth_mask shape {tooth.shape} does not match heatmap shape {shape}")
+
+    diag = {
+        "heatmap_max": float(np.max(prob)) if prob.size else 0.0,
+        "selected_threshold": None,
+        "candidate_voxels_before_components": 0,
+        "candidate_voxels_after_components": 0,
+        "component_count": 0,
+        "component_count_kept": 0,
+        "largest_component_voxels": 0,
+        "largest_component_ratio": 0.0,
+        "fallback_used": False,
+        "empty_reason": None,
+    }
+
+    if prob.size == 0 or diag["heatmap_max"] <= 0.0 or int(tooth.sum()) == 0:
+        diag["empty_reason"] = "empty_heatmap_or_tooth_mask"
+        return np.zeros(shape, dtype=np.uint8), diag
+
+    threshold = float(cfg.get("threshold_theta", 0.3))
+    relative = float(cfg.get("relative_threshold", 0.45))
+    fallback_min = float(cfg.get("fallback_min_threshold", 0.1))
+    min_voxels = int(cfg.get("min_candidate_voxels", cfg.get("fit_pred_curve_min_points", 8)))
+    min_voxels = max(1, min_voxels)
+
+    primary = max(threshold, diag["heatmap_max"] * relative)
+    lower = min(primary, max(0.0, fallback_min))
+    if primary <= lower:
+        thresholds = [primary]
+    else:
+        thresholds = np.linspace(primary, lower, num=6, dtype=np.float32).tolist()
+
+    selected = np.zeros(shape, dtype=np.uint8)
+    selected_stats = None
+    selected_threshold = float(thresholds[-1])
+    before = 0
+    for idx, thr in enumerate(thresholds):
+        candidate = (prob >= float(thr)) & tooth
+        before = int(candidate.sum())
+        filtered, comp_stats = _filter_components(
+            candidate,
+            min_voxels=int(cfg.get("min_component_voxels", 8)),
+            max_components=int(cfg.get("max_curve_components", 4)),
+            keep_lcc=bool(cfg.get("keep_lcc_for_curve", False)),
+        )
+        selected = filtered
+        selected_stats = comp_stats
+        selected_threshold = float(thr)
+        if int(selected.sum()) >= min_voxels:
+            diag["fallback_used"] = idx > 0
+            break
+        diag["fallback_used"] = True
+
+    diag["selected_threshold"] = selected_threshold
+    diag["candidate_voxels_before_components"] = before
+    if selected_stats is not None:
+        diag.update(selected_stats)
+    if before < min_voxels:
+        diag["empty_reason"] = "too_few_candidate_voxels"
+        return np.zeros(shape, dtype=np.uint8), diag
+    if int(selected.sum()) < min_voxels:
+        diag["empty_reason"] = "too_few_component_voxels"
+        return np.zeros(shape, dtype=np.uint8), diag
+    return selected.astype(np.uint8), diag
+
+
 def extract_curve(mask_prob, tooth_mask, threshold=0.3, keep_lcc=True):
-    # Minimal postprocess: threshold -> intersect with tooth -> skeletonize -> largest component
-    # TODO: replace with a more robust centerline extractor if needed.
     binary = (mask_prob >= threshold).astype(np.uint8)
     binary = binary * (tooth_mask > 0).astype(np.uint8)
     if binary.sum() == 0:
@@ -56,7 +172,6 @@ def extract_curve(mask_prob, tooth_mask, threshold=0.3, keep_lcc=True):
         skel = binary
     if skel.sum() == 0:
         return skel
-    # keep largest component via MONAI when desired.
     if keep_lcc:
         skel = _keep_lcc(skel[None, ...])[0]
     return skel.astype(np.uint8)
@@ -110,6 +225,48 @@ def _sort_points_by_plane_angle(points_mm):
     pts_sorted = pts[order]
     start = int(np.argmin(pts_sorted[:, 2]))
     return np.roll(pts_sorted, -start, axis=0)
+
+
+def _plane_angles(points_mm):
+    pts = np.asarray(points_mm, dtype=np.float32)
+    if pts.shape[0] <= 2:
+        return np.zeros((pts.shape[0],), dtype=np.float32)
+    center = pts.mean(axis=0, keepdims=True)
+    centered = pts - center
+    _, _, vt = np.linalg.svd(centered, full_matrices=False)
+    basis = vt[:2].T
+    proj = centered @ basis
+    return np.arctan2(proj[:, 1], proj[:, 0]).astype(np.float32)
+
+
+def _filter_curve_outliers(points_vox, spacing, max_mad=3.5):
+    pts = np.asarray(points_vox, dtype=np.float32)
+    if pts.shape[0] < 8:
+        return pts
+    pts_mm = pts * np.asarray(spacing, dtype=np.float32)
+    center = np.median(pts_mm, axis=0, keepdims=True)
+    dist = np.linalg.norm(pts_mm - center, axis=1)
+    med = float(np.median(dist))
+    mad = float(np.median(np.abs(dist - med)))
+    if mad <= 1e-6:
+        return pts
+    keep = dist <= med + float(max_mad) * 1.4826 * mad
+    if int(keep.sum()) < max(4, int(0.5 * pts.shape[0])):
+        return pts
+    return pts[keep]
+
+
+def _angle_coverage(points_vox, spacing):
+    pts = np.asarray(points_vox, dtype=np.float32)
+    if pts.shape[0] < 4:
+        return 0.0
+    angles = np.sort(_plane_angles(pts * np.asarray(spacing, dtype=np.float32)))
+    if angles.shape[0] < 2:
+        return 0.0
+    gaps = np.diff(np.concatenate([angles, angles[:1] + (2.0 * np.pi)]))
+    largest_gap = float(np.max(gaps))
+    coverage = max(0.0, (2.0 * np.pi - largest_gap) / (2.0 * np.pi))
+    return float(coverage)
 
 
 def fit_curve_and_sample(points_vox, spacing, step_mm, closed=True, smooth=0.0):
@@ -175,17 +332,34 @@ def rasterize_polyline_to_mask(mask, points_xyz, close_loop=False):
             _mark(p)
 
 
-def fit_curve_mask(curve_mask, spacing, step_mm, closed, smooth, min_points):
+def fit_curve_mask(
+    curve_mask,
+    spacing,
+    step_mm,
+    closed,
+    smooth,
+    min_points,
+    min_closed_angle_coverage=0.55,
+    max_outlier_mad=3.5,
+):
     pts = np.argwhere(curve_mask > 0).astype(np.float32)
     if pts.shape[0] < max(2, int(min_points)):
         return curve_mask.astype(np.uint8), np.zeros((0, 3), dtype=np.float32)
+
+    pts = _filter_curve_outliers(pts, spacing, max_mad=max_outlier_mad)
+    if pts.shape[0] < max(2, int(min_points)):
+        return curve_mask.astype(np.uint8), np.zeros((0, 3), dtype=np.float32)
+
+    fit_closed = bool(closed)
+    if fit_closed and _angle_coverage(pts, spacing) < float(min_closed_angle_coverage):
+        fit_closed = False
 
     try:
         dense_pts = fit_curve_and_sample(
             pts,
             spacing=np.asarray(spacing, dtype=np.float32),
             step_mm=float(step_mm),
-            closed=bool(closed),
+            closed=fit_closed,
             smooth=float(smooth),
         )
     except Exception:
@@ -195,7 +369,7 @@ def fit_curve_mask(curve_mask, spacing, step_mm, closed, smooth, min_points):
         return curve_mask.astype(np.uint8), np.zeros((0, 3), dtype=np.float32)
 
     fit_mask = np.zeros_like(curve_mask, dtype=np.uint8)
-    rasterize_polyline_to_mask(fit_mask, dense_pts, close_loop=bool(closed))
+    rasterize_polyline_to_mask(fit_mask, dense_pts, close_loop=fit_closed)
     if int(fit_mask.sum()) == 0:
         return curve_mask.astype(np.uint8), dense_pts.astype(np.float32)
     return fit_mask.astype(np.uint8), dense_pts.astype(np.float32)
@@ -223,12 +397,32 @@ def project_curve_to_tooth_surface(curve_mask, tooth_mask):
 def postprocess_prediction_curve(mask_prob, tooth_mask, spacing, cfg):
     constrain_to_tooth = bool(cfg.get("constrain_curve_to_tooth_mask", False))
     curve_tooth_mask = tooth_mask if constrain_to_tooth else np.ones_like(tooth_mask, dtype=np.uint8)
-    c_pred = extract_curve(
-        mask_prob,
-        curve_tooth_mask,
-        threshold=float(cfg.get("threshold_theta", 0.3)),
-        keep_lcc=bool(cfg.get("keep_lcc_for_curve", False)),
-    )
+    candidates, diag = _threshold_heatmap_candidates(mask_prob, curve_tooth_mask, cfg)
+    if bool(cfg.get("return_postprocess_diagnostics", False)):
+        cfg["postprocess_diagnostics"] = diag
+
+    if int(candidates.sum()) == 0:
+        c_pred = candidates.astype(np.uint8)
+    else:
+        try:
+            c_pred = _skeletonize(candidates).astype(np.uint8)
+        except Exception:
+            c_pred = candidates.astype(np.uint8)
+        if int(c_pred.sum()) > 0:
+            c_pred, skel_stats = _filter_components(
+                c_pred,
+                min_voxels=int(cfg.get("min_skeleton_component_voxels", 2)),
+                max_components=int(cfg.get("max_curve_components", 4)),
+                keep_lcc=bool(cfg.get("keep_lcc_for_curve", False)),
+            )
+            if bool(cfg.get("return_postprocess_diagnostics", False)):
+                cfg["postprocess_diagnostics"].update(
+                    {
+                        "skeleton_component_count": skel_stats["component_count"],
+                        "skeleton_component_count_kept": skel_stats["component_count_kept"],
+                        "skeleton_voxels": int(c_pred.sum()),
+                    }
+                )
 
     c_fit = c_pred
     dense_pts = np.zeros((0, 3), dtype=np.float32)
@@ -240,6 +434,8 @@ def postprocess_prediction_curve(mask_prob, tooth_mask, spacing, cfg):
             closed=bool(cfg.get("fit_pred_curve_closed", cfg.get("curve_closed", True))),
             smooth=float(cfg.get("fit_pred_curve_smooth", cfg.get("curve_smooth", 0.0))),
             min_points=int(cfg.get("fit_pred_curve_min_points", 8)),
+            min_closed_angle_coverage=float(cfg.get("fit_pred_curve_min_closed_angle_coverage", 0.55)),
+            max_outlier_mad=float(cfg.get("fit_pred_curve_max_outlier_mad", 3.5)),
         )
 
     if bool(cfg.get("constrain_curve_to_tooth_surface", False)):
