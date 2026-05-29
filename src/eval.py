@@ -92,6 +92,7 @@ def evaluate_predictions(
     rows = []
     all_dists = []
     missing_prediction_count = 0
+    no_curve_count = 0
 
     for tdir in tooth_dirs:
         roi_meta_path = os.path.join(tdir, "roi_meta.json")
@@ -132,12 +133,16 @@ def evaluate_predictions(
         spacing = _ensure_spacing(spacing, affine)
         d = compute_distances(pts, C_pred, spacing)
         metrics = summarize_metrics(d, taus)
+        has_points = len(pts) > 0
+        no_curve = bool(has_points and int(np.asarray(C_pred > 0).sum()) == 0)
+        status = "no_curve" if no_curve else "ok"
+        no_curve_count += int(no_curve)
 
         row = {
             "case_id": case_id,
             "tooth_id": tooth_id,
             "n_points": int(len(pts)),
-            "status": "ok",
+            "status": status,
             "pred_path": pred_path,
             "mean_dist_mm": metrics["mean"],
             "p95_dist_mm": metrics["p95"],
@@ -162,11 +167,16 @@ def evaluate_predictions(
     else:
         all_dists = np.array([], dtype=np.float32)
     summary = summarize_metrics(all_dists, taus)
+    summary["mean_dist_mm"] = summary.get("mean")
+    summary["p95_dist_mm"] = summary.get("p95")
+    for t in taus:
+        summary[f"sr@{t}mm"] = summary.get("sr", {}).get(str(t))
     summary.update(
         {
             "prediction_name": prediction_name,
             "tooth_count": len(rows),
             "missing_prediction_count": int(missing_prediction_count),
+            "no_curve_count": int(no_curve_count),
             "failed_tooth_count": int(sum(1 for r in rows if r["status"] != "ok")),
             "ok_tooth_count": int(sum(1 for r in rows if r["status"] == "ok")),
         }

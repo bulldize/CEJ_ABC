@@ -12,6 +12,7 @@ from scipy.spatial import cKDTree
 from monai.utils import set_determinism
 
 from src.datasets.dataset import ToothDataset, write_supervised_audit
+from src.datasets.points import get_points_for_tooth, load_points
 from src.infer import _fit_pred_curve_mask
 from src.models.unet3d import UNet3D
 from src.postprocess.skeleton import extract_curve, extract_curve_from_heatmap_peak
@@ -54,6 +55,13 @@ def _summarize_distances(distances):
     if arr.size == 0:
         return None, None
     return float(np.mean(arr)), float(np.percentile(arr, 95))
+
+
+def _concat_distances(distances):
+    arrs = [d for d in distances if d.size > 0]
+    if not arrs:
+        return np.array([], dtype=np.float32)
+    return np.concatenate(arrs).astype(np.float32)
 
 
 def _component_stats(binary):
@@ -160,6 +168,22 @@ def _item_spacing(item):
     return (1.0, 1.0, 1.0)
 
 
+def _manual_points_for_item(dataset, idx):
+    item = dataset.items[idx]
+    tooth_dir = item.get("tooth_dir")
+    tooth_id = item.get("tooth_id")
+    if not tooth_dir:
+        return np.zeros((0, 3), dtype=np.float32)
+    try:
+        points_data = load_points(os.path.join(tooth_dir, "points.json"))
+        pts = get_points_for_tooth(points_data, tooth_id)
+    except Exception:
+        return np.zeros((0, 3), dtype=np.float32)
+    if pts.ndim != 2 or pts.shape[1] != 3:
+        return np.zeros((0, 3), dtype=np.float32)
+    return pts.astype(np.float32)
+
+
 def _case_suffix(case_id):
     text = str(case_id)
     digits = ""
@@ -198,6 +222,7 @@ def evaluate_holdout(model, dataset, device, cfg, epoch, out_dir=None, save_pref
     hard_rows = []
     all_sym = []
     gt_to_pred_all = []
+    manual_point_all = []
     no_curve_count = 0
     h_max_values = []
     h_p99_values = []
@@ -249,11 +274,15 @@ def evaluate_holdout(model, dataset, device, cfg, epoch, out_dir=None, save_pref
 
             pred_to_gt = _directed_distances(pred_pts, gt_pts, spacing, y.shape)
             gt_to_pred = _directed_distances(gt_pts, pred_pts, spacing, y.shape)
+            manual_pts = _manual_points_for_item(dataset, idx)
+            manual_to_pred = _directed_distances(manual_pts, pred_pts, spacing, y.shape)
             sym = np.concatenate([pred_to_gt, gt_to_pred]).astype(np.float32)
             if sym.size > 0:
                 all_sym.append(sym)
             if gt_to_pred.size > 0:
                 gt_to_pred_all.append(gt_to_pred)
+            if manual_to_pred.size > 0:
+                manual_point_all.append(manual_to_pred)
             coverage = float(np.mean(gt_to_pred <= wrap_tau)) if gt_to_pred.size else 0.0
 
             h_max = float(np.max(h_pred)) if h_pred.size else 0.0
@@ -270,6 +299,11 @@ def evaluate_holdout(model, dataset, device, cfg, epoch, out_dir=None, save_pref
                 "sym_p95": float(np.percentile(sym, 95)) if sym.size else None,
                 "gt_to_pred_mean": float(np.mean(gt_to_pred)) if gt_to_pred.size else None,
                 "pred_to_gt_mean": float(np.mean(pred_to_gt)) if pred_to_gt.size else None,
+                "manual_point_mean": float(np.mean(manual_to_pred)) if manual_to_pred.size else None,
+                "manual_point_p95": float(np.percentile(manual_to_pred, 95)) if manual_to_pred.size else None,
+                "manual_point_sr1": float(np.mean(manual_to_pred <= 1.0)) if manual_to_pred.size else None,
+                "manual_point_sr2": float(np.mean(manual_to_pred <= 2.0)) if manual_to_pred.size else None,
+                "manual_point_count": int(manual_to_pred.shape[0]),
                 "no_curve": no_curve,
                 "h_pred_max": h_max,
                 "h_pred_p99": h_p99,
@@ -292,6 +326,8 @@ def evaluate_holdout(model, dataset, device, cfg, epoch, out_dir=None, save_pref
 
     sym_mean, sym_p95 = _summarize_distances(all_sym)
     gt_mean, gt_p95 = _summarize_distances(gt_to_pred_all)
+    manual_mean, manual_p95 = _summarize_distances(manual_point_all)
+    manual_all = _concat_distances(manual_point_all)
     metrics = {
         "epoch": int(epoch),
         "holdout_tooth_count": int(len(rows)),
@@ -299,6 +335,11 @@ def evaluate_holdout(model, dataset, device, cfg, epoch, out_dir=None, save_pref
         "sym_p95": sym_p95,
         "gt_to_pred_mean": gt_mean,
         "gt_to_pred_p95": gt_p95,
+        "manual_point_mean": manual_mean,
+        "manual_point_p95": manual_p95,
+        "manual_point_sr1": float(np.mean(manual_all <= 1.0)) if manual_all.size else None,
+        "manual_point_sr2": float(np.mean(manual_all <= 2.0)) if manual_all.size else None,
+        "manual_point_count": int(manual_all.shape[0]),
         "no_curve_count": int(no_curve_count),
         "h_pred_max": float(np.max(h_max_values)) if h_max_values else 0.0,
         "h_pred_p99": float(np.mean(h_p99_values)) if h_p99_values else 0.0,

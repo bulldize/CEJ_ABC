@@ -37,19 +37,48 @@ def load_pretrained(model, ckpt_path, strict=False):
         raise FileNotFoundError(f"pretrained checkpoint not found: {ckpt_path}")
     ckpt = torch.load(ckpt_path, map_location="cpu")
     state = ckpt.get("model", ckpt)
-    missing, unexpected = model.load_state_dict(state, strict=bool(strict))
+    skipped_mismatch = []
+    loaded_tensor_count = len(state)
+    if strict:
+        missing, unexpected = model.load_state_dict(state, strict=True)
+    else:
+        model_state = model.state_dict()
+        compatible_state = {}
+        unexpected = []
+        for key, value in state.items():
+            target = model_state.get(key)
+            if target is None:
+                unexpected.append(key)
+                continue
+            if getattr(value, "shape", None) != target.shape:
+                skipped_mismatch.append(
+                    {
+                        "key": key,
+                        "checkpoint_shape": list(value.shape),
+                        "model_shape": list(target.shape),
+                    }
+                )
+                continue
+            compatible_state[key] = value
+        loaded_tensor_count = len(compatible_state)
+        missing, unexpected_loaded = model.load_state_dict(compatible_state, strict=False)
+        unexpected = list(unexpected) + list(unexpected_loaded)
     logger.info(
-        "loaded pretrained=%s strict=%s missing=%d unexpected=%d",
+        "loaded pretrained=%s strict=%s loaded_tensors=%d missing=%d unexpected=%d skipped_mismatch=%d",
         ckpt_path,
         strict,
+        loaded_tensor_count,
         len(missing),
         len(unexpected),
+        len(skipped_mismatch),
     )
     return {
-        "loaded": True,
+        "loaded": loaded_tensor_count > 0,
         "path": ckpt_path,
         "missing": list(missing),
         "unexpected": list(unexpected),
+        "loaded_tensor_count": int(loaded_tensor_count),
+        "skipped_mismatch": skipped_mismatch,
     }
 
 
@@ -270,6 +299,11 @@ def compute_composite_score(holdout_loss, holdout_metrics, holdout_rows, cfg):
     weights = score_cfg.get("weights", {})
     targets = score_cfg.get("targets", {})
     sym_p95 = _finite_float(holdout_metrics.get("sym_p95"), targets.get("sym_p95_mm", 5.0))
+    manual_p95 = _finite_float(
+        holdout_metrics.get("manual_point_p95"),
+        targets.get("manual_point_p95_mm", targets.get("sym_p95_mm", 5.0)),
+    )
+    manual_sr1 = _finite_float(holdout_metrics.get("manual_point_sr1"), 0.0)
     no_curve_count = int(holdout_metrics.get("no_curve_count", 0) or 0)
     bad_rate = compute_bad_rate(holdout_rows, targets.get("bad_sym_p95_mm", 5.0))
     wrap_coverage = _finite_float(holdout_metrics.get("wrap_coverage"), 0.0)
@@ -277,6 +311,10 @@ def compute_composite_score(holdout_loss, holdout_metrics, holdout_rows, cfg):
     vox03 = _finite_float(holdout_metrics.get("vox03"), 0.0)
     vox03_target = max(1.0, _finite_float(targets.get("vox03", 100.0), 100.0))
     sym_target = max(1e-6, _finite_float(targets.get("sym_p95_mm", 5.0), 5.0))
+    manual_target = max(
+        1e-6,
+        _finite_float(targets.get("manual_point_p95_mm", targets.get("sym_p95_mm", 5.0)), 5.0),
+    )
     cc_target = max(1.0, _finite_float(targets.get("cc_count", 4.0), 4.0))
     loss_target = max(1e-6, _finite_float(targets.get("loss", 0.5), 0.5))
     hard_rows = [row for row in holdout_rows if int(row.get("is_hard_case", 0) or 0) > 0]
@@ -285,6 +323,8 @@ def compute_composite_score(holdout_loss, holdout_metrics, holdout_rows, cfg):
     components = {
         "loss": _finite_float(holdout_loss, loss_target) / loss_target,
         "sym_p95": min(sym_p95 / sym_target, 10.0),
+        "manual_point_p95": min(manual_p95 / manual_target, 10.0),
+        "manual_point_sr1_miss": max(0.0, 1.0 - manual_sr1),
         "no_curve_count": float(no_curve_count),
         "bad_rate": bad_rate,
         "vox03_empty": max(0.0, (vox03_target - vox03) / vox03_target),
@@ -314,6 +354,11 @@ def make_monitor_metrics(epoch, holdout_loss, holdout_metrics, composite_score, 
     for src, dst in [
         ("sym_mean", "holdout_sym_mean"),
         ("sym_p95", "holdout_sym_p95"),
+        ("manual_point_mean", "holdout_manual_point_mean"),
+        ("manual_point_p95", "holdout_manual_point_p95"),
+        ("manual_point_sr1", "holdout_manual_point_sr1"),
+        ("manual_point_sr2", "holdout_manual_point_sr2"),
+        ("manual_point_count", "holdout_manual_point_count"),
         ("no_curve_count", "holdout_no_curve_count"),
         ("h_pred_max", "h_pred_max"),
         ("h_pred_p99", "h_pred_p99"),
@@ -466,6 +511,11 @@ def main():
                 "best_composite_score",
                 "holdout_sym_mean",
                 "holdout_sym_p95",
+                "holdout_manual_point_mean",
+                "holdout_manual_point_p95",
+                "holdout_manual_point_sr1",
+                "holdout_manual_point_sr2",
+                "holdout_manual_point_count",
                 "holdout_no_curve_count",
                 "holdout_bad_rate",
                 "h_pred_max",
@@ -480,6 +530,8 @@ def main():
                 "score_loss_component",
                 "score_sym_p95_component",
                 "score_no_curve_count_component",
+                "score_manual_point_p95_component",
+                "score_manual_point_sr1_miss_component",
                 "score_bad_rate_component",
                 "score_vox03_empty_component",
                 "score_cc_count_component",
@@ -577,6 +629,11 @@ def main():
                     "holdout_sym_mean": monitor_metrics["holdout_sym_mean"],
                     "holdout_sym_p95": monitor_metrics["holdout_sym_p95"],
                     "holdout_no_curve_count": monitor_metrics["holdout_no_curve_count"],
+                    "holdout_manual_point_mean": monitor_metrics["holdout_manual_point_mean"],
+                    "holdout_manual_point_p95": monitor_metrics["holdout_manual_point_p95"],
+                    "holdout_manual_point_sr1": monitor_metrics["holdout_manual_point_sr1"],
+                    "holdout_manual_point_sr2": monitor_metrics["holdout_manual_point_sr2"],
+                    "holdout_manual_point_count": monitor_metrics["holdout_manual_point_count"],
                     "holdout_bad_rate": monitor_metrics["holdout_bad_rate"],
                     "h_pred_max": monitor_metrics["h_pred_max"],
                     "h_pred_p99": monitor_metrics["h_pred_p99"],
@@ -590,6 +647,8 @@ def main():
                     "score_loss_component": score_components["loss"],
                     "score_sym_p95_component": score_components["sym_p95"],
                     "score_no_curve_count_component": score_components["no_curve_count"],
+                    "score_manual_point_p95_component": score_components["manual_point_p95"],
+                    "score_manual_point_sr1_miss_component": score_components["manual_point_sr1_miss"],
                     "score_bad_rate_component": score_components["bad_rate"],
                     "score_vox03_empty_component": score_components["vox03_empty"],
                     "score_cc_count_component": score_components["cc_count"],
@@ -605,12 +664,14 @@ def main():
             )
             f.flush()
             logger.info(
-                "epoch=%d train_loss=%.6f holdout_loss=%.6f score=%.6f sym_p95=%s no_curve=%s bad_rate=%.4f vox03=%s cc=%s wrap=%s best_score=%s best_epoch=%s patience=%d/%d active=%s",
+                "epoch=%d train_loss=%.6f holdout_loss=%.6f score=%.6f sym_p95=%s manual_p95=%s manual_sr1=%s no_curve=%s bad_rate=%.4f vox03=%s cc=%s wrap=%s best_score=%s best_epoch=%s patience=%d/%d active=%s",
                 epoch,
                 train_loss,
                 holdout_loss,
                 composite_score,
                 monitor_metrics["holdout_sym_p95"],
+                monitor_metrics["holdout_manual_point_p95"],
+                monitor_metrics["holdout_manual_point_sr1"],
                 monitor_metrics["holdout_no_curve_count"],
                 monitor_metrics["holdout_bad_rate"],
                 monitor_metrics["vox03"],
@@ -654,6 +715,8 @@ def main():
         "best_monitor_metrics": best_monitor_metrics,
         "best_holdout_loss": best_monitor_metrics.get("holdout_loss"),
         "best_holdout_sym_p95": best_monitor_metrics.get("holdout_sym_p95"),
+        "best_holdout_manual_point_p95": best_monitor_metrics.get("holdout_manual_point_p95"),
+        "best_holdout_manual_point_sr1": best_monitor_metrics.get("holdout_manual_point_sr1"),
         "best_holdout_no_curve_count": best_monitor_metrics.get("holdout_no_curve_count"),
         "best_holdout_bad_rate": best_monitor_metrics.get("holdout_bad_rate"),
         "best_wrap_coverage": best_monitor_metrics.get("wrap_coverage"),
