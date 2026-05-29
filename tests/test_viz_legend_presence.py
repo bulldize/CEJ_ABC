@@ -14,6 +14,21 @@ def test_fixed_process_legend_is_written_to_html(tmp_path):
     H_gt[10, 10, 8] = 1.0
     C_gt = np.zeros(shape, dtype=np.uint8)
     C_gt[10, 10, 8] = 1
+    geometry_prior = {
+        "origin_mm": [10.0, 10.0, 8.0],
+        "axes": {
+            "long_axis_root_to_crown": [0.0, 0.0, 1.0],
+            "mesial_axis": [1.0, 0.0, 0.0],
+            "buccal_axis": [0.0, 1.0, 0.0],
+        },
+        "confidence": {"overall": 0.8},
+        "fit_summary": {"constraints_passed": True},
+    }
+    curve_fit_report = {
+        "manual_to_curve": {"mean_mm": 0.1, "p95_mm": 0.2},
+        "curve_to_gt_curve": {"mean_mm": 0.1, "p95_mm": 0.2},
+        "constraints": {"passed": True, "peak_margin_mm": 1.0},
+    }
 
     out_html = tmp_path / "viewer.html"
     cfg = {
@@ -42,6 +57,8 @@ def test_fixed_process_legend_is_written_to_html(tmp_path):
         C_pred=None,
         R=None,
         distances=None,
+        geometry_prior=geometry_prior,
+        curve_fit_report=curve_fit_report,
     )
 
     html = out_html.read_text(encoding="utf-8")
@@ -52,3 +69,10 @@ def test_fixed_process_legend_is_written_to_html(tmp_path):
     assert "4 伪GT骨架" in html
     assert "5 推理热图" in html
     assert "6 推理曲线" in html
+    assert "约束拟合曲线" in html
+    assert "GT热图" in html
+    assert "GT曲线" in html
+    assert "方向轴" in html
+    assert "手工点到拟合曲线" in html
+    assert "拟合曲线到GT曲线" in html
+    assert "方向约束=通过" in html

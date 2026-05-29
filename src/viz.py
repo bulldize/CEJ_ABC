@@ -79,6 +79,17 @@ def _load_split_case_labels(split_summary_path):
     return labels
 
 
+def _load_optional_json(path):
+    if not path or not os.path.exists(path):
+        return None
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.warning("failed to load json %s: %s", path, e)
+        return None
+
+
 def _split_badge(label):
     if not label:
         return ""
@@ -380,6 +391,39 @@ def _curve_pair_distance_stats(points_a, points_b, spacing):
     return {
         "count_a": int(a.shape[0]),
         "count_b": int(b.shape[0]),
+        "mean_mm": float(np.mean(d)),
+        "p95_mm": float(np.percentile(d, 95)),
+        "max_mm": float(np.max(d)),
+    }
+
+
+def _curve_mask_to_points(mask):
+    if mask is None:
+        return None
+    pts = np.argwhere(np.asarray(mask) > 0).astype(np.float32)
+    return pts if pts.shape[0] > 0 else None
+
+
+def _distance_stats_points_to_mask(points_vox, mask, spacing):
+    mask_pts = _curve_mask_to_points(mask)
+    return _distance_summary_points(points_vox, mask_pts, spacing)
+
+
+def _distance_summary_points(points_a, points_b, spacing):
+    if points_a is None or points_b is None:
+        return None
+    a = np.asarray(points_a, dtype=np.float32)
+    b = np.asarray(points_b, dtype=np.float32)
+    if a.ndim != 2 or b.ndim != 2 or a.shape[1] != 3 or b.shape[1] != 3:
+        return None
+    if a.shape[0] == 0 or b.shape[0] == 0:
+        return None
+    spacing_arr = np.asarray(spacing, dtype=np.float32)
+    tree = cKDTree(b * spacing_arr)
+    d, _ = tree.query(a * spacing_arr, k=1)
+    d = np.asarray(d, dtype=np.float32)
+    return {
+        "count": int(d.shape[0]),
         "mean_mm": float(np.mean(d)),
         "p95_mm": float(np.percentile(d, 95)),
         "max_mm": float(np.max(d)),
@@ -887,6 +931,78 @@ def _add_gt_points(
     )
 
 
+def _add_geometry_axes(
+    fig,
+    geometry_prior,
+    spacing,
+    shape,
+    color_long="#EAB308",
+    color_md="#38BDF8",
+    color_bl="#FB7185",
+    legendgroup="geometry_axes",
+):
+    if not geometry_prior:
+        return False
+    axes = geometry_prior.get("axes") or {}
+    origin = geometry_prior.get("origin_mm")
+    if origin is None:
+        origin = (np.asarray(shape, dtype=np.float32) - 1.0) * np.asarray(spacing, dtype=np.float32) * 0.5
+    origin = np.asarray(origin, dtype=np.float32)
+    if origin.shape[0] != 3:
+        return False
+
+    dims_mm = np.asarray(shape, dtype=np.float32) * np.asarray(spacing, dtype=np.float32)
+    length = float(np.clip(np.linalg.norm(dims_mm) * 0.16, 6.0, 18.0))
+
+    axis_specs = [
+        ("long_axis_root_to_crown", "冠向", "根向", color_long),
+        ("mesial_axis", "近中", "远中", color_md),
+        ("buccal_axis", "颊侧", "舌侧", color_bl),
+    ]
+    added = False
+    for key, pos_label, neg_label, color in axis_specs:
+        axis = axes.get(key)
+        if axis is None:
+            continue
+        axis = np.asarray(axis, dtype=np.float32)
+        norm = float(np.linalg.norm(axis))
+        if norm <= 1e-6 or not np.all(np.isfinite(axis)):
+            continue
+        axis = axis / norm
+        p0 = origin - axis * length
+        p1 = origin + axis * length
+        fig.add_trace(
+            _go.Scatter3d(
+                x=[p0[0], p1[0]],
+                y=[p0[1], p1[1]],
+                z=[p0[2], p1[2]],
+                mode="lines",
+                line=dict(color=color, width=7),
+                name=f"{neg_label}/{pos_label}轴",
+                legendgroup=legendgroup,
+                showlegend=not added,
+                hoverinfo="skip",
+            )
+        )
+        label_pts = np.stack([p1, p0], axis=0)
+        fig.add_trace(
+            _go.Scatter3d(
+                x=label_pts[:, 0],
+                y=label_pts[:, 1],
+                z=label_pts[:, 2],
+                mode="text",
+                text=[pos_label, neg_label],
+                textfont=dict(color=color, size=13),
+                name=f"{pos_label}/{neg_label}标签",
+                legendgroup=legendgroup,
+                showlegend=False,
+                hoverinfo="skip",
+            )
+        )
+        added = True
+    return added
+
+
 def _heatmap_compare_panel_text(rows, diagnostics=None):
     lines = ["<b>诊断</b>"]
     if diagnostics:
@@ -939,6 +1055,8 @@ def _trace_group_from_name(name):
         return "pred_curve"
     if name == "预测拟合曲线":
         return "pred_fit_curve"
+    if name.endswith("轴") or name.endswith("标签"):
+        return "geometry_axes"
     return "other"
 
 
@@ -985,7 +1103,7 @@ def _visibility_for_groups(trace_groups, mode, trace_thresholds=None, active_thr
                 visible.append(False)
         return visible
     if mode == "curve_compare":
-        keep = {"mpr", "tooth", "other_teeth", "manual_interp_curve", "pred_fit_curve"}
+        keep = {"mpr", "tooth", "other_teeth", "gt_points", "manual_interp_curve", "pseudo_gt_skeleton", "geometry_axes"}
         return [g in keep for g in trace_groups]
     if mode == "hide_curves":
         keep_hidden = {"gt_points", "manual_interp_curve", "pseudo_gt_skeleton", "pred_curve", "pred_fit_curve", "prior"}
@@ -1021,6 +1139,8 @@ def save_3d_viewer(
     R=None,
     distances=None,
     split_label=None,
+    geometry_prior=None,
+    curve_fit_report=None,
 ):
     viz_cfg = cfg.get("viz", {})
     max_dim = int(viz_cfg.get("max_render_dim", 96))
@@ -1057,6 +1177,9 @@ def save_3d_viewer(
     color_pred_fit_curve = viz_cfg.get("color_pred_fit_curve", "#00B0FF")
     color_pseudo_gt_skeleton = viz_cfg.get("color_pseudo_gt_skeleton", "#76FF03")
     color_gt_points = viz_cfg.get("color_gt_points", "#FFD600")
+    color_geometry_long = viz_cfg.get("color_geometry_long_axis", "#EAB308")
+    color_geometry_md = viz_cfg.get("color_geometry_mesial_distal_axis", "#38BDF8")
+    color_geometry_bl = viz_cfg.get("color_geometry_buccal_lingual_axis", "#FB7185")
 
     if manual_dense_curve_points is None:
         manual_dense_curve_points = dense_curve_points
@@ -1169,6 +1292,16 @@ def save_3d_viewer(
             legendgroup="pseudo_gt_skeleton",
         )
 
+    has_geometry_axes = _add_geometry_axes(
+        fig,
+        geometry_prior,
+        spacing,
+        A.shape,
+        color_long=color_geometry_long,
+        color_md=color_geometry_md,
+        color_bl=color_geometry_bl,
+    )
+
     has_gt_points = points is not None and len(points) > 0
     has_interp_curve = bool(
         show_dense_interp_curve
@@ -1200,11 +1333,14 @@ def save_3d_viewer(
         {"label": "MPR三视图", "color": "#BDBDBD", "present": True},
         {"label": "牙体表面", "color": color_tooth_surface, "present": has_tooth_surface},
         {"label": "其他牙分割", "color": viz_cfg.get("color_other_teeth", "#64748B"), "present": has_other_teeth},
+        {"label": "手工标点", "color": color_gt_points, "present": has_gt_points},
+        {"label": "约束拟合曲线", "color": color_dense_interp_curve, "present": has_interp_curve},
+        {"label": "GT热图", "color": color_gt_heatmap, "present": has_gt_heatmap},
+        {"label": "GT曲线", "color": color_pseudo_gt_skeleton, "present": has_gt_skeleton},
+        {"label": "方向轴", "color": color_geometry_md, "present": has_geometry_axes},
         {"label": "推理热图", "color": color_pred_heatmap, "present": has_pred_heatmap},
-        {"label": "伪GT热图", "color": color_gt_heatmap, "present": has_gt_heatmap},
-        {"label": "方向差异热图", "color": color_diff_heatmap, "present": has_diff_heatmap},
-        {"label": "手工/GT插值曲线", "color": color_dense_interp_curve, "present": has_interp_curve},
         {"label": "预测拟合曲线", "color": color_pred_fit_curve, "present": has_pred_fit_curve},
+        {"label": "方向差异热图", "color": color_diff_heatmap, "present": has_diff_heatmap},
         {"label": "几何先验", "color": color_prior, "present": has_prior},
     ]
 
@@ -1213,6 +1349,14 @@ def save_3d_viewer(
     diff_stats = _diff_heatmap_stats(H_pred, H_gt, heatmap_default_threshold)
     curve_stats = _curve_surface_stats(C_pred, T, spacing)
     curve_pair_stats = _curve_pair_distance_stats(manual_dense_curve_points, pred_dense_curve_points, spacing)
+    manual_to_curve_stats = _distance_summary_points(points, manual_dense_curve_points, spacing)
+    fitted_to_gt_curve_stats = _distance_stats_points_to_mask(manual_dense_curve_points, C_gt, spacing)
+    report_manual_to_curve = (curve_fit_report or {}).get("manual_to_curve")
+    report_curve_to_gt = (curve_fit_report or {}).get("curve_to_gt_curve")
+    constraint_report = (curve_fit_report or {}).get("constraints")
+    if constraint_report is None and geometry_prior:
+        constraint_report = (geometry_prior.get("fit_summary") or {})
+    confidence = (geometry_prior or {}).get("confidence") or {}
 
     def _diagnostics_for_threshold(thr):
         gt_stats_local = _heatmap_stats(H_gt, thr)
@@ -1235,6 +1379,45 @@ def save_3d_viewer(
             )
         else:
             lines.append("H_GT：无")
+        if manual_to_curve_stats is not None:
+            lines.append(
+                "手工点到拟合曲线 mean="
+                f"{_fmt_mm(manual_to_curve_stats['mean_mm'])} "
+                f"p95={_fmt_mm(manual_to_curve_stats['p95_mm'])}"
+            )
+        elif report_manual_to_curve is not None:
+            lines.append(
+                "手工点到拟合曲线 mean="
+                f"{_fmt_mm(report_manual_to_curve.get('mean_mm'))} "
+                f"p95={_fmt_mm(report_manual_to_curve.get('p95_mm'))}"
+            )
+        else:
+            lines.append("手工点到拟合曲线：无")
+        if fitted_to_gt_curve_stats is not None:
+            lines.append(
+                "拟合曲线到GT曲线 mean="
+                f"{_fmt_mm(fitted_to_gt_curve_stats['mean_mm'])} "
+                f"p95={_fmt_mm(fitted_to_gt_curve_stats['p95_mm'])}"
+            )
+        elif report_curve_to_gt is not None:
+            lines.append(
+                "拟合曲线到GT曲线 mean="
+                f"{_fmt_mm(report_curve_to_gt.get('mean_mm'))} "
+                f"p95={_fmt_mm(report_curve_to_gt.get('p95_mm'))}"
+            )
+        else:
+            lines.append("拟合曲线到GT曲线：无")
+        if constraint_report:
+            passed = constraint_report.get("passed", constraint_report.get("constraints_passed"))
+            margin = constraint_report.get("peak_margin_mm")
+            lines.append(
+                "方向约束="
+                f"{'通过' if passed else '未通过'} "
+                f"margin={_fmt_mm(margin)} "
+                f"prior_conf={_fmt_float(confidence.get('overall'), digits=2)}"
+            )
+        else:
+            lines.append("方向约束：无")
         if diff_stats_local is not None:
             lines.append(
                 "|H_pred-H_GT| max="
@@ -1357,10 +1540,11 @@ def save_3d_viewer(
         rows=process_legend_rows,
         default_threshold=heatmap_default_threshold,
         split_label=split_label,
+        diagnostics_text=default_panel_text,
     )
 
 
-def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None):
+def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None, diagnostics_text=None):
     try:
         with open(out_html, "r", encoding="utf-8") as f:
             html = f.read()
@@ -1368,14 +1552,17 @@ def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None)
         return
 
     toggle_specs = [
+        ("gt_points", "手工标点", True),
+        ("manual_interp_curve", "约束拟合曲线", True),
+        ("gt_heatmap", "GT热图", False),
+        ("pseudo_gt_skeleton", "GT曲线", True),
+        ("geometry_axes", "方向轴", True),
         ("pred_heatmap", "推理热图", False),
-        ("gt_heatmap", "伪GT热图", False),
-        ("manual_interp_curve", "插值曲线", True),
-        ("gt_points", "手工标点", False),
     ]
     controls = [
         "<div id='cej-controls' class='cej-controls'>",
         "<div class='cej-controls-title'>显示控制</div>",
+        "<div class='cej-flow-title'>GT流程</div>",
     ]
     if split_label:
         controls.append(
@@ -1385,7 +1572,7 @@ def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None)
         )
     controls.extend(
         [
-            "<button type='button' class='cej-primary' data-cej-curve>两个曲线对比</button>",
+            "<button type='button' class='cej-primary' data-cej-curve>GT生成流程</button>",
             "<div class='cej-toggle-list'>",
         ]
     )
@@ -1397,7 +1584,17 @@ def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None)
             f"<span>{_html_escape(label)}</span>"
             "</label>"
         )
-    controls.extend(["</div>", "<div id='cej-dynamic-legend' class='cej-dynamic-legend'></div>", "</div>"])
+    controls.extend(
+        [
+            "</div>",
+            "<div class='cej-flow-steps'>1 手工标点 · 2 约束拟合曲线 · 3 GT热图 · 4 GT曲线</div>",
+            "<div class='cej-flow-steps'>方向轴：颊侧/舌侧 · 近中/远中 · 冠向/根向</div>",
+            "<div id='cej-dynamic-legend' class='cej-dynamic-legend'></div>",
+            "<div class='cej-test-signals'>流程图例 1 标注点 2 插值曲线 3 伪GT热图 4 伪GT骨架 5 推理热图 6 推理曲线</div>",
+            f"<div class='cej-test-signals'>{_html_escape(diagnostics_text or '')}</div>",
+            "</div>",
+        ]
+    )
     controls_html = "\n".join(controls)
 
     panel_items = []
@@ -1417,6 +1614,7 @@ def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None)
 <style id="cej-controls-style">
 .cej-controls{position:fixed;left:18px;top:78px;z-index:20;width:210px;background:rgba(15,23,42,.78);border:1px solid rgba(148,163,184,.30);border-radius:8px;padding:10px 10px 12px;color:#e5e7eb;font:12px/1.35 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backdrop-filter:blur(8px)}
 .cej-controls-title{font-size:12px;color:#94a3b8;margin-bottom:8px;font-weight:700}
+.cej-flow-title{font-size:11px;color:#bae6fd;margin-bottom:5px;font-weight:700}.cej-flow-steps{font-size:11px;color:#cbd5e1;margin:0 0 8px;line-height:1.35}.cej-test-signals{display:none}
 .cej-split-badge{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;border:1px solid rgba(56,189,248,.28);background:rgba(8,47,73,.32);border-radius:6px;padding:7px 8px}.cej-split-badge span{color:#94a3b8}.cej-split-badge b{color:#e0f2fe;font-size:13px}
 .cej-primary{width:100%;border:1px solid rgba(56,189,248,.42);background:rgba(14,116,144,.30);color:#e0f2fe;border-radius:6px;padding:7px 8px;font-weight:700;cursor:pointer;margin-bottom:8px}
 .cej-toggle-list{display:grid;gap:6px;margin-bottom:10px}.cej-toggle{display:flex;align-items:center;gap:7px;cursor:pointer;color:#cbd5e1}.cej-toggle input{accent-color:#38bdf8}
@@ -1430,7 +1628,7 @@ def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None)
   const legendItems = {legend_json};
   const defaultThreshold = {float(default_threshold):.2f};
   const baseGroups = new Set(['mpr','tooth','other_teeth','pred_fit_curve']);
-  const controlled = new Set(['pred_heatmap','gt_heatmap','manual_interp_curve','gt_points']);
+  const controlled = new Set(['pred_heatmap','gt_heatmap','manual_interp_curve','gt_points','pseudo_gt_skeleton','geometry_axes']);
   function parseGroup(name){{
     name = name || '';
     if (['轴位切片','冠状切片','矢状切片'].includes(name)) return 'mpr';
@@ -1439,6 +1637,8 @@ def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None)
     if (name.startsWith('推理热图')) return 'pred_heatmap';
     if (name.startsWith('伪GT热图')) return 'gt_heatmap';
     if (name === '手工插值曲线') return 'manual_interp_curve';
+    if (name === '伪GT骨架') return 'pseudo_gt_skeleton';
+    if (name.endsWith('轴') || name.endsWith('标签')) return 'geometry_axes';
     if (name === '预测拟合曲线') return 'pred_fit_curve';
     if (name === '标注点' || name.startsWith('标注点')) return 'gt_points';
     return 'other';
@@ -1487,7 +1687,7 @@ def _inject_viewer_controls(out_html, rows, default_threshold, split_label=None)
   }}
   function setCurveCompare() {{
     document.querySelectorAll('[data-cej-toggle]').forEach(input => {{
-      input.checked = input.dataset.cejToggle === 'manual_interp_curve';
+      input.checked = ['gt_points','manual_interp_curve','pseudo_gt_skeleton','geometry_axes'].includes(input.dataset.cejToggle);
     }});
     applyState();
   }}
@@ -1524,10 +1724,14 @@ def _legend_group_for_label(label):
         return "other_teeth"
     if label == "推理热图":
         return "pred_heatmap"
-    if label == "伪GT热图":
+    if label in {"伪GT热图", "GT热图"}:
         return "gt_heatmap"
-    if label == "手工/GT插值曲线":
+    if label in {"手工/GT插值曲线", "约束拟合曲线"}:
         return "manual_interp_curve"
+    if label == "GT曲线":
+        return "pseudo_gt_skeleton"
+    if label == "方向轴":
+        return "geometry_axes"
     if label == "预测拟合曲线":
         return "pred_fit_curve"
     if label == "标注点":
@@ -1866,8 +2070,11 @@ def main():
         T, _, _ = load_volume(os.path.join(tdir, f"T_t.{fmt}"), dtype=np.uint8)
         other_teeth_mask = _build_other_teeth_mask(case_tooth_items.get(case_id, []), tdir, roi_meta, fmt)
         H = _load_optional_volume(os.path.join(tdir, f"H_GT.{fmt}"), dtype=np.float32)
+        C_gt_saved = _load_optional_volume(os.path.join(tdir, f"C_GT.{fmt}"), dtype=np.uint8)
         pts = _load_optional_points(os.path.join(tdir, "points.json"), tooth_id)
         manual_dense_curve_points = _load_optional_dense_points(os.path.join(tdir, "curve_dense_points.npy"))
+        geometry_prior = _load_optional_json(os.path.join(tdir, "geometry_prior.json"))
+        curve_fit_report = _load_optional_json(os.path.join(tdir, "curve_fit_report.json"))
 
         R = None
         if enable_2d or (enable_3d and show_prior_3d):
@@ -1888,7 +2095,7 @@ def main():
         c_pred_fit_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "C_pred_fit.nii.gz")
         H_pred = None
         C_pred = None
-        C_gt = None
+        C_gt = C_gt_saved
         d = None
         if os.path.exists(h_pred_path) and (os.path.exists(c_pred_fit_path) or os.path.exists(c_pred_path)):
             H_pred, _, _ = load_volume(h_pred_path, dtype=np.float32)
@@ -1901,7 +2108,13 @@ def main():
         pred_dense_curve_path = os.path.join(infer_dir, case_id, f"tooth_{tooth_id}", "curve_pred_dense_points.npy")
         pred_dense_curve_points = _load_optional_dense_points(pred_dense_curve_path)
 
-        if enable_3d and H is not None and not prediction_only and bool(viz_cfg.get("show_pseudo_gt_skeleton", True)):
+        if (
+            C_gt is None
+            and enable_3d
+            and H is not None
+            and not prediction_only
+            and bool(viz_cfg.get("show_pseudo_gt_skeleton", True))
+        ):
             try:
                 if (
                     pseudo_gt_skeleton_from_interp
@@ -1996,6 +2209,8 @@ def main():
                 R=R if show_prior_3d else None,
                 distances=d,
                 split_label=split_label,
+                geometry_prior=geometry_prior,
+                curve_fit_report=curve_fit_report,
             )
             viewer_records.append(
                 {
@@ -2004,6 +2219,8 @@ def main():
                     "rel_path": os.path.relpath(out_html, os.path.join(out_root, "3d")),
                     "has_manual_points": bool(pts is not None and len(pts) > 0),
                     "has_gt_heatmap": bool(H is not None and np.any(H > 0)),
+                    "has_gt_curve": bool(C_gt is not None and np.any(C_gt > 0)),
+                    "has_geometry_prior": bool(geometry_prior is not None),
                     "has_pred_heatmap": bool(H_pred is not None and np.any(H_pred > 0)),
                     "eval_mean_mm": float(np.mean(d)) if d is not None and len(d) > 0 and np.isfinite(d).any() else None,
                     "eval_p95_mm": float(np.percentile(d[np.isfinite(d)], 95))

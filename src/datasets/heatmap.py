@@ -2,6 +2,8 @@ import numpy as np
 from scipy.interpolate import splprep, splev
 from scipy.ndimage import distance_transform_edt
 
+from src.datasets.cej_geometry import fit_curve_with_geometry_prior
+
 
 def _linear_resample(points_mm, step_mm):
     if len(points_mm) < 2:
@@ -56,12 +58,46 @@ def _sort_points_by_plane_angle(points_mm):
     return pts_sorted
 
 
-def fit_curve_and_sample(points_vox, spacing, step_mm, closed=True, smooth=0.0):
+def fit_curve_and_sample(
+    points_vox,
+    spacing,
+    step_mm,
+    closed=True,
+    smooth=0.0,
+    geometry_prior=None,
+    return_report=False,
+):
     pts = np.asarray(points_vox, dtype=np.float32)
     if pts.shape[0] == 0:
-        return np.zeros((0, 3), dtype=np.float32)
+        out = np.zeros((0, 3), dtype=np.float32)
+        if return_report:
+            return out, {
+                "used_geometry_prior": bool(geometry_prior is not None),
+                "fallback": True,
+                "fallback_reason": "no_points",
+                "n_input_points": 0,
+                "n_output_points": 0,
+            }
+        return out
 
     spacing = np.asarray(spacing, dtype=np.float32)
+
+    if geometry_prior is not None:
+        dense_constrained, prior_report = fit_curve_with_geometry_prior(
+            pts,
+            spacing=spacing,
+            step_mm=step_mm,
+            closed=closed,
+            smooth=smooth,
+            geometry_prior=geometry_prior,
+        )
+        if dense_constrained is not None:
+            if return_report:
+                return dense_constrained.astype(np.float32), prior_report
+            return dense_constrained.astype(np.float32)
+    else:
+        prior_report = None
+
     pts_mm = pts * spacing
 
     # Remove exact duplicates (after rounding) to reduce spline instability.
@@ -69,7 +105,17 @@ def fit_curve_and_sample(points_vox, spacing, step_mm, closed=True, smooth=0.0):
     _, uniq_idx = np.unique(pts_round, axis=0, return_index=True)
     pts_mm = pts_mm[np.sort(uniq_idx)]
     if pts_mm.shape[0] == 0:
-        return np.zeros((0, 3), dtype=np.float32)
+        out = np.zeros((0, 3), dtype=np.float32)
+        if return_report:
+            return out, {
+                "used_geometry_prior": bool(geometry_prior is not None),
+                "fallback": True,
+                "fallback_reason": "all_points_duplicate_or_invalid",
+                "n_input_points": int(pts.shape[0]),
+                "n_output_points": 0,
+                "geometry_prior_report": prior_report,
+            }
+        return out
 
     if closed:
         pts_mm = _sort_points_by_plane_angle(pts_mm)
@@ -92,7 +138,20 @@ def fit_curve_and_sample(points_vox, spacing, step_mm, closed=True, smooth=0.0):
         pts_dense = _linear_resample_closed(pts_mm, step_mm) if closed else _linear_resample(pts_mm, step_mm)
 
     pts_dense_vox = pts_dense / spacing
-    return pts_dense_vox.astype(np.float32)
+    pts_dense_vox = pts_dense_vox.astype(np.float32)
+    if return_report:
+        fallback_reason = None
+        if geometry_prior is not None:
+            fallback_reason = (prior_report or {}).get("fallback_reason") or "geometry_fit_failed"
+        return pts_dense_vox, {
+            "used_geometry_prior": bool(geometry_prior is not None),
+            "fallback": bool(geometry_prior is not None),
+            "fallback_reason": fallback_reason,
+            "n_input_points": int(pts.shape[0]),
+            "n_output_points": int(pts_dense_vox.shape[0]),
+            "geometry_prior_report": prior_report,
+        }
+    return pts_dense_vox
 
 
 def _rasterize_polyline_mask(shape, points_vox, close_loop=True):
