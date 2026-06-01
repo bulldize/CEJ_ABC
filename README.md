@@ -9,6 +9,9 @@ This repo follows `doc/specs/PRD.md` and the tech-route spec under `doc/specs/` 
 # optional: create a venv and install deps
 pip install -r requirements.txt
 
+# current default reproduction training flow (unsup_last.pt -> Stage 1 exp03 -> Stage 2 goal模式_19full)
+bash scripts/run_unsup_to_goal_repro.sh
+
 # run the full pipeline (preprocess -> train -> infer -> eval -> viz)
 bash scripts/run_all.sh
 
@@ -25,6 +28,21 @@ python -m src.viz --config configs/default.yaml
 The script is compatible with macOS default Bash (3.2), no `readarray` dependency.
 Matplotlib cache is stored under `outputs/.mpl_cache` to avoid permission warnings.
 3D viewer index is written to `outputs/viz/3d/index.html` (Slicer-like MPR + surface overlays).
+
+## Default Reproduction Training
+
+The current full reproduction entrypoint is:
+
+```bash
+bash scripts/run_unsup_to_goal_repro.sh
+```
+
+It creates isolated run roots under `/root/cej_isolated_runs/C` and runs:
+
+1. Stage 1: `scripts/run_cej_unsup_retrain.py` with `exp03_skeleton_aux_loss`, initialized only from `/root/cej_runs/run_unsup_001/unsup/pretrain/checkpoints/last.pt`.
+2. Stage 2: `scripts/run_goal_mode_19full.py`, initialized from the new Stage 1 `best.pt`.
+
+Stage 2 chooses its first training length from the data size, not a fixed epoch count. It estimates `steps_per_epoch = ceil(tooth_dir_count / batch_size)` and targets roughly `--target-train-steps` completed updates before final evaluation; more teeth usually means fewer epochs, fewer teeth usually means more epochs. Stopping is governed by final inference/evaluation acceptance, not by the training CSV monitor columns. The training fields `holdout_manual_point_p95`, `holdout_manual_point_sr1`, and `holdout_sym_p95` are proxy metrics for checkpoint selection only. Acceptance is decided from `summary/acceptance_report.json` and `final/eval/metrics_summary.json` using the strict criteria: case/tooth counts match the run manifest, no missing/no-curve/failed teeth, `mean_dist_mm <= 0.35`, `p95_dist_mm <= 0.65`, and `sr@1.0mm >= 0.99`.
 
 ## Unsupervised Pretrain (Masked Reconstruction)
 

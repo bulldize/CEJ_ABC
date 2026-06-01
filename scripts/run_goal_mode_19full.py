@@ -4,6 +4,7 @@ import csv
 import datetime as dt
 import glob
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -388,6 +389,47 @@ def load_summary(eval_dir: Path) -> Dict:
     return read_json(path) if path.exists() else {}
 
 
+def strict_acceptance_checks(source_manifest: Dict, summary: Dict, failed_or_bad_teeth_count: int) -> Dict:
+    case_count = int(source_manifest.get("case_count", 0) or 0)
+    tooth_count = int(summary.get("tooth_count", source_manifest.get("tooth_dir_count", 0)) or 0)
+    expected_case_count = int(source_manifest.get("expected_case_count", source_manifest.get("case_count", 0)) or 0)
+    expected_tooth_count = int(
+        source_manifest.get("expected_tooth_count", source_manifest.get("tooth_dir_count", 0)) or 0
+    )
+    missing_prediction_count = int(summary.get("missing_prediction_count", 0) or 0)
+    no_curve_count = int(summary.get("no_curve_count", 0) or 0)
+    failed_tooth_count = int(summary.get("failed_tooth_count", 0) or 0)
+    mean_dist_mm = float(summary.get("mean_dist_mm", summary.get("mean", float("inf"))))
+    p95_dist_mm = summary_p95(summary)
+    sr1 = summary_sr1(summary)
+    criteria = {
+        "case_count_matches_expected": case_count == expected_case_count,
+        "tooth_count_matches_expected": tooth_count == expected_tooth_count,
+        "missing_prediction_count_is_0": missing_prediction_count == 0,
+        "no_curve_count_is_0": no_curve_count == 0,
+        "failed_tooth_count_is_0": failed_tooth_count == 0,
+        "failed_or_bad_teeth_empty": int(failed_or_bad_teeth_count) == 0,
+        "mean_dist_mm_lte_0_35": mean_dist_mm <= 0.35,
+        "p95_dist_mm_lte_0_65": p95_dist_mm <= 0.65,
+        "sr_at_1mm_gte_99pct": sr1 >= 0.99,
+    }
+    return {
+        "criteria": criteria,
+        "accepted": all(criteria.values()),
+        "case_count": case_count,
+        "tooth_count": tooth_count,
+        "expected_case_count": expected_case_count,
+        "expected_tooth_count": expected_tooth_count,
+        "missing_prediction_count": missing_prediction_count,
+        "no_curve_count": no_curve_count,
+        "failed_tooth_count": failed_tooth_count,
+        "failed_or_bad_teeth_count": int(failed_or_bad_teeth_count),
+        "mean_dist_mm": mean_dist_mm,
+        "p95_dist_mm": p95_dist_mm,
+        "sr@1.0mm": sr1,
+    }
+
+
 def load_bad_rows(per_tooth_csv: Path) -> List[Dict]:
     if not per_tooth_csv.exists():
         return []
@@ -426,7 +468,15 @@ def write_failed_rows(path: Path, rows: List[Dict]) -> None:
         writer.writerows(rows)
 
 
-def sweep_thresholds(repo_dir: Path, python_exe: str, run_root: Path, cfg: Dict, thresholds: List[float]) -> Dict:
+def sweep_thresholds(
+    repo_dir: Path,
+    python_exe: str,
+    run_root: Path,
+    cfg: Dict,
+    thresholds: List[float],
+    source_manifest: Dict,
+    stop_on_strict_acceptance: bool,
+) -> Dict:
     ckpt_path = Path(cfg["data"]["output_dir"]) / "train" / "checkpoints" / "best.pt"
     if not ckpt_path.exists():
         raise FileNotFoundError(f"best checkpoint missing before sweep: {ckpt_path}")
@@ -452,6 +502,7 @@ def sweep_thresholds(repo_dir: Path, python_exe: str, run_root: Path, cfg: Dict,
         sr1 = summary_sr1(summary)
         bad_rows = load_bad_rows(out_dir / "eval" / "metrics_per_tooth.csv")
         bad_count = len(bad_rows)
+        strict_checks = strict_acceptance_checks(source_manifest, summary, bad_count)
         row = {
             "threshold": threshold,
             "output_dir": str(out_dir),
@@ -464,11 +515,25 @@ def sweep_thresholds(repo_dir: Path, python_exe: str, run_root: Path, cfg: Dict,
             "no_curve_count": no_curve,
             "failed_tooth_count": failed,
             "failed_or_bad_teeth_count": bad_count,
+            "strict_accepted": strict_checks["accepted"],
         }
         rows.append(row)
         no_empty_curve = missing == 0 and no_curve == 0
         no_bad_teeth = bad_count == 0
-        candidates.append((0 if no_empty_curve else 1, 0 if no_bad_teeth else 1, p95, -sr1, threshold, row, threshold_cfg))
+        candidates.append(
+            (
+                0 if strict_checks["accepted"] else 1,
+                0 if no_empty_curve else 1,
+                0 if no_bad_teeth else 1,
+                p95,
+                -sr1,
+                threshold,
+                row,
+                threshold_cfg,
+            )
+        )
+        if stop_on_strict_acceptance and strict_checks["accepted"]:
+            break
 
     sweep_csv = run_root / "summary" / "threshold_sweep.csv"
     sweep_csv.parent.mkdir(parents=True, exist_ok=True)
@@ -482,8 +547,8 @@ def sweep_thresholds(repo_dir: Path, python_exe: str, run_root: Path, cfg: Dict,
     return {
         "sweep_csv": str(sweep_csv),
         "rows": rows,
-        "best_row": best[5],
-        "best_config": best[6],
+        "best_row": best[6],
+        "best_config": best[7],
     }
 
 
@@ -518,25 +583,29 @@ def acceptance_report(run_root: Path, source_manifest: Dict, best_row: Dict, fin
     bad_rows = load_bad_rows(per_tooth)
     failed_csv = final_eval / "failed_or_bad_teeth.csv"
     write_failed_rows(failed_csv, bad_rows)
-    criteria = {
-        "case_count_is_19": int(source_manifest.get("case_count", 0)) == 19,
-        "missing_prediction_count_is_0": int(summary.get("missing_prediction_count", 0) or 0) == 0,
-        "no_curve_count_is_0": int(summary.get("no_curve_count", 0) or 0) == 0,
-        "p95_dist_mm_lte_2": summary_p95(summary) <= 2.0,
-        "mean_dist_mm_lte_1": float(summary.get("mean_dist_mm", summary.get("mean", float("inf")))) <= 1.0,
-        "sr_at_1mm_gte_90pct": summary_sr1(summary) >= 0.90,
-        "failed_or_bad_teeth_empty": len(bad_rows) == 0,
-    }
+    failed_or_bad_teeth_count = len(bad_rows)
+    strict = strict_acceptance_checks(source_manifest, summary, failed_or_bad_teeth_count)
+    criteria = strict["criteria"]
     accepted = all(criteria.values())
     report = {
         "created_at": now_iso(),
         "accepted": bool(accepted),
         "criteria": criteria,
+        "case_count": strict["case_count"],
+        "tooth_count": strict["tooth_count"],
+        "expected_case_count": strict["expected_case_count"],
+        "expected_tooth_count": strict["expected_tooth_count"],
+        "missing_prediction_count": strict["missing_prediction_count"],
+        "no_curve_count": strict["no_curve_count"],
+        "failed_tooth_count": strict["failed_tooth_count"],
+        "failed_or_bad_teeth_count": strict["failed_or_bad_teeth_count"],
+        "mean_dist_mm": strict["mean_dist_mm"],
+        "p95_dist_mm": strict["p95_dist_mm"],
+        "sr@1.0mm": strict["sr@1.0mm"],
         "metrics_summary": summary,
         "metrics_summary_path": str(final_eval / "metrics_summary.json"),
         "metrics_per_tooth_path": str(per_tooth),
         "failed_or_bad_teeth_path": str(failed_csv),
-        "failed_or_bad_teeth_count": len(bad_rows),
         "selected_threshold": best_row["threshold"],
         "selected_threshold_row": best_row,
         "case_manifest": str(run_root / "input" / "case_manifest.csv"),
@@ -595,6 +664,46 @@ def audit_dataset(repo_dir: Path, python_exe: str, run_root: Path, cfg_path: Pat
     run_cmd([python_exe, "-c", code], repo_dir, run_root / "logs" / "audit_all19.log")
 
 
+def choose_stage2_schedule(args: argparse.Namespace, source_manifest: Dict) -> Dict:
+    tooth_count = int(source_manifest.get("tooth_dir_count", 0) or 0)
+    tooth_count = max(1, tooth_count)
+    batch_size = max(1, int(args.batch_size))
+    steps_per_epoch = max(1, math.ceil(tooth_count / batch_size))
+    target_steps = max(1, int(args.target_train_steps))
+
+    if args.score_start_epoch is None:
+        score_start_epoch = math.ceil(0.85 * target_steps / steps_per_epoch)
+        score_start_epoch = max(2, min(int(args.auto_max_score_start_epoch), score_start_epoch))
+    else:
+        score_start_epoch = int(args.score_start_epoch)
+
+    if args.max_epochs is None:
+        max_epochs = math.ceil(target_steps / steps_per_epoch)
+        max_epochs = max(max_epochs, score_start_epoch + 2, int(args.auto_min_epochs))
+        max_epochs = min(max_epochs, int(args.auto_max_epochs))
+        max_epochs = max(max_epochs, score_start_epoch + 2)
+    else:
+        max_epochs = int(args.max_epochs)
+
+    if args.min_epochs is None:
+        min_epochs = max_epochs
+    else:
+        min_epochs = int(args.min_epochs)
+
+    args.score_start_epoch = score_start_epoch
+    args.max_epochs = max_epochs
+    args.min_epochs = min_epochs
+    return {
+        "tooth_count": tooth_count,
+        "batch_size": batch_size,
+        "estimated_steps_per_epoch": steps_per_epoch,
+        "target_train_steps": target_steps,
+        "score_start_epoch": score_start_epoch,
+        "max_epochs": max_epochs,
+        "min_epochs": min_epochs,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run goal-mode CEJ training on all 19 PASS manual cases.")
     parser.add_argument("--repo-dir", default=".")
@@ -608,13 +717,18 @@ def main() -> int:
     parser.add_argument("--train-only", action="store_true")
     parser.add_argument("--skip-train", action="store_true")
     parser.add_argument("--skip-viz", action="store_true")
+    parser.add_argument("--sweep-all-thresholds", action="store_true")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--base-channels", type=int, default=16)
-    parser.add_argument("--max-epochs", type=int, default=80)
-    parser.add_argument("--min-epochs", type=int, default=20)
+    parser.add_argument("--max-epochs", type=int, default=None)
+    parser.add_argument("--min-epochs", type=int, default=None)
     parser.add_argument("--patience", type=int, default=16)
     parser.add_argument("--early-stopping-min-delta", type=float, default=1e-4)
-    parser.add_argument("--score-start-epoch", type=int, default=5)
+    parser.add_argument("--score-start-epoch", type=int, default=None)
+    parser.add_argument("--target-train-steps", type=int, default=3437)
+    parser.add_argument("--auto-min-epochs", type=int, default=4)
+    parser.add_argument("--auto-max-epochs", type=int, default=30)
+    parser.add_argument("--auto-max-score-start-epoch", type=int, default=10)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--holdout-batch-size", type=int, default=1)
@@ -657,6 +771,9 @@ def main() -> int:
         Path(args.unsup_ckpt).resolve(),
         args.resume,
     )
+    schedule = choose_stage2_schedule(args, source_manifest)
+    write_json(run_root / "summary" / "stage2_schedule.json", schedule)
+    print(f"[SCHEDULE] {json.dumps(schedule, ensure_ascii=False)}")
     base_cfg = yaml.safe_load(base_config.read_text(encoding="utf-8"))
     cfg = update_train_cfg(base_cfg, args, source_manifest, run_root)
     train_cfg_path = run_root / "config" / "goal_mode_train.yaml"
@@ -679,7 +796,15 @@ def main() -> int:
         print(f"[OK] training complete: {best_ckpt}")
         return 0
 
-    sweep = sweep_thresholds(repo_dir, args.python_exe, run_root, cfg, list(THRESHOLDS))
+    sweep = sweep_thresholds(
+        repo_dir,
+        args.python_exe,
+        run_root,
+        cfg,
+        list(THRESHOLDS),
+        source_manifest,
+        stop_on_strict_acceptance=not args.sweep_all_thresholds,
+    )
     final_info = copy_final_outputs(run_root, sweep["best_row"], sweep["best_config"])
     if not args.skip_viz:
         run_final_viz(repo_dir, args.python_exe, run_root, Path(final_info["final_config"]))
