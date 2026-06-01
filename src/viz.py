@@ -1136,6 +1136,7 @@ def save_3d_viewer(
     dense_curve_points=None,
     manual_dense_curve_points=None,
     pred_dense_curve_points=None,
+    H_shape_prior=None,
     R=None,
     distances=None,
     split_label=None,
@@ -1172,6 +1173,7 @@ def save_3d_viewer(
     color_pred_heatmap = viz_cfg.get("color_pred_heatmap", "#FF5252")
     color_diff_heatmap = viz_cfg.get("color_diff_heatmap", "#F97316")
     color_prior = viz_cfg.get("color_prior", "#7E57C2")
+    color_shape_prior = viz_cfg.get("color_shape_prior", "#A78BFA")
     color_pred_curve = viz_cfg.get("color_pred_curve", "#00E5FF")
     color_dense_interp_curve = viz_cfg.get("color_dense_interp_curve", "#F500FF")
     color_pred_fit_curve = viz_cfg.get("color_pred_fit_curve", "#00B0FF")
@@ -1191,6 +1193,7 @@ def save_3d_viewer(
     T_ds = _downsample_volume(T, step)
     H_gt_ds = _downsample_volume(H_gt, step) if H_gt is not None else None
     H_pred_ds = _downsample_volume(H_pred, step) if H_pred is not None else None
+    H_shape_prior_ds = _downsample_volume(H_shape_prior, step) if H_shape_prior is not None else None
     other_teeth_ds = _downsample_volume(other_teeth_mask, step) if other_teeth_mask is not None else None
     R_ds = _downsample_volume(R, step) if R is not None else None
     spacing_ds = tuple(np.asarray(spacing, dtype=np.float32) * float(step))
@@ -1244,6 +1247,21 @@ def save_3d_viewer(
         )
         if prior_mesh is not None:
             fig.add_trace(prior_mesh)
+
+    shape_prior_thr = float(viz_cfg.get("shape_prior_iso_threshold", prior_thr))
+    shape_prior_mesh = None
+    if H_shape_prior_ds is not None:
+        shape_prior_mesh = _make_mesh_trace_from_mask(
+            (H_shape_prior_ds >= shape_prior_thr).astype(np.uint8),
+            spacing_ds,
+            name=f"Loss shape prior (>{shape_prior_thr:.2f})",
+            color=color_shape_prior,
+            opacity=float(viz_cfg.get("shape_prior_opacity", prior_opacity)),
+            step=mesh_step,
+            legendgroup="shape_prior",
+        )
+        if shape_prior_mesh is not None:
+            fig.add_trace(shape_prior_mesh)
 
     if C_pred is not None:
         _add_curve_points(
@@ -1315,6 +1333,7 @@ def save_3d_viewer(
     has_diff_heatmap = bool(heatmap_presence.get("diff_heatmap", False))
     has_pred_curve = bool(C_pred is not None and np.any(C_pred > 0))
     has_prior = bool(R_ds is not None and np.any(R_ds >= prior_thr))
+    has_shape_prior = bool(H_shape_prior_ds is not None and np.any(H_shape_prior_ds >= shape_prior_thr))
     has_tooth_surface = tooth_mesh is not None
     has_other_teeth = other_teeth_mesh is not None
 
@@ -1342,6 +1361,7 @@ def save_3d_viewer(
         {"label": "预测拟合曲线", "color": color_pred_fit_curve, "present": has_pred_fit_curve},
         {"label": "方向差异热图", "color": color_diff_heatmap, "present": has_diff_heatmap},
         {"label": "几何先验", "color": color_prior, "present": has_prior},
+        {"label": "Loss shape prior", "color": color_shape_prior, "present": has_shape_prior},
     ]
 
     gt_stats = _heatmap_stats(H_gt, heatmap_default_threshold)
@@ -2074,7 +2094,15 @@ def main():
         pts = _load_optional_points(os.path.join(tdir, "points.json"), tooth_id)
         manual_dense_curve_points = _load_optional_dense_points(os.path.join(tdir, "curve_dense_points.npy"))
         geometry_prior = _load_optional_json(os.path.join(tdir, "geometry_prior.json"))
+        if geometry_prior is None:
+            geometry_prior = _load_optional_json(os.path.join(tdir, "loss_shape_geometry_prior.json"))
         curve_fit_report = _load_optional_json(os.path.join(tdir, "curve_fit_report.json"))
+        if curve_fit_report is None:
+            curve_fit_report = _load_optional_json(os.path.join(tdir, "shape_prior_fit_report.json"))
+        H_shape_prior = _load_optional_volume(
+            os.path.join(tdir, f"{cfg['data'].get('shape_prior_name', 'H_SHAPE_PRIOR')}.{fmt}"),
+            dtype=np.float32,
+        )
 
         R = None
         if enable_2d or (enable_3d and show_prior_3d):
@@ -2206,6 +2234,7 @@ def main():
                 other_teeth_mask=other_teeth_mask,
                 manual_dense_curve_points=None if prediction_only else manual_dense_curve_points,
                 pred_dense_curve_points=pred_dense_curve_points,
+                H_shape_prior=H_shape_prior,
                 R=R if show_prior_3d else None,
                 distances=d,
                 split_label=split_label,

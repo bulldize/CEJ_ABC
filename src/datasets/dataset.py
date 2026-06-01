@@ -243,31 +243,49 @@ def write_supervised_audit(audit, out_dir):
     }
 
 
-def _build_supervised_items(processed_dir, processed_format="nii.gz", audit=None):
+def _build_supervised_items(
+    processed_dir,
+    processed_format="nii.gz",
+    audit=None,
+    use_shape_prior=False,
+    shape_prior_name="H_SHAPE_PRIOR",
+):
     if audit is None:
         audit = build_supervised_audit(processed_dir, processed_format)
     fmt = processed_format
     items = []
     for rec in audit["used_labeled_teeth"]:
         tdir = rec["tooth_dir"]
-        items.append({
+        item = {
             "image": os.path.join(tdir, f"A_t.{fmt}"),
             "mask": os.path.join(tdir, f"T_t.{fmt}"),
             "label": os.path.join(tdir, f"H_GT.{fmt}"),
             "tooth_dir": tdir,
             "case_id": rec["case_id"],
             "tooth_id": rec["tooth_id"],
-        })
+        }
+        if use_shape_prior:
+            item["shape_prior"] = os.path.join(tdir, f"{shape_prior_name}.{fmt}")
+        items.append(item)
     return items
 
 
-def _build_supervised_transforms(clip_percentiles, norm_mode, use_mask_channel, pad_divisor=None):
+def _build_supervised_transforms(
+    clip_percentiles,
+    norm_mode,
+    use_mask_channel,
+    pad_divisor=None,
+    use_shape_prior=False,
+):
+    volume_keys = ["image", "mask", "label"]
+    if use_shape_prior:
+        volume_keys.append("shape_prior")
     t = [
-        LoadImaged(keys=["image", "mask", "label"], image_only=True),
-        EnsureChannelFirstd(keys=["image", "mask", "label"]),
+        LoadImaged(keys=volume_keys, image_only=True),
+        EnsureChannelFirstd(keys=volume_keys),
     ]
     if pad_divisor is not None and int(pad_divisor) > 1:
-        t.append(DivisiblePadd(keys=["image", "mask", "label"], k=int(pad_divisor), method="end"))
+        t.append(DivisiblePadd(keys=volume_keys, k=int(pad_divisor), method="end"))
     if clip_percentiles is not None:
         low, high = clip_percentiles
         t.append(ClipIntensityPercentilesd(keys=["image"], lower=low, upper=high))
@@ -275,7 +293,7 @@ def _build_supervised_transforms(clip_percentiles, norm_mode, use_mask_channel, 
         t.append(NormalizeIntensityd(keys=["image"], nonzero=False, channel_wise=False))
     elif norm_mode == "minmax":
         t.append(ScaleIntensityd(keys=["image"], minv=0.0, maxv=1.0))
-    t.append(EnsureTyped(keys=["image", "mask", "label"], dtype=np.float32))
+    t.append(EnsureTyped(keys=volume_keys, dtype=np.float32))
     if use_mask_channel:
         t.append(ConcatItemsd(keys=["image", "mask"], name="x", dim=0))
     else:
@@ -286,11 +304,24 @@ def _build_supervised_transforms(clip_percentiles, norm_mode, use_mask_channel, 
 
 class ToothDataset(Dataset):
     def __init__(self, processed_dir, processed_format="nii.gz", use_mask_channel=True,
-                 clip_percentiles=(1.0, 99.0), norm_mode="zscore", cache_rate=0.0, pad_divisor=None):
+                 clip_percentiles=(1.0, 99.0), norm_mode="zscore", cache_rate=0.0, pad_divisor=None,
+                 use_shape_prior=False, shape_prior_name="H_SHAPE_PRIOR"):
         self.audit = build_supervised_audit(processed_dir, processed_format)
-        items = _build_supervised_items(processed_dir, processed_format, audit=self.audit)
+        items = _build_supervised_items(
+            processed_dir,
+            processed_format,
+            audit=self.audit,
+            use_shape_prior=use_shape_prior,
+            shape_prior_name=shape_prior_name,
+        )
         self.items = items
-        transforms = _build_supervised_transforms(clip_percentiles, norm_mode, use_mask_channel, pad_divisor)
+        transforms = _build_supervised_transforms(
+            clip_percentiles,
+            norm_mode,
+            use_mask_channel,
+            pad_divisor,
+            use_shape_prior=use_shape_prior,
+        )
         if cache_rate and cache_rate > 0:
             self.ds = CacheDataset(items, transform=transforms, cache_rate=float(cache_rate), num_workers=0)
         else:

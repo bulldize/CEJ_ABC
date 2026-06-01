@@ -68,6 +68,13 @@ def upgrade_processed_dir(cfg):
     curve_closed = bool(preprocess_cfg.get("curve_closed", True))
     curve_smooth = float(preprocess_cfg.get("curve_smooth", 0.0))
     peak_threshold = float(preprocess_cfg.get("gt_curve_peak_threshold", 0.999))
+    write_shape_prior = bool(
+        geometry_cfg.get("write_shape_prior_heatmap", preprocess_cfg.get("write_shape_prior_heatmap", False))
+    )
+    shape_prior_sigma_mm = float(
+        geometry_cfg.get("shape_prior_sigma_mm", preprocess_cfg.get("shape_prior_sigma_mm", 2.0))
+    )
+    shape_prior_name = str(geometry_cfg.get("shape_prior_name", preprocess_cfg.get("shape_prior_name", "H_SHAPE_PRIOR")))
 
     upgraded = 0
     for _, tooth_dirs in _case_tooth_dirs(processed_dir):
@@ -135,6 +142,26 @@ def upgrade_processed_dir(cfg):
             np.save(os.path.join(tdir, "curve_dense_points.npy"), dense_pts.astype(np.float32))
             save_volume(os.path.join(tdir, f"H_GT.{fmt}"), H_GT.astype(np.float32), affine=None, spacing=spacing)
             save_volume(os.path.join(tdir, f"C_GT.{fmt}"), C_GT.astype(np.uint8), affine=None, spacing=spacing)
+            if write_shape_prior:
+                H_shape_prior = generate_heatmap_from_points(
+                    A.shape,
+                    dense_pts,
+                    spacing=spacing,
+                    sigma_mm=shape_prior_sigma_mm,
+                    connect_points=True,
+                    close_loop=curve_closed,
+                )
+                save_volume(
+                    os.path.join(tdir, f"{shape_prior_name}.{fmt}"),
+                    H_shape_prior.astype(np.float32),
+                    affine=None,
+                    spacing=spacing,
+                )
+                curve_fit_report["shape_prior"] = {
+                    "path": os.path.join(tdir, f"{shape_prior_name}.{fmt}"),
+                    "sigma_mm": shape_prior_sigma_mm,
+                    "max": float(np.max(H_shape_prior)) if H_shape_prior.size else 0.0,
+                }
             with open(os.path.join(tdir, "geometry_prior.json"), "w", encoding="utf-8") as f:
                 json.dump(geometry_prior_to_jsonable(geometry_prior), f)
             with open(os.path.join(tdir, "curve_fit_report.json"), "w", encoding="utf-8") as f:

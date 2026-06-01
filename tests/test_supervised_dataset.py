@@ -6,13 +6,15 @@ from src.datasets.dataset import ToothDataset, build_supervised_audit
 from src.datasets.io import save_volume
 
 
-def _write_tooth(root, case_id, tooth_id, points, h_gt):
+def _write_tooth(root, case_id, tooth_id, points, h_gt, shape_prior=None):
     tooth_dir = root / case_id / f"tooth_{tooth_id}"
     tooth_dir.mkdir(parents=True)
     shape = h_gt.shape
     save_volume(str(tooth_dir / "A_t.nii.gz"), np.ones(shape, dtype=np.float32))
     save_volume(str(tooth_dir / "T_t.nii.gz"), np.ones(shape, dtype=np.uint8))
     save_volume(str(tooth_dir / "H_GT.nii.gz"), h_gt.astype(np.float32))
+    if shape_prior is not None:
+        save_volume(str(tooth_dir / "H_SHAPE_PRIOR.nii.gz"), shape_prior.astype(np.float32))
     (tooth_dir / "points.json").write_text(
         json.dumps(
             {
@@ -67,3 +69,24 @@ def test_supervised_dataset_skips_unlabeled_teeth_and_invalid_empty_heatmaps(tmp
     ds = ToothDataset(str(processed_dir), cache_rate=0.0)
     assert len(ds) == 1
     assert ds.items[0]["tooth_dir"].endswith("tooth_11")
+
+
+def test_supervised_dataset_loads_optional_shape_prior(tmp_path):
+    processed_dir = tmp_path / "processed"
+    h_labeled = np.zeros((4, 4, 4), dtype=np.float32)
+    h_labeled[1, 1, 1] = 1.0
+    shape_prior = np.full((4, 4, 4), 0.25, dtype=np.float32)
+    _write_tooth(
+        processed_dir,
+        "case_a",
+        11,
+        points=[[1.0, 1.0, 1.0]],
+        h_gt=h_labeled,
+        shape_prior=shape_prior,
+    )
+
+    ds = ToothDataset(str(processed_dir), cache_rate=0.0, use_shape_prior=True)
+    sample = ds[0]
+    assert "shape_prior" in sample
+    assert tuple(sample["shape_prior"].shape) == (1, 4, 4, 4)
+    assert float(sample["shape_prior"].max()) == 0.25

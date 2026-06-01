@@ -104,12 +104,28 @@ def surface_constraint_loss(logits, x, cfg):
     return weight * torch.mean((prob ** 2) * (1.0 - band))
 
 
+def shape_prior_constraint_loss(logits, batch, device, cfg):
+    train_cfg = cfg.get("train", {})
+    if not bool(train_cfg.get("use_shape_prior_channel_or_loss", False)):
+        return logits.new_tensor(0.0)
+    weight = float(train_cfg.get("lambda_shape_prior", 0.0))
+    if weight <= 0.0:
+        return logits.new_tensor(0.0)
+    if "shape_prior" not in batch:
+        raise KeyError("shape_prior is enabled in config, but the batch has no shape_prior tensor")
+    shape_prior = batch["shape_prior"].to(device).float().clamp(0.0, 1.0)
+    if tuple(shape_prior.shape) != tuple(logits.shape):
+        raise ValueError(f"shape_prior shape {tuple(shape_prior.shape)} does not match logits {tuple(logits.shape)}")
+    prob = torch.sigmoid(logits)
+    return weight * torch.mean((prob ** 2) * (1.0 - shape_prior))
+
+
 def batch_loss(model, batch, device, loss_fn, cfg):
     x = batch["x"].to(device)
     y = batch["y"].to(device)
     logits = model(x)
     loss = loss_fn(logits, y)
-    return loss + surface_constraint_loss(logits, x, cfg)
+    return loss + surface_constraint_loss(logits, x, cfg) + shape_prior_constraint_loss(logits, batch, device, cfg)
 
 
 def train_one_epoch(model, loader, optimizer, device, loss_fn, cfg, global_step):
@@ -437,6 +453,8 @@ def main():
         norm_mode=cfg["preprocess"]["intensity_norm"],
         cache_rate=cfg["train"].get("cache_rate", 0.0),
         pad_divisor=pad_divisor,
+        use_shape_prior=bool(cfg["train"].get("use_shape_prior_channel_or_loss", False)),
+        shape_prior_name=cfg["data"].get("shape_prior_name", "H_SHAPE_PRIOR"),
     )
     holdout_ds = ToothDataset(
         cfg["data"]["holdout_processed_dir"],
@@ -446,6 +464,8 @@ def main():
         norm_mode=cfg["preprocess"]["intensity_norm"],
         cache_rate=cfg["train"].get("holdout_cache_rate", 0.0),
         pad_divisor=pad_divisor,
+        use_shape_prior=bool(cfg["train"].get("use_shape_prior_channel_or_loss", False)),
+        shape_prior_name=cfg["data"].get("shape_prior_name", "H_SHAPE_PRIOR"),
     )
     if len(train_ds) == 0:
         raise RuntimeError("no labeled training teeth available after audit")
