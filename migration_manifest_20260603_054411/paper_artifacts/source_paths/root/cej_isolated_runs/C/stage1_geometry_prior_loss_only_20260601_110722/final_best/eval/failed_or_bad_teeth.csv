@@ -1,0 +1,6 @@
+case_id,tooth_id,n_points,status,mean_dist_mm,p95_dist_mm,sr@1.0,sr@2.0,pred_path
+ToothFairy3F_044,46,16,ok,1.0405972003936768,2.026686519384384,0.5,0.9375,/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/threshold_sweep_best/theta_0.25/infer/ToothFairy3F_044/tooth_46/C_pred_fit.nii.gz
+ToothFairy3F_052,31,20,ok,1.9040257930755615,4.081078362464905,0.4,0.55,/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/threshold_sweep_best/theta_0.25/infer/ToothFairy3F_052/tooth_31/C_pred_fit.nii.gz
+ToothFairy3F_052,32,20,ok,1.4460303783416748,2.4387840390205384,0.35,0.75,/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/threshold_sweep_best/theta_0.25/infer/ToothFairy3F_052/tooth_32/C_pred_fit.nii.gz
+ToothFairy3F_052,41,24,ok,1.7330068349838257,2.9605613231658934,0.2916666666666667,0.5833333333333334,/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/threshold_sweep_best/theta_0.25/infer/ToothFairy3F_052/tooth_41/C_pred_fit.nii.gz
+ToothFairy3F_052,42,20,ok,2.326855182647705,4.357956886291504,0.25,0.5,/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/threshold_sweep_best/theta_0.25/infer/ToothFairy3F_052/tooth_42/C_pred_fit.nii.gz

@@ -1,0 +1,28 @@
+[started_at] 2026-05-07T15:44:15.636600+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train --config /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp01_clean_dicece/config/train.yaml
+[2026-05-07 15:44:21,606] INFO - supervised dataset audit total=244 used_labeled=188 skipped_unlabeled=56 invalid=0 audit=/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp01_clean_dicece/outputs/train/supervised_dataset_audit.json
+[2026-05-07 15:44:23,315] INFO - loaded pretrained=/root/cej_isolated_runs/C/cej_improve_20260507_001/input/checkpoints/seed_last.pt strict=False missing=0 unexpected=0
+[2026-05-07 15:44:33,858] INFO - epoch 0 loss 0.3882
+[2026-05-07 15:44:41,186] INFO - epoch 1 loss 0.3879
+[2026-05-07 15:44:48,300] INFO - epoch 2 loss 0.3877
+[2026-05-07 15:44:55,434] INFO - epoch 3 loss 0.3871
+[2026-05-07 15:45:02,521] INFO - epoch 4 loss 0.3867
+[2026-05-07 15:45:09,383] INFO - epoch 5 loss 0.3863
+[2026-05-07 15:45:16,114] INFO - epoch 6 loss 0.3861
+[2026-05-07 15:45:22,953] INFO - epoch 7 loss 0.3861
+[2026-05-07 15:45:29,798] INFO - epoch 8 loss 0.3858
+[2026-05-07 15:45:36,613] INFO - epoch 9 loss 0.3855
+[2026-05-07 15:45:43,451] INFO - epoch 10 loss 0.3854
+[2026-05-07 15:45:50,279] INFO - epoch 11 loss 0.3850
+[2026-05-07 15:45:57,186] INFO - epoch 12 loss 0.3847
+[2026-05-07 15:46:04,251] INFO - epoch 13 loss 0.3847
+[2026-05-07 15:46:11,277] INFO - epoch 14 loss 0.3851
+[2026-05-07 15:46:18,506] INFO - epoch 15 loss 0.3853
+[2026-05-07 15:46:25,527] INFO - epoch 16 loss 0.3847
+[2026-05-07 15:46:32,391] INFO - epoch 17 loss 0.3845
+[2026-05-07 15:46:39,221] INFO - epoch 18 loss 0.3844
+[2026-05-07 15:46:46,308] INFO - epoch 19 loss 0.3845
+[2026-05-07 15:46:46,323] INFO - saved checkpoint /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp01_clean_dicece/outputs/train/checkpoints/last.pt
+[2026-05-07 15:46:46,324] INFO - saved train manifest /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp01_clean_dicece/outputs/train/train_manifest.json
+[finished_at] 2026-05-07T15:46:47.433674+00:00
+[returncode] 0

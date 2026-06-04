@@ -1,0 +1,54 @@
+[started_at] 2026-05-07T16:13:28.832915+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train_holdout --config /root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp02_focal_hard_sampling/config/train.yaml
+[2026-05-07 16:13:40,755] INFO - loaded pretrained=/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/input/checkpoints/unsup_last.pt strict=False missing=0 unexpected=0
+[2026-05-07 16:14:30,402] INFO - epoch=0 loss=1.057579 sym_p95=165.56268310546875 no_curve=9 wrap=0.1297 best_epoch=0 patience=0/5
+[2026-05-07 16:15:13,383] INFO - epoch=1 loss=0.478711 sym_p95=171.77601623535156 no_curve=6 wrap=0.1476 best_epoch=1 patience=0/5
+[2026-05-07 16:15:42,555] INFO - epoch=2 loss=0.447187 sym_p95=173.02890014648438 no_curve=11 wrap=0.1639 best_epoch=1 patience=1/5
+Traceback (most recent call last):
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/root/workspace/CEJ_ABC/src/train_holdout.py", line 532, in <module>
+    main()
+  File "/root/workspace/CEJ_ABC/src/train_holdout.py", line 446, in main
+    train_loss, global_step = train_one_epoch(model, loader, optimizer, device, loss_fn, cfg, global_step)
+  File "/root/workspace/CEJ_ABC/src/train_holdout.py", line 103, in train_one_epoch
+    logits = model(x)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/workspace/CEJ_ABC/src/models/unet3d.py", line 22, in forward
+    return self.net(x)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/monai/networks/nets/unet.py", line 300, in forward
+    x = self.model(x)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/container.py", line 215, in forward
+    input = module(input)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/monai/networks/blocks/convolutions.py", line 316, in forward
+    res: torch.Tensor = self.residual(x)  # create the additive residual from x
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 610, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 605, in _conv_forward
+    return F.conv3d(
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/monai/data/meta_tensor.py", line 282, in __torch_function__
+    ret = super().__torch_function__(func, types, args, kwargs)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/_tensor.py", line 1386, in __torch_function__
+    ret = func(*args, **kwargs)
+KeyboardInterrupt

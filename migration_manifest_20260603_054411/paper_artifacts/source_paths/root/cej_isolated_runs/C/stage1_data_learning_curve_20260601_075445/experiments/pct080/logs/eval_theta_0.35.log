@@ -1,0 +1,5 @@
+[started_at] 2026-06-01T09:14:54.992629+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.eval --config /root/cej_isolated_runs/C/stage1_data_learning_curve_20260601_075445/experiments/pct080/config/best_theta_0.35.yaml
+[2026-06-01 09:14:59,405] INFO - saved metrics to /root/cej_isolated_runs/C/stage1_data_learning_curve_20260601_075445/experiments/pct080/threshold_sweep_best/theta_0.35/eval
+[finished_at] 2026-06-01T09:14:59.888573+00:00
+[returncode] 0

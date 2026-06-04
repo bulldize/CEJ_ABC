@@ -1,0 +1,113 @@
+project:
+  seed: 42
+  device: auto
+
+data:
+  raw_dir: /root/ToothFairy3
+  raw_layout: toothfairy3
+  images_tr_dir: /root/ToothFairy3/imagesTr
+  labels_tr_dir: /root/ToothFairy3/labelsTr
+  points_dir: /root/ToothFairy3/pointsTr
+  meta_dir: null
+  max_cases: null
+  processed_dir: /root/cej_isolated_runs/C/cej_runtime_exp03_viz_20260513_001/input/processed_examples
+  output_dir: /root/cej_isolated_runs/C/cej_runtime_exp03_viz_20260513_001/outputs
+  raw_a_name: A.nii.gz
+  raw_b_name: B.nii.gz
+  raw_points_name: points.json
+  raw_meta_name: meta.json
+  cej_points_name: cej_points_ras.xlsx
+  scan_boundary_path: data/scan_boundary_ras.xlsx
+  mark_meta_name: mark_meta.json
+  processed_format: nii.gz
+  use_tooth_mask_channel: true
+
+preprocess:
+  roi_padding_mm: 8.0
+  target_spacing_mm: [0.5, 0.5, 0.5]
+  resample_to_target: false
+  intensity_clip_percentiles: [1.0, 99.0]
+  intensity_norm: zscore
+  dense_sample_step_mm: 0.2
+  curve_closed: true
+  curve_smooth: 0.0
+  sigma_mm: 1.0
+  gt_curve_peak_threshold: 0.999
+  point_surface_dist_thresh_mm: 3.0
+  z_ignore_ratio: 0.1
+  geometry_prior:
+    enabled: true
+    constraints:
+      min_crown_root_amplitude_mm: 0.65
+      max_crown_root_amplitude_mm: 2.4
+      radial_smooth_sigma_mm: 0.4
+      project_to_surface: true
+      max_surface_projection_mm: 2.5
+      enforce_constraints_after_projection: true
+      constraint_tolerance_mm: 0.03
+
+model:
+  in_channels: 2
+  out_channels: 1
+  base_channels: 16
+  depth: 4
+  num_res_units: 2
+  norm: batch
+
+infer:
+  threshold_theta: 0.3
+  use_prior_gating: false
+  prior_sigma_z_mm: 2.0
+  prior_sigma_s_mm: 1.0
+  prior_delta_s_mm: 1.0
+  prior_use_gradient: false
+  prior_gradient_weight: 1.0
+  use_sliding_window: false
+  sw_roi_size: null
+  sw_batch_size: 1
+  sw_overlap: 0.25
+  constrain_curve_to_tooth_mask: false
+  constrain_curve_to_tooth_surface: false
+  keep_lcc_for_curve: false
+  fit_pred_curve: true
+  ckpt_path: /root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt
+
+viz:
+  enable_2d: false
+  enable_3d: true
+  num_slices: 4
+  max_cases: 10
+  max_teeth_per_case: 8
+  max_render_dim: 96
+  mesh_step: 1
+  slice_opacity: 0.82
+  tooth_opacity: 0.18
+  heatmap_opacity: 0.35
+  prior_opacity: 0.2
+  heatmap_iso_threshold: 0.3
+  pred_heatmap_iso_threshold: 0.3
+  prior_iso_threshold: 0.5
+  curve_max_points: 12000
+  show_prior_3d: true
+  prediction_only: false
+  use_error_colormap_for_gt_points: false
+  color_tooth_surface: "#64B5F6"
+  color_gt_heatmap: "#FFA726"
+  color_pred_heatmap: "#FF5252"
+  color_pred_curve: "#FF1744"
+  color_dense_interp_curve: "#F500FF"
+  color_pseudo_gt_skeleton: "#76FF03"
+  color_gt_points: "#FFD600"
+  color_prior: "#7E57C2"
+  color_geometry_long_axis: "#EAB308"
+  color_geometry_mesial_distal_axis: "#38BDF8"
+  color_geometry_buccal_lingual_axis: "#FB7185"
+  show_dense_interp_curve: true
+  dense_interp_curve_closed: true
+  dense_interp_curve_max_points: 20000
+  show_pseudo_gt_skeleton: true
+  pseudo_gt_skeleton_from_interp: false
+  pseudo_gt_skeleton_from_heatmap_peak: true
+  pseudo_gt_peak_threshold: 0.999
+  pseudo_gt_skeleton_threshold: 0.3
+  pseudo_gt_skeleton_max_points: 12000

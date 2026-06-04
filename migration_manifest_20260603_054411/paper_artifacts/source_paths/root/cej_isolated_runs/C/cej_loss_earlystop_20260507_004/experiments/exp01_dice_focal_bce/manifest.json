@@ -1,0 +1,252 @@
+{
+  "experiment": "exp01_dice_focal_bce",
+  "status": "success",
+  "started_at": "2026-05-07T18:01:14.264542+00:00",
+  "finished_at": "2026-05-07T18:21:10.794039+00:00",
+  "run_condition": "all_loss_only_comparison",
+  "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/config/train.yaml",
+  "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/best.pt",
+  "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/last.pt",
+  "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/metrics.csv",
+  "package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/package/exp01_dice_focal_bce_training_bundle.tar.gz",
+  "train_manifest": {
+    "started_at": "2026-05-07T18:01:24.432397+00:00",
+    "finished_at": "2026-05-07T18:21:09.508625+00:00",
+    "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/config/train.yaml",
+    "output_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train",
+    "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/metrics.csv",
+    "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/best.pt",
+    "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/last.pt",
+    "topk_checkpoints": [
+      {
+        "epoch": 24,
+        "holdout_composite_score": 0.9385958497489517,
+        "holdout_loss": 0.5035715075639579,
+        "holdout_sym_p95": 6.4031243324279785,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_024_score_0.938596.pt"
+      },
+      {
+        "epoch": 16,
+        "holdout_composite_score": 1.1485404114877014,
+        "holdout_loss": 0.52841358597462,
+        "holdout_sym_p95": 8.5440034866333,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_016_score_1.148540.pt"
+      },
+      {
+        "epoch": 21,
+        "holdout_composite_score": 1.248454882453925,
+        "holdout_loss": 0.5628407340783339,
+        "holdout_sym_p95": 9.643651008605957,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_021_score_1.248455.pt"
+      },
+      {
+        "epoch": 28,
+        "holdout_composite_score": 1.5602413220529612,
+        "holdout_loss": 0.5569755169061514,
+        "holdout_sym_p95": 7.6157732009887695,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_028_score_1.560241.pt"
+      },
+      {
+        "epoch": 31,
+        "holdout_composite_score": 1.5732086126668285,
+        "holdout_loss": 0.5495615583199721,
+        "holdout_sym_p95": 7.874007701873779,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_031_score_1.573209.pt"
+      }
+    ],
+    "checkpoint_top_k": 5,
+    "checkpoint_every_n_epochs": 5,
+    "archive_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/archive",
+    "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/holdout_analysis",
+    "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+    "early_stop_metric": "holdout_composite_score",
+    "early_stop_score": {
+      "start_epoch": 10,
+      "weights": {
+        "loss": 0.3,
+        "sym_p95": 0.3,
+        "no_curve_count": 0.07,
+        "bad_rate": 0.07,
+        "vox03_empty": 0.03,
+        "cc_count": 0.03,
+        "wrap_miss": 0.05,
+        "hard_case_viewer": 0.15
+      },
+      "targets": {
+        "loss": 0.5,
+        "sym_p95_mm": 5.0,
+        "bad_sym_p95_mm": 5.0,
+        "hard_sym_p95_mm": 5.0,
+        "hard_bad_sym_p95_mm": 5.0,
+        "hard_case_count": 12,
+        "vox03": 100.0,
+        "cc_count": 4.0
+      }
+    },
+    "score_start_epoch": 10,
+    "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+    "best_epoch": 24,
+    "best_composite_score": 0.9385958497489517,
+    "best_monitor_metrics": {
+      "epoch": 24,
+      "holdout_loss": 0.5035715075639579,
+      "holdout_composite_score": 0.9385958497489517,
+      "holdout_bad_rate": 0.3384615384615385,
+      "score_components": {
+        "loss": 1.0071430151279157,
+        "sym_p95": 1.2806248664855957,
+        "no_curve_count": 0.0,
+        "bad_rate": 0.3384615384615385,
+        "vox03_empty": 0.0,
+        "cc_count": 0.0692307692307692,
+        "wrap_miss": 0.7296479903039744,
+        "hard_case_viewer": 1.2667590332031249,
+        "hard_case_sym_p95": 13.490737915039062,
+        "hard_case_no_curve_count": 0,
+        "hard_case_bad_rate": 0.75,
+        "hard_case_missing_rate": 0.0,
+        "hard_case_expected_count": 12
+      },
+      "hard_case_viewer_component": 1.2667590332031249,
+      "hard_case_sym_p95": 13.490737915039062,
+      "hard_case_no_curve_count": 0,
+      "hard_case_bad_rate": 0.75,
+      "holdout_sym_mean": 2.34995436668396,
+      "holdout_sym_p95": 6.4031243324279785,
+      "holdout_no_curve_count": 0,
+      "h_pred_max": 0.9999992847442627,
+      "h_pred_p99": 0.32748005707438554,
+      "vox03": 8030.0615384615385,
+      "vox03_total": 521954,
+      "cc_count": 1.2769230769230768,
+      "lcc_ratio": 0.9912331124349945,
+      "wrap_coverage": 0.2703520096960256,
+      "hard_case_count": 12,
+      "holdout_tooth_count": 65
+    },
+    "best_holdout_loss": 0.5035715075639579,
+    "best_holdout_sym_p95": 6.4031243324279785,
+    "best_holdout_no_curve_count": 0,
+    "best_holdout_bad_rate": 0.3384615384615385,
+    "best_wrap_coverage": 0.2703520096960256,
+    "best_hard_case_viewer_component": 1.2667590332031249,
+    "best_hard_case_sym_p95": 13.490737915039062,
+    "best_hard_case_no_curve_count": 0,
+    "best_hard_case_bad_rate": 0.75,
+    "pretrained": {
+      "loaded": true,
+      "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+      "missing": [],
+      "unexpected": []
+    },
+    "dataset": {
+      "train": {
+        "total_tooth_dirs": 497,
+        "used_labeled_tooth_dirs": 426,
+        "skipped_unlabeled_tooth_dirs": 71,
+        "invalid_tooth_dirs": 0
+      },
+      "holdout": {
+        "total_tooth_dirs": 88,
+        "used_labeled_tooth_dirs": 65,
+        "skipped_unlabeled_tooth_dirs": 23,
+        "invalid_tooth_dirs": 0
+      }
+    },
+    "audit_paths": {
+      "train": {
+        "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/supervised_dataset_audit.json",
+        "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+        "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+        "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/invalid_labeled_teeth.json",
+        "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/invalid_labeled_teeth.txt"
+      },
+      "holdout": {
+        "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/supervised_dataset_audit.json",
+        "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+        "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+        "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+        "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+      }
+    },
+    "sampler": {
+      "weighted_sampler": false,
+      "weight_count": 0,
+      "hard_weight_count": 0
+    }
+  },
+  "best_epoch": 24,
+  "best_composite_score": 0.9385958497489517,
+  "best_holdout_loss": 0.5035715075639579,
+  "best_holdout_sym_p95": 6.4031243324279785,
+  "best_holdout_no_curve_count": 0,
+  "best_holdout_bad_rate": 0.3384615384615385,
+  "best_wrap_coverage": 0.2703520096960256,
+  "best_hard_case_viewer_component": 1.2667590332031249,
+  "best_hard_case_sym_p95": 13.490737915039062,
+  "best_hard_case_no_curve_count": 0,
+  "best_hard_case_bad_rate": 0.75,
+  "best_monitor_metrics": {
+    "epoch": 24,
+    "holdout_loss": 0.5035715075639579,
+    "holdout_composite_score": 0.9385958497489517,
+    "holdout_bad_rate": 0.3384615384615385,
+    "score_components": {
+      "loss": 1.0071430151279157,
+      "sym_p95": 1.2806248664855957,
+      "no_curve_count": 0.0,
+      "bad_rate": 0.3384615384615385,
+      "vox03_empty": 0.0,
+      "cc_count": 0.0692307692307692,
+      "wrap_miss": 0.7296479903039744,
+      "hard_case_viewer": 1.2667590332031249,
+      "hard_case_sym_p95": 13.490737915039062,
+      "hard_case_no_curve_count": 0,
+      "hard_case_bad_rate": 0.75,
+      "hard_case_missing_rate": 0.0,
+      "hard_case_expected_count": 12
+    },
+    "hard_case_viewer_component": 1.2667590332031249,
+    "hard_case_sym_p95": 13.490737915039062,
+    "hard_case_no_curve_count": 0,
+    "hard_case_bad_rate": 0.75,
+    "holdout_sym_mean": 2.34995436668396,
+    "holdout_sym_p95": 6.4031243324279785,
+    "holdout_no_curve_count": 0,
+    "h_pred_max": 0.9999992847442627,
+    "h_pred_p99": 0.32748005707438554,
+    "vox03": 8030.0615384615385,
+    "vox03_total": 521954,
+    "cc_count": 1.2769230769230768,
+    "lcc_ratio": 0.9912331124349945,
+    "wrap_coverage": 0.2703520096960256,
+    "hard_case_count": 12,
+    "holdout_tooth_count": 65
+  },
+  "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+  "early_stop_metric": "holdout_composite_score",
+  "early_stop_score": {
+    "start_epoch": 10,
+    "weights": {
+      "loss": 0.3,
+      "sym_p95": 0.3,
+      "no_curve_count": 0.07,
+      "bad_rate": 0.07,
+      "vox03_empty": 0.03,
+      "cc_count": 0.03,
+      "wrap_miss": 0.05,
+      "hard_case_viewer": 0.15
+    },
+    "targets": {
+      "loss": 0.5,
+      "sym_p95_mm": 5.0,
+      "bad_sym_p95_mm": 5.0,
+      "hard_sym_p95_mm": 5.0,
+      "hard_bad_sym_p95_mm": 5.0,
+      "hard_case_count": 12,
+      "vox03": 100.0,
+      "cc_count": 4.0
+    }
+  },
+  "error": null
+}

@@ -1,0 +1,20 @@
+{
+  "git_status_short": " M scripts/upgrade_processed_geometry_gt.py\n M src/datasets/dataset.py\n M src/train_holdout.py\n M src/train_loss_earlystop.py\n M tests/test_supervised_dataset.py\n?? STAGE1_ONLY_EXPERIMENT_CONCLUSION.md\n?? scripts/run_goal_mode_16train_3holdout.py\n?? scripts/run_stage1_16train_direct_eval.py\n?? scripts/run_stage1_data_learning_curve.py\n?? scripts/run_stage1_full19_direct_eval.py\n?? scripts/run_stage1_geometry_prior_loss_exp.py\n?? scripts/run_stage1_geometry_prior_preprocess_exp.py\n?? scripts/stage1_geometry_prior_common.py\n",
+  "cuda": {
+    "cuda_available": true,
+    "device_count": 1,
+    "device_name": "NVIDIA GeForce RTX 3090"
+  },
+  "unsup_checkpoint_exists": true,
+  "pretrained_copy_exists": true,
+  "train_tooth_dirs": 497,
+  "holdout_tooth_dirs": 88,
+  "expected_train_tooth_dirs": 497,
+  "expected_holdout_tooth_dirs": 88,
+  "pretrained_source_sha256": "4c865ca7292a9e500974f92d2fc028b9bee061453f779da75e2822457bab1283",
+  "pretrained_copy_sha256": "4c865ca7292a9e500974f92d2fc028b9bee061453f779da75e2822457bab1283",
+  "train_tooth_dirs_ok": true,
+  "holdout_tooth_dirs_ok": true,
+  "pretrained_hash_ok": true,
+  "ok": true
+}

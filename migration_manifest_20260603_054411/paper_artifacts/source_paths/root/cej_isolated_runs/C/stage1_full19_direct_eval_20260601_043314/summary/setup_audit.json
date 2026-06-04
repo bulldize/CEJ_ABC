@@ -1,0 +1,14 @@
+{
+  "input_case_count_ok": true,
+  "input_tooth_dir_count_ok": true,
+  "train_equals_holdout_all19": true,
+  "unsup_hash_match": true,
+  "stage1_best_exists": false,
+  "stage1_last_exists": false,
+  "stage1_metrics_exists": false,
+  "stage1_train_manifest_exists": false,
+  "train_manifest_dataset": null,
+  "train_manifest_pretrained": null,
+  "train_manifest_best_epoch": null,
+  "train_manifest_best_composite_score": null
+}

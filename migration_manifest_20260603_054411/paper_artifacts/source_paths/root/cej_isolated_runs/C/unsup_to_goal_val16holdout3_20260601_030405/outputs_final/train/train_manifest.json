@@ -1,0 +1,152 @@
+{
+  "started_at": "2026-06-01T03:06:06.737800+00:00",
+  "finished_at": "2026-06-01T03:10:22.398347+00:00",
+  "config_path": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/config/goal_mode_train.yaml",
+  "output_dir": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train",
+  "metrics_csv": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/metrics.csv",
+  "best_checkpoint": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/checkpoints/best.pt",
+  "last_checkpoint": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/checkpoints/last.pt",
+  "topk_checkpoints": [
+    {
+      "epoch": 6,
+      "holdout_composite_score": 2.3112915991886167,
+      "holdout_loss": 0.5040620235296396,
+      "holdout_sym_p95": 5.0,
+      "path": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/checkpoints/topk/epoch_006_score_2.311292.pt"
+    }
+  ],
+  "checkpoint_top_k": 5,
+  "checkpoint_every_n_epochs": 5,
+  "archive_dir": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/checkpoints/archive",
+  "holdout_analysis_dir": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/holdout_analysis",
+  "hard_case_viewer": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+  "early_stop_metric": "holdout_composite_score",
+  "early_stop_score": {
+    "start_epoch": 6,
+    "weights": {
+      "loss": 0.08,
+      "sym_p95": 0.16,
+      "manual_point_p95": 0.58,
+      "manual_point_sr1_miss": 0.16,
+      "no_curve_count": 0.1,
+      "bad_rate": 0.05,
+      "vox03_empty": 0.02,
+      "cc_count": 0.02,
+      "wrap_miss": 0.02,
+      "hard_case_viewer": 0.05
+    },
+    "targets": {
+      "loss": 0.35,
+      "sym_p95_mm": 2.0,
+      "manual_point_p95_mm": 2.0,
+      "bad_sym_p95_mm": 2.0,
+      "hard_sym_p95_mm": 2.0,
+      "hard_bad_sym_p95_mm": 2.0,
+      "hard_case_count": 12,
+      "vox03": 100.0,
+      "cc_count": 4.0
+    }
+  },
+  "score_start_epoch": 6,
+  "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+  "best_epoch": 6,
+  "best_composite_score": 2.3112915991886167,
+  "best_monitor_metrics": {
+    "epoch": 6,
+    "holdout_loss": 0.5040620235296396,
+    "holdout_composite_score": 2.3112915991886167,
+    "holdout_bad_rate": 1.0,
+    "score_components": {
+      "loss": 1.4401772100846846,
+      "sym_p95": 2.5,
+      "manual_point_p95": 2.4642674684524533,
+      "manual_point_sr1_miss": 0.7325490196078431,
+      "no_curve_count": 0.0,
+      "bad_rate": 1.0,
+      "vox03_empty": 0.0,
+      "cc_count": 0.038461538461538436,
+      "wrap_miss": 0.7095797778556643,
+      "hard_case_viewer": 3.692672424316406,
+      "hard_case_sym_p95": 17.21336212158203,
+      "hard_case_no_curve_count": 0,
+      "hard_case_bad_rate": 1.0,
+      "hard_case_missing_rate": 0.0,
+      "hard_case_expected_count": 12
+    },
+    "hard_case_viewer_component": 3.692672424316406,
+    "hard_case_sym_p95": 17.21336212158203,
+    "hard_case_no_curve_count": 0,
+    "hard_case_bad_rate": 1.0,
+    "holdout_sym_mean": 2.0349698066711426,
+    "holdout_sym_p95": 5.0,
+    "holdout_manual_point_mean": 2.098926305770874,
+    "holdout_manual_point_p95": 4.9285349369049065,
+    "holdout_manual_point_sr1": 0.26745098039215687,
+    "holdout_manual_point_sr2": 0.6298039215686274,
+    "holdout_manual_point_count": 1275,
+    "holdout_no_curve_count": 0,
+    "h_pred_max": 0.9993550181388855,
+    "h_pred_p99": 0.187449591639916,
+    "vox03": 6533.184615384615,
+    "vox03_total": 424657,
+    "cc_count": 1.1538461538461537,
+    "lcc_ratio": 0.9793141331569731,
+    "wrap_coverage": 0.29042022214433566,
+    "hard_case_count": 12,
+    "holdout_tooth_count": 65
+  },
+  "best_holdout_loss": 0.5040620235296396,
+  "best_holdout_sym_p95": 5.0,
+  "best_holdout_manual_point_p95": 4.9285349369049065,
+  "best_holdout_manual_point_sr1": 0.26745098039215687,
+  "best_holdout_no_curve_count": 0,
+  "best_holdout_bad_rate": 1.0,
+  "best_wrap_coverage": 0.29042022214433566,
+  "best_hard_case_viewer_component": 3.692672424316406,
+  "best_hard_case_sym_p95": 17.21336212158203,
+  "best_hard_case_no_curve_count": 0,
+  "best_hard_case_bad_rate": 1.0,
+  "pretrained": {
+    "loaded": true,
+    "path": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/input/checkpoints/stage1_best.pt",
+    "missing": [],
+    "unexpected": [],
+    "loaded_tensor_count": 114,
+    "skipped_mismatch": []
+  },
+  "dataset": {
+    "train": {
+      "total_tooth_dirs": 497,
+      "used_labeled_tooth_dirs": 426,
+      "skipped_unlabeled_tooth_dirs": 71,
+      "invalid_tooth_dirs": 0
+    },
+    "holdout": {
+      "total_tooth_dirs": 88,
+      "used_labeled_tooth_dirs": 65,
+      "skipped_unlabeled_tooth_dirs": 23,
+      "invalid_tooth_dirs": 0
+    }
+  },
+  "audit_paths": {
+    "train": {
+      "audit": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_train/supervised_dataset_audit.json",
+      "skipped_json": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_train/skipped_unlabeled_teeth.json",
+      "skipped_txt": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_train/skipped_unlabeled_teeth.txt",
+      "invalid_json": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_train/invalid_labeled_teeth.json",
+      "invalid_txt": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_train/invalid_labeled_teeth.txt"
+    },
+    "holdout": {
+      "audit": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_holdout/supervised_dataset_audit.json",
+      "skipped_json": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_holdout/skipped_unlabeled_teeth.json",
+      "skipped_txt": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_holdout/skipped_unlabeled_teeth.txt",
+      "invalid_json": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_holdout/invalid_labeled_teeth.json",
+      "invalid_txt": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/outputs_final/train/audit_holdout/invalid_labeled_teeth.txt"
+    }
+  },
+  "sampler": {
+    "weighted_sampler": true,
+    "weight_count": 426,
+    "hard_weight_count": 0
+  }
+}

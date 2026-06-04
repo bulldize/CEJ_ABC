@@ -1,0 +1,11 @@
+{
+  "stage1_config_exists": true,
+  "input_manifest_exists": true,
+  "case_manifest_exists": true,
+  "train_case_count_is_16": true,
+  "holdout_case_count_is_3": true,
+  "train_tooth_count_is_497": true,
+  "holdout_tooth_count_is_88": true,
+  "stage1_best_hash_match": true,
+  "stage1_last_hash_match": true
+}

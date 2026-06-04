@@ -1,0 +1,5 @@
+[started_at] 2026-06-01T03:35:12.526499+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.eval --config /root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_max20_min7_20260601_031934/config/theta_0.35.yaml
+[2026-06-01 03:35:16,849] INFO - saved metrics to /root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_max20_min7_20260601_031934/threshold_sweep/theta_0.35/eval
+[finished_at] 2026-06-01T03:35:17.622603+00:00
+[returncode] 0

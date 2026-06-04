@@ -1,0 +1,71 @@
+{
+  "experiment": "exp01_dice_focal_bce",
+  "status": "success",
+  "started_at": "2026-05-07T16:48:42.078057+00:00",
+  "finished_at": "2026-05-07T17:00:28.021235+00:00",
+  "run_condition": "all_loss_only_comparison",
+  "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/config/train.yaml",
+  "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/best.pt",
+  "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/last.pt",
+  "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/metrics.csv",
+  "package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/package/exp01_dice_focal_bce_training_bundle.tar.gz",
+  "train_manifest": {
+    "started_at": "2026-05-07T16:48:54.051391+00:00",
+    "finished_at": "2026-05-07T17:00:26.850177+00:00",
+    "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/config/train.yaml",
+    "output_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train",
+    "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/metrics.csv",
+    "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/best.pt",
+    "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/last.pt",
+    "early_stop_metric": "holdout_loss",
+    "early_stop_loss": "DiceCELoss(sigmoid=True)",
+    "best_epoch": 24,
+    "best_holdout_loss": 0.5035715075639579,
+    "pretrained": {
+      "loaded": true,
+      "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/input/checkpoints/unsup_last.pt",
+      "missing": [],
+      "unexpected": []
+    },
+    "dataset": {
+      "train": {
+        "total_tooth_dirs": 497,
+        "used_labeled_tooth_dirs": 426,
+        "skipped_unlabeled_tooth_dirs": 71,
+        "invalid_tooth_dirs": 0
+      },
+      "holdout": {
+        "total_tooth_dirs": 88,
+        "used_labeled_tooth_dirs": 65,
+        "skipped_unlabeled_tooth_dirs": 23,
+        "invalid_tooth_dirs": 0
+      }
+    },
+    "audit_paths": {
+      "train": {
+        "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/supervised_dataset_audit.json",
+        "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+        "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+        "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/invalid_labeled_teeth.json",
+        "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/invalid_labeled_teeth.txt"
+      },
+      "holdout": {
+        "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/supervised_dataset_audit.json",
+        "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+        "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+        "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+        "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+      }
+    },
+    "sampler": {
+      "weighted_sampler": false,
+      "weight_count": 0,
+      "hard_weight_count": 0
+    }
+  },
+  "best_epoch": 24,
+  "best_holdout_loss": 0.5035715075639579,
+  "early_stop_metric": "holdout_loss",
+  "early_stop_loss": "DiceCELoss(sigmoid=True)",
+  "error": null
+}

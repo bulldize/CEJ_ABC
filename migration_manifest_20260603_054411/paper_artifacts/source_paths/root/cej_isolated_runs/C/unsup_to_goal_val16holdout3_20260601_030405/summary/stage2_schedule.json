@@ -1,0 +1,12 @@
+{
+  "train_tooth_count": 497,
+  "tooth_count_for_schedule": 497,
+  "tooth_count": 497,
+  "batch_size": 1,
+  "estimated_steps_per_epoch": 497,
+  "target_train_steps": 3437,
+  "score_start_epoch": 6,
+  "max_epochs": 7,
+  "min_epochs": 7,
+  "formula": "ceil(target_train_steps / ceil(train_tooth_count / batch_size)), bounded by auto_min/auto_max"
+}

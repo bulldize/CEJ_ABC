@@ -1,0 +1,37 @@
+{
+  "experiment": "exp00_audit_baseline",
+  "attempt": 1,
+  "status": "success",
+  "started_at": "2026-05-07T15:39:51.573185+00:00",
+  "finished_at": "2026-05-07T15:44:15.629667+00:00",
+  "attempt_root": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline",
+  "config_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/config/train.yaml",
+  "model_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/outputs/train/checkpoints/last.pt",
+  "metrics_csv": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/outputs/train/metrics.csv",
+  "audit_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/outputs/train/supervised_dataset_audit.json",
+  "eval_summary_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/outputs/eval/metrics_summary.json",
+  "eval_per_tooth_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/outputs/eval/metrics_per_tooth.csv",
+  "package_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/package/exp00_audit_baseline_training_bundle.tar.gz",
+  "metrics_summary": {
+    "mean": 0.2828170955181122,
+    "p95": 0.5709471702575684,
+    "sr": {
+      "0.5": 0.9195134575569358,
+      "1.0": 0.9968944099378882,
+      "1.5": 0.9997412008281573
+    },
+    "prediction_name": "C_pred_fit.nii.gz",
+    "tooth_count": 244,
+    "missing_prediction_count": 0,
+    "failed_tooth_count": 0,
+    "ok_tooth_count": 244
+  },
+  "audit_summary": {
+    "total_tooth_dirs": 244,
+    "used_labeled_tooth_dirs": 188,
+    "skipped_unlabeled_tooth_dirs": 56,
+    "invalid_tooth_dirs": 0,
+    "invalid_used_tooth_dirs": 0
+  },
+  "error": null
+}

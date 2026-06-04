@@ -1,0 +1,116 @@
+{
+  "started_at": null,
+  "finished_at": "2026-06-01T02:13:10.858504+00:00",
+  "config_path": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/config/goal_mode_train.yaml",
+  "output_dir": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train",
+  "metrics_csv": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/metrics.csv",
+  "best_checkpoint": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/checkpoints/best.pt",
+  "last_checkpoint": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/checkpoints/last.pt",
+  "topk_checkpoints": [
+    {
+      "path": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/checkpoints/topk/epoch_005_score_1.065036.pt",
+      "name": "epoch_005_score_1.065036.pt",
+      "size_bytes": 14381075
+    },
+    {
+      "path": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/checkpoints/topk/epoch_006_score_0.981189.pt",
+      "name": "epoch_006_score_0.981189.pt",
+      "size_bytes": 14381075
+    },
+    {
+      "path": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/checkpoints/topk/epoch_007_score_1.045574.pt",
+      "name": "epoch_007_score_1.045574.pt",
+      "size_bytes": 14381075
+    },
+    {
+      "path": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/checkpoints/topk/epoch_008_score_1.006999.pt",
+      "name": "epoch_008_score_1.006999.pt",
+      "size_bytes": 14381075
+    }
+  ],
+  "checkpoint_top_k": 4,
+  "checkpoint_every_n_epochs": 5,
+  "archive_dir": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/checkpoints/archive",
+  "holdout_analysis_dir": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/holdout_analysis",
+  "hard_case_viewer": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+  "early_stop_metric": "holdout_composite_score",
+  "early_stop_score": {
+    "note": "Training was stopped after epoch 8 because the user requested stopping once acceptance metrics are met; best checkpoint selected from completed active rows."
+  },
+  "score_start_epoch": 5,
+  "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+  "best_epoch": 6,
+  "best_composite_score": 0.9811892396095446,
+  "best_monitor_metrics": {
+    "epoch": 6,
+    "global_step": 3437,
+    "holdout_loss": 0.39899490406459803,
+    "holdout_composite_score": 0.9811892396095446,
+    "holdout_sym_mean": 1.0127619504928589,
+    "holdout_sym_p95": 2.2360680103302,
+    "holdout_manual_point_mean": 0.9580346941947937,
+    "holdout_manual_point_p95": 1.9438244581222535,
+    "holdout_manual_point_sr1": 0.6269135291683906,
+    "holdout_manual_point_sr2": 0.9549027720314439,
+    "holdout_manual_point_count": 9668,
+    "holdout_no_curve_count": 0,
+    "holdout_bad_rate": 0.7006109979633401,
+    "h_pred_max": 0.9998086094856262,
+    "h_pred_p99": 0.14964138998676893,
+    "vox03": 7640.468431771894,
+    "vox03_total": 3751470,
+    "cc_count": 1.0122199592668024,
+    "lcc_ratio": 0.9999796993600922,
+    "wrap_coverage": 0.573817734460688,
+    "hard_case_count": 12,
+    "hard_case_sym_p95": 3.471174037456506,
+    "hard_case_no_curve_count": 0,
+    "hard_case_bad_rate": 0.75
+  },
+  "best_holdout_loss": 0.39899490406459803,
+  "best_holdout_sym_p95": 2.2360680103302,
+  "best_holdout_manual_point_p95": 1.9438244581222535,
+  "best_holdout_manual_point_sr1": 0.6269135291683906,
+  "best_holdout_no_curve_count": 0,
+  "best_holdout_bad_rate": 0.7006109979633401,
+  "best_wrap_coverage": 0.573817734460688,
+  "best_hard_case_viewer_component": 0.8817348074913012,
+  "best_hard_case_sym_p95": 3.471174037456506,
+  "best_hard_case_no_curve_count": 0,
+  "best_hard_case_bad_rate": 0.75,
+  "stopped_early_by_user_request": true,
+  "completed_epoch_count": 9,
+  "last_completed_epoch": 8,
+  "pretrained": {
+    "loaded": true,
+    "path": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/input/checkpoints/best.pt",
+    "source": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage1/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt",
+    "loaded_tensor_count": 114,
+    "missing": [],
+    "unexpected": [],
+    "skipped_mismatch": []
+  },
+  "dataset": {
+    "train": {
+      "total_tooth_dirs": 585,
+      "used_labeled_tooth_dirs": 491,
+      "skipped_unlabeled_tooth_dirs": 94,
+      "invalid_tooth_dirs": 0
+    },
+    "holdout": {
+      "total_tooth_dirs": 585,
+      "used_labeled_tooth_dirs": 491,
+      "skipped_unlabeled_tooth_dirs": 94,
+      "invalid_tooth_dirs": 0
+    }
+  },
+  "audit_paths": {
+    "train": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/audit_train",
+    "holdout": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/outputs_final/train/audit_holdout"
+  },
+  "sampler": {
+    "weighted_sampler": true,
+    "weight_count": 491,
+    "hard_weight_count": null
+  }
+}

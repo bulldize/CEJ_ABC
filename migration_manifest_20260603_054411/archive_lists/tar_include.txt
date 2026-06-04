@@ -1,0 +1,17 @@
+root/workspace/CEJ_ABC
+root/ToothFairy3
+root/cej_runs/run_unsup_001
+root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage1/experiments/exp03_skeleton_aux_loss
+root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss
+root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001
+root/cej_isolated_runs/C/goal模式_19full_001
+root/backup_models
+root/xray
+root/clash
+root/.proxy_env
+root/.bashrc
+root/.zshrc
+root/.profile
+root/.condarc
+root/.config/pip/pip.conf
+root/.ssh/authorized_keys

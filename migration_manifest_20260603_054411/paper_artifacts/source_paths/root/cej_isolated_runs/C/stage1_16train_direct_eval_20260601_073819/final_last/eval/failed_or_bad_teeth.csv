@@ -1,0 +1,7 @@
+case_id,tooth_id,n_points,status,mean_dist_mm,p95_dist_mm,sr@1.0,sr@2.0,pred_path
+ToothFairy3F_040,43,20,ok,1.2395915985107422,2.2511199474334718,0.35,0.9,/root/cej_isolated_runs/C/stage1_16train_direct_eval_20260601_073819/threshold_sweep_last/theta_0.20/infer/ToothFairy3F_040/tooth_43/C_pred_fit.nii.gz
+ToothFairy3F_052,31,20,ok,3.4286441802978516,5.320840120315552,0.15,0.25,/root/cej_isolated_runs/C/stage1_16train_direct_eval_20260601_073819/threshold_sweep_last/theta_0.20/infer/ToothFairy3F_052/tooth_31/C_pred_fit.nii.gz
+ToothFairy3F_052,32,20,ok,1.47139573097229,2.587421774864197,0.3,0.85,/root/cej_isolated_runs/C/stage1_16train_direct_eval_20260601_073819/threshold_sweep_last/theta_0.20/infer/ToothFairy3F_052/tooth_32/C_pred_fit.nii.gz
+ToothFairy3F_052,33,24,ok,0.7656485438346863,2.0927895009517656,0.7916666666666666,0.9166666666666666,/root/cej_isolated_runs/C/stage1_16train_direct_eval_20260601_073819/threshold_sweep_last/theta_0.20/infer/ToothFairy3F_052/tooth_33/C_pred_fit.nii.gz
+ToothFairy3F_052,41,24,ok,3.0262019634246826,4.895714139938353,0.125,0.2916666666666667,/root/cej_isolated_runs/C/stage1_16train_direct_eval_20260601_073819/threshold_sweep_last/theta_0.20/infer/ToothFairy3F_052/tooth_41/C_pred_fit.nii.gz
+ToothFairy3F_052,42,20,ok,1.6217749118804932,3.4501199245452883,0.25,0.7,/root/cej_isolated_runs/C/stage1_16train_direct_eval_20260601_073819/threshold_sweep_last/theta_0.20/infer/ToothFairy3F_052/tooth_42/C_pred_fit.nii.gz

@@ -1,0 +1,6 @@
+[started_at] 2026-05-07T16:03:35.291263+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train_holdout --config /root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_002/experiments/exp00_baseline_dicece/config/train.yaml
+[2026-05-07 16:03:47,163] INFO - loaded pretrained=/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_002/input/checkpoints/unsup_last.pt strict=False missing=0 unexpected=0
+[2026-05-07 16:05:37,917] INFO - epoch=0 loss=1.052409 sym_p95=14.03566837310791 no_curve=1 wrap=0.2067 best_epoch=0 patience=0/1
+[finished_at] 2026-05-07T16:05:38.921897+00:00
+[returncode] 0

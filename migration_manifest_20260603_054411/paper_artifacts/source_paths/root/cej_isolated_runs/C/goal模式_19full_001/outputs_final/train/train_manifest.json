@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-05-29T18:49:01.067690+00:00",
+  "status": "stopped_after_acceptance_candidate",
+  "note": "Training was stopped after a passing validation candidate was found; final acceptance is produced by the goal-mode runner skip-train sweep.",
+  "config_path": "/root/cej_isolated_runs/C/goal模式_19full_001/config/goal_mode_train.yaml",
+  "output_dir": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train",
+  "metrics_csv": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/metrics.csv",
+  "best_checkpoint": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/checkpoints/best.pt",
+  "last_checkpoint": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/checkpoints/last.pt",
+  "topk_dir": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/checkpoints/topk",
+  "archive_dir": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/checkpoints/archive",
+  "observed_epoch_count": 7,
+  "best_epoch": 6,
+  "best_composite_score": 0.9811892396095446,
+  "best_holdout_manual_point_p95": 1.9438244581222535,
+  "best_holdout_manual_point_sr1": 0.6269135291683906,
+  "best_holdout_no_curve_count": 0,
+  "audit_train": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/audit_train",
+  "audit_holdout": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/audit_holdout"
+}

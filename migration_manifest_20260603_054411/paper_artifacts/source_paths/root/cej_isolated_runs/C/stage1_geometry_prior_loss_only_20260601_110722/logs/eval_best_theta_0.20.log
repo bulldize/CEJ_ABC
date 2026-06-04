@@ -1,0 +1,5 @@
+[started_at] 2026-06-01T11:29:40.192257+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.eval --config /root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/config/best_theta_0.20.yaml
+[2026-06-01 11:29:43,608] INFO - saved metrics to /root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/threshold_sweep_best/theta_0.20/eval
+[finished_at] 2026-06-01T11:29:44.086456+00:00
+[returncode] 0

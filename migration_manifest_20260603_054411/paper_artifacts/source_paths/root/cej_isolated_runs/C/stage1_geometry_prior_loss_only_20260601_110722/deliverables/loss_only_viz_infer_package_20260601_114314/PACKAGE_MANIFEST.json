@@ -1,0 +1,44 @@
+{
+  "created_at": "2026-06-01T11:43:14.451395+00:00",
+  "source_run_root": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722",
+  "package_root": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/deliverables/loss_only_viz_infer_package_20260601_114314",
+  "experiment": "stage1_geometry_prior_loss_only",
+  "gt_modified": false,
+  "gt_preserved": true,
+  "gt_mismatch_count": 0,
+  "selected_threshold": 0.25,
+  "selected_validation": {
+    "status": "FAIL",
+    "passed_non_inferiority_goal": false,
+    "criteria": {
+      "p95_dist_mm_lte_1_467": false,
+      "sr_at_1mm_gte_0_836": true,
+      "failed_or_bad_teeth_count_lte_3": false,
+      "missing_prediction_count_is_0": true,
+      "no_curve_count_is_0": true,
+      "holdout_tooth_count_is_88": true,
+      "holdout_case_count_is_3": true
+    },
+    "holdout_case_count": 3,
+    "holdout_tooth_count": 88,
+    "missing_prediction_count": 0,
+    "no_curve_count": 0,
+    "failed_tooth_count": 0,
+    "failed_or_bad_teeth_count": 5,
+    "mean_dist_mm": 0.6476492881774902,
+    "p95_dist_mm": 1.6594260096549975,
+    "sr@1.0mm": 0.8627450980392157
+  },
+  "contents": {
+    "model": [
+      "best.pt",
+      "last.pt",
+      "unsup_last.pt"
+    ],
+    "inference": "final_best selected-threshold prediction volumes and curves",
+    "visualization": "3D HTML viewers only, one index plus per-tooth viewers",
+    "input": "processed_holdout3 only; train16 processed data excluded",
+    "evaluation": "final eval plus threshold sweep metrics",
+    "reports": "training, audits, manifest, logs"
+  }
+}

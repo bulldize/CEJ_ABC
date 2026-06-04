@@ -1,0 +1,28 @@
+{
+  "train_case_count_full_is_16": true,
+  "holdout_case_count_is_3": true,
+  "train_tooth_count_full_is_497": true,
+  "holdout_tooth_count_is_88": true,
+  "unsup_hash_match": true,
+  "subset_labels": [
+    "pct020",
+    "pct040",
+    "pct060",
+    "pct080",
+    "pct100"
+  ],
+  "subset_case_counts": {
+    "pct020": 3,
+    "pct040": 6,
+    "pct060": 10,
+    "pct080": 13,
+    "pct100": 16
+  },
+  "subset_tooth_counts": {
+    "pct020": 91,
+    "pct040": 187,
+    "pct060": 313,
+    "pct080": 404,
+    "pct100": 497
+  }
+}

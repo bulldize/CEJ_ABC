@@ -1,0 +1,6 @@
+Filesystem             Type                         Size  Used Avail Use% Mounted on
+overlay                overlay                      473G  198G  256G  44% /
+overlay                overlay                      473G  198G  256G  44% /
+overlay                overlay                      473G  198G  256G  44% /
+overlay                overlay                      473G  198G  256G  44% /
+UPFS:upfs-13n5o97wrrr4 fuse.UPFS:upfs-13n5o97wrrr4   40T   33T  7.0T  83% /model

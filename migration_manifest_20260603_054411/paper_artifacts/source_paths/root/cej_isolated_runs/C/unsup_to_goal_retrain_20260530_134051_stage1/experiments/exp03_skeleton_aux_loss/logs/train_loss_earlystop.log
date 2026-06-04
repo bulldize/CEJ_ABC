@@ -1,0 +1,31 @@
+[started_at] 2026-05-30T13:45:44.704508+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train_loss_earlystop --config /root/cej_isolated_runs/C/unsup_to_goal_retrain_20260530_134051_stage1/experiments/exp03_skeleton_aux_loss/config/train.yaml
+Traceback (most recent call last):
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/root/workspace/CEJ_ABC/src/train_loss_earlystop.py", line 754, in <module>
+    main()
+  File "/root/workspace/CEJ_ABC/src/train_loss_earlystop.py", line 474, in main
+    model = build_model(cfg, device)
+  File "/root/workspace/CEJ_ABC/src/train_loss_earlystop.py", line 30, in build_model
+    ).to(device)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1160, in to
+    return self._apply(convert)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 810, in _apply
+    module._apply(fn)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 810, in _apply
+    module._apply(fn)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 810, in _apply
+    module._apply(fn)
+  [Previous line repeated 3 more times]
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 833, in _apply
+    param_applied = fn(param)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1158, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+  File "/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/cuda/__init__.py", line 298, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero.
+[finished_at] 2026-05-30T13:46:00.601821+00:00
+[returncode] 1

@@ -1,0 +1,440 @@
+{
+  "case_id": "ToothFairy3F_009",
+  "source_processed_dir": "/root/cej_runs/run_unsup_001/processed_f009",
+  "n_teeth_stitched": 32,
+  "skeleton_threshold": 0.3,
+  "keep_lcc_for_skeleton": false,
+  "skeleton_from_heatmap_peak": true,
+  "heatmap_peak_threshold": 0.999,
+  "nonoverlap_tubes_for_slicer": false,
+  "tube_radius_mm": {
+    "skeleton": 0.0,
+    "interpolated_curve": 0.0,
+    "manual_points": 0.0
+  },
+  "consistency_thresholds": {
+    "iou_min": 0.95,
+    "dice_min": 0.97,
+    "fail_on_consistency_violation": true
+  },
+  "curve_consistency": {
+    "case_level": {
+      "equal_voxelwise": true,
+      "intersection_voxels": 1828,
+      "union_voxels": 1828,
+      "curve_a_voxels": 1828,
+      "curve_b_voxels": 1828,
+      "iou": 1.0,
+      "dice": 1.0
+    },
+    "per_tooth": [
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 66,
+        "union_voxels": 66,
+        "curve_a_voxels": 66,
+        "curve_b_voxels": 66,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 11,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 39,
+        "union_voxels": 39,
+        "curve_a_voxels": 39,
+        "curve_b_voxels": 39,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 12,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 57,
+        "union_voxels": 57,
+        "curve_a_voxels": 57,
+        "curve_b_voxels": 57,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 13,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 63,
+        "union_voxels": 63,
+        "curve_a_voxels": 63,
+        "curve_b_voxels": 63,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 14,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 66,
+        "union_voxels": 66,
+        "curve_a_voxels": 66,
+        "curve_b_voxels": 66,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 15,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 86,
+        "union_voxels": 86,
+        "curve_a_voxels": 86,
+        "curve_b_voxels": 86,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 16,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 88,
+        "union_voxels": 88,
+        "curve_a_voxels": 88,
+        "curve_b_voxels": 88,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 17,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 0,
+        "union_voxels": 0,
+        "curve_a_voxels": 0,
+        "curve_b_voxels": 0,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 18,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 55,
+        "union_voxels": 55,
+        "curve_a_voxels": 55,
+        "curve_b_voxels": 55,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 21,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 59,
+        "union_voxels": 59,
+        "curve_a_voxels": 59,
+        "curve_b_voxels": 59,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 22,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 72,
+        "union_voxels": 72,
+        "curve_a_voxels": 72,
+        "curve_b_voxels": 72,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 23,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 80,
+        "union_voxels": 80,
+        "curve_a_voxels": 80,
+        "curve_b_voxels": 80,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 24,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 67,
+        "union_voxels": 67,
+        "curve_a_voxels": 67,
+        "curve_b_voxels": 67,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 25,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 90,
+        "union_voxels": 90,
+        "curve_a_voxels": 90,
+        "curve_b_voxels": 90,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 26,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 99,
+        "union_voxels": 99,
+        "curve_a_voxels": 99,
+        "curve_b_voxels": 99,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 27,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 0,
+        "union_voxels": 0,
+        "curve_a_voxels": 0,
+        "curve_b_voxels": 0,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 28,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 47,
+        "union_voxels": 47,
+        "curve_a_voxels": 47,
+        "curve_b_voxels": 47,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 31,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 38,
+        "union_voxels": 38,
+        "curve_a_voxels": 38,
+        "curve_b_voxels": 38,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 32,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 43,
+        "union_voxels": 43,
+        "curve_a_voxels": 43,
+        "curve_b_voxels": 43,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 33,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 64,
+        "union_voxels": 64,
+        "curve_a_voxels": 64,
+        "curve_b_voxels": 64,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 34,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 73,
+        "union_voxels": 73,
+        "curve_a_voxels": 73,
+        "curve_b_voxels": 73,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 35,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 85,
+        "union_voxels": 85,
+        "curve_a_voxels": 85,
+        "curve_b_voxels": 85,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 36,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 70,
+        "union_voxels": 70,
+        "curve_a_voxels": 70,
+        "curve_b_voxels": 70,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 37,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 0,
+        "union_voxels": 0,
+        "curve_a_voxels": 0,
+        "curve_b_voxels": 0,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 38,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 39,
+        "union_voxels": 39,
+        "curve_a_voxels": 39,
+        "curve_b_voxels": 39,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 41,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 44,
+        "union_voxels": 44,
+        "curve_a_voxels": 44,
+        "curve_b_voxels": 44,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 42,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 51,
+        "union_voxels": 51,
+        "curve_a_voxels": 51,
+        "curve_b_voxels": 51,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 43,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 59,
+        "union_voxels": 59,
+        "curve_a_voxels": 59,
+        "curve_b_voxels": 59,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 44,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 47,
+        "union_voxels": 47,
+        "curve_a_voxels": 47,
+        "curve_b_voxels": 47,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 45,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 87,
+        "union_voxels": 87,
+        "curve_a_voxels": 87,
+        "curve_b_voxels": 87,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 46,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 94,
+        "union_voxels": 94,
+        "curve_a_voxels": 94,
+        "curve_b_voxels": 94,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 47,
+        "passes_threshold": true
+      },
+      {
+        "equal_voxelwise": true,
+        "intersection_voxels": 0,
+        "union_voxels": 0,
+        "curve_a_voxels": 0,
+        "curve_b_voxels": 0,
+        "iou": 1.0,
+        "dice": 1.0,
+        "tooth_id": 48,
+        "passes_threshold": true
+      }
+    ],
+    "n_violations": 0,
+    "violation_tooth_ids": []
+  },
+  "volumes": [
+    "CEJ_medical_compare_full.nii.gz",
+    "CEJ_model_compare_full.nii.gz",
+    "CEJ_qc_compare_full.nii.gz"
+  ],
+  "compare_label_definition": {
+    "0": "background",
+    "1": "tooth_body",
+    "2": "segment_2",
+    "3": "segment_3"
+  },
+  "compare_files": {
+    "CEJ_medical_compare_full.nii.gz": {
+      "segment_1": "tooth_body",
+      "segment_2": "manual_points",
+      "segment_3": "pseudo_gt_interpolated_curve",
+      "voxel_stats": {
+        "label_counts": {
+          "0": 44372046,
+          "1": 676761,
+          "2": 165,
+          "3": 1828
+        },
+        "segment2_segment3_overlap_voxels": 304
+      }
+    },
+    "CEJ_qc_compare_full.nii.gz": {
+      "segment_1": "tooth_body",
+      "segment_2": "pseudo_gt_interpolated_curve",
+      "segment_3": "pseudo_gt_skeleton",
+      "voxel_stats": {
+        "label_counts": {
+          "0": 44372167,
+          "1": 676805,
+          "3": 1828
+        },
+        "segment2_segment3_overlap_voxels": 1828
+      }
+    },
+    "CEJ_model_compare_full.nii.gz": {
+      "segment_1": "tooth_body",
+      "segment_2": "pseudo_gt_interpolated_curve",
+      "segment_3": "predicted_curve",
+      "voxel_stats": {
+        "label_counts": {
+          "0": 44372167,
+          "1": 676805,
+          "2": 1828
+        },
+        "segment2_segment3_overlap_voxels": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "created_at": "2026-05-30T13:32:56.879071+00:00",
+  "repo": {
+    "path": "/root/workspace/CEJ_ABC",
+    "commit": "cbca7f9c53367c21d446317efdda49bc2faea187"
+  },
+  "note": "This report validates the existing reproduced artifacts and does not edit historical train manifests. Stage 1 train_manifest records the isolated checkpoint copy; Stage 1 source_manifest records that copy came from the required unsup_last.pt path.",
+  "runtime_constraint": {
+    "cuda_available_now": false,
+    "checked_with": "torch.cuda.is_available() and nvidia-smi both reported no usable GPU during this validation turn",
+    "fresh_full_training_executed_this_turn": false
+  },
+  "overall_accepted": true,
+  "strict_acceptance_criteria": {
+    "accepted_true": true,
+    "case_count_eq_19": true,
+    "csv_case_count_eq_19": true,
+    "tooth_count_eq_585": true,
+    "source_tooth_dir_count_eq_585": true,
+    "missing_prediction_count_eq_0": true,
+    "no_curve_count_eq_0": true,
+    "failed_tooth_count_eq_0": true,
+    "failed_or_bad_teeth_count_eq_0": true,
+    "mean_dist_mm_lte_0_35": true,
+    "p95_dist_mm_lte_0_65": true,
+    "sr_at_1mm_gte_0_99": true
+  },
+  "lineage_checks": {
+    "stage1_source_unsup_is_required_path": true,
+    "stage1_train_pretrained_is_stage1_unsup_copy": true,
+    "stage1_unsup_copy_hash_matches_required_unsup": true,
+    "stage1_best_exists": true,
+    "stage1_last_exists": true,
+    "stage2_source_pretrained_is_stage1_best": true,
+    "stage2_pretrained_copy_hash_matches_stage1_best": true,
+    "stage2_config_pretrained_copy_exists": true,
+    "stage2_best_exists": true,
+    "stage2_last_exists": true
+  },
+  "artifact_checks": {
+    "stage1_source_manifest": true,
+    "stage1_train_manifest": true,
+    "stage1_train_config": true,
+    "stage1_train_log": true,
+    "stage1_metrics_csv": true,
+    "stage1_best": true,
+    "stage1_last": true,
+    "stage2_source_manifest": true,
+    "stage2_case_manifest": true,
+    "stage2_train_manifest": true,
+    "stage2_train_config": true,
+    "stage2_train_log": true,
+    "stage2_metrics_csv": true,
+    "final_acceptance_report": true,
+    "final_metrics_summary": true,
+    "final_metrics_per_tooth": true,
+    "final_failed_or_bad_teeth": true,
+    "final_best": true,
+    "final_last": true,
+    "final_package": true
+  },
+  "metrics": {
+    "selected_threshold": 0.35,
+    "case_count_from_source_manifest": 19,
+    "case_count_from_metrics_csv": 19,
+    "case_ids": [
+      "ToothFairy3F_008",
+      "ToothFairy3F_009",
+      "ToothFairy3F_010",
+      "ToothFairy3F_018",
+      "ToothFairy3F_021",
+      "ToothFairy3F_023",
+      "ToothFairy3F_025",
+      "ToothFairy3F_026",
+      "ToothFairy3F_027",
+      "ToothFairy3F_033",
+      "ToothFairy3F_040",
+      "ToothFairy3F_041",
+      "ToothFairy3F_044",
+      "ToothFairy3F_050",
+      "ToothFairy3F_051",
+      "ToothFairy3F_052",
+      "ToothFairy3F_053",
+      "ToothFairy3F_054",
+      "ToothFairy3F_055"
+    ],
+    "tooth_count": 585,
+    "metrics_per_tooth_rows": 585,
+    "status_counts": {
+      "ok": 585
+    },
+    "mean_dist_mm": 0.29731258749961853,
+    "p95_dist_mm": 0.5984374463558196,
+    "sr@1.0mm": 0.9957592056268101,
+    "missing_prediction_count": 0,
+    "no_curve_count": 0,
+    "failed_tooth_count": 0,
+    "failed_or_bad_teeth_count": 0
+  },
+  "stage1": {
+    "run_root": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004",
+    "experiment_root": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss",
+    "experiment_status": "success",
+    "source_unsup_checkpoint": "/root/cej_runs/run_unsup_001/unsup/pretrain/checkpoints/last.pt",
+    "unsup_checkpoint_copy": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+    "train_manifest_pretrained_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+    "best_epoch": 22,
+    "best_composite_score": 0.8143920010183066,
+    "best_holdout_sym_p95": 5.099019527435303,
+    "dataset": {
+      "train": {
+        "total_tooth_dirs": 497,
+        "used_labeled_tooth_dirs": 426,
+        "skipped_unlabeled_tooth_dirs": 71,
+        "invalid_tooth_dirs": 0
+      },
+      "holdout": {
+        "total_tooth_dirs": 88,
+        "used_labeled_tooth_dirs": 65,
+        "skipped_unlabeled_tooth_dirs": 23,
+        "invalid_tooth_dirs": 0
+      }
+    },
+    "checkpoints": {
+      "required_unsup": {
+        "path": "/root/cej_runs/run_unsup_001/unsup/pretrain/checkpoints/last.pt",
+        "exists": true,
+        "size_bytes": 14354894,
+        "sha256": "4c865ca7292a9e500974f92d2fc028b9bee061453f779da75e2822457bab1283"
+      },
+      "unsup_copy": {
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+        "exists": true,
+        "size_bytes": 14354894,
+        "sha256": "4c865ca7292a9e500974f92d2fc028b9bee061453f779da75e2822457bab1283"
+      },
+      "best": {
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt",
+        "exists": true,
+        "size_bytes": 14360839,
+        "sha256": "ec23de5840139ca200dbaa165ea81fedb7cb3e18e35e3c937cb2bdab1efcf8e6"
+      },
+      "last": {
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/last.pt",
+        "exists": true,
+        "size_bytes": 14360839,
+        "sha256": "f075d29080273da3f3ca9994076d7ca3bf938a13cc6963633b113876496a5cf0"
+      }
+    }
+  },
+  "stage2": {
+    "run_root": "/root/cej_isolated_runs/C/goal模式_19full_001",
+    "source_pretrained": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt",
+    "pretrained_copy": "/root/cej_isolated_runs/C/goal模式_19full_001/input/checkpoints/best.pt",
+    "pretrained_kind": "exp03_skeleton_aux_loss_best",
+    "train_manifest_status": "stopped_after_acceptance_candidate",
+    "train_manifest_note": "Training was stopped after a passing validation candidate was found; final acceptance is produced by the goal-mode runner skip-train sweep.",
+    "observed_epoch_count": 7,
+    "best_epoch": 6,
+    "best_composite_score": 0.9811892396095446,
+    "checkpoints": {
+      "pretrained_copy": {
+        "path": "/root/cej_isolated_runs/C/goal模式_19full_001/input/checkpoints/best.pt",
+        "exists": true,
+        "size_bytes": 14360839,
+        "sha256": "ec23de5840139ca200dbaa165ea81fedb7cb3e18e35e3c937cb2bdab1efcf8e6"
+      },
+      "best": {
+        "path": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/checkpoints/best.pt",
+        "exists": true,
+        "size_bytes": 14374604,
+        "sha256": "b0db940d61a4329d6af450cbfd9df6e59a12a16aab1fa513b6a47846deb6af20"
+      },
+      "last": {
+        "path": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/checkpoints/last.pt",
+        "exists": true,
+        "size_bytes": 14374604,
+        "sha256": "b0db940d61a4329d6af450cbfd9df6e59a12a16aab1fa513b6a47846deb6af20"
+      }
+    }
+  },
+  "artifact_paths": {
+    "stage1_source_manifest": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/source_manifest.json",
+    "stage1_train_manifest": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/train_manifest.json",
+    "stage1_train_config": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/config/train.yaml",
+    "stage1_train_log": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/logs/train_loss_earlystop.log",
+    "stage1_metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/metrics.csv",
+    "stage1_best": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt",
+    "stage1_last": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/last.pt",
+    "stage2_source_manifest": "/root/cej_isolated_runs/C/goal模式_19full_001/input/source_manifest.json",
+    "stage2_case_manifest": "/root/cej_isolated_runs/C/goal模式_19full_001/input/case_manifest.csv",
+    "stage2_train_manifest": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/train_manifest.json",
+    "stage2_train_config": "/root/cej_isolated_runs/C/goal模式_19full_001/config/goal_mode_train.yaml",
+    "stage2_train_log": "/root/cej_isolated_runs/C/goal模式_19full_001/logs/train_goal_mode.log",
+    "stage2_metrics_csv": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/metrics.csv",
+    "final_acceptance_report": "/root/cej_isolated_runs/C/goal模式_19full_001/summary/acceptance_report.json",
+    "final_metrics_summary": "/root/cej_isolated_runs/C/goal模式_19full_001/final/eval/metrics_summary.json",
+    "final_metrics_per_tooth": "/root/cej_isolated_runs/C/goal模式_19full_001/final/eval/metrics_per_tooth.csv",
+    "final_failed_or_bad_teeth": "/root/cej_isolated_runs/C/goal模式_19full_001/final/eval/failed_or_bad_teeth.csv",
+    "final_best": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/checkpoints/best.pt",
+    "final_last": "/root/cej_isolated_runs/C/goal模式_19full_001/outputs_final/train/checkpoints/last.pt",
+    "final_package": "/root/cej_isolated_runs/C/goal模式_19full_001/package/goal模式_19full_training_bundle.tar.gz"
+  },
+  "reproduction_commands": [
+    "python scripts/run_cej_unsup_retrain.py --repo-dir /root/workspace/CEJ_ABC --run-root <new_stage1_run_root> --unsup-ckpt /root/cej_runs/run_unsup_001/unsup/pretrain/checkpoints/last.pt --experiments exp03_skeleton_aux_loss",
+    "python scripts/run_goal_mode_19full.py --repo-dir /root/workspace/CEJ_ABC --run-root <new_stage2_run_root> --best-ckpt <new_stage1_run_root>/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt --unsup-ckpt /root/cej_runs/run_unsup_001/unsup/pretrain/checkpoints/last.pt"
+  ]
+}

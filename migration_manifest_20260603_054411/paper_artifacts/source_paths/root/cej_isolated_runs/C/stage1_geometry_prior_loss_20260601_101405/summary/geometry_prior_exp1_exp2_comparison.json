@@ -1,0 +1,57 @@
+{
+  "created_at": "2026-06-01T10:56:54.201832+00:00",
+  "baseline": {
+    "experiment": "baseline Stage1-only",
+    "threshold": 0.25,
+    "mean_dist_mm": 0.628,
+    "p95_dist_mm": 1.417,
+    "sr@1.0mm": 0.846,
+    "failed_or_bad_teeth_count": 3,
+    "status": "baseline"
+  },
+  "exp1_report": "/root/cej_isolated_runs/C/stage1_geometry_prior_preprocess_20260601_101207/summary/geometry_prior_preprocess_report.json",
+  "exp2_report": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_20260601_101405/summary/geometry_prior_loss_report.json",
+  "rows": [
+    {
+      "experiment": "baseline Stage1-only",
+      "threshold": 0.25,
+      "mean_dist_mm": 0.628,
+      "p95_dist_mm": 1.417,
+      "sr@1.0mm": 0.846,
+      "failed_or_bad_teeth_count": 3,
+      "status": "baseline"
+    },
+    {
+      "experiment": "exp1 preprocess prior",
+      "threshold": 0.35,
+      "mean_dist_mm": 2.8685684204101562,
+      "p95_dist_mm": 4.035110092163081,
+      "sr@1.0mm": 0.563921568627451,
+      "failed_or_bad_teeth_count": 25,
+      "status": "FAIL",
+      "run_root": "/root/cej_isolated_runs/C/stage1_geometry_prior_preprocess_20260601_101207"
+    },
+    {
+      "experiment": "exp2 shape-prior loss",
+      "threshold": 0.25,
+      "mean_dist_mm": 3.504990339279175,
+      "p95_dist_mm": 18.751021099088593,
+      "sr@1.0mm": 0.6172549019607844,
+      "failed_or_bad_teeth_count": 24,
+      "status": "FAIL",
+      "run_root": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_20260601_101405"
+    }
+  ],
+  "exp1_passed": false,
+  "exp2_passed": false,
+  "exp2_better_or_equal_to_exp1": true,
+  "conclusion": "do_not_merge_geometry_prior_by_default",
+  "conclusion_rules": [
+    "exp1 pass and exp2 not clearly better: adopt exp1 without loss",
+    "exp1 pass and exp2 pass with better metrics: adopt exp2, keep exp1 fallback",
+    "exp1 fail: do not merge geometry prior by default",
+    "exp1 pass and exp2 fail: preprocess only"
+  ],
+  "comparison_json": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_20260601_101405/summary/geometry_prior_exp1_exp2_comparison.json",
+  "comparison_md": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_20260601_101405/summary/geometry_prior_exp1_exp2_comparison.md"
+}

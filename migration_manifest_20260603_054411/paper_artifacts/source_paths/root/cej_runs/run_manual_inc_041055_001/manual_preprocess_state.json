@@ -1,0 +1,1049 @@
+{
+  "done_cases": [
+    "ToothFairy3F_041",
+    "ToothFairy3F_044",
+    "ToothFairy3F_050",
+    "ToothFairy3F_051",
+    "ToothFairy3F_052",
+    "ToothFairy3F_053",
+    "ToothFairy3F_054",
+    "ToothFairy3F_055"
+  ],
+  "failed_cases": {},
+  "last_case": "ToothFairy3F_055",
+  "source_meta": {
+    "ToothFairy3F_041": {
+      "boundary_file": null,
+      "manual_dir": "/root/uploads/41-55/41",
+      "points_file": {
+        "files": [
+          {
+            "mtime_ns": 1777812457687646479,
+            "name": "F_31.mrk.json",
+            "size": 10809
+          },
+          {
+            "mtime_ns": 1777812456251632288,
+            "name": "F_32.mrk.json",
+            "size": 10814
+          },
+          {
+            "mtime_ns": 1777812456411633871,
+            "name": "F_33.mrk.json",
+            "size": 10809
+          },
+          {
+            "mtime_ns": 1777812457211641783,
+            "name": "F_34.mrk.json",
+            "size": 10809
+          },
+          {
+            "mtime_ns": 1777812457051640205,
+            "name": "F_35.mrk.json",
+            "size": 11363
+          },
+          {
+            "mtime_ns": 1777812458247651998,
+            "name": "F_36.mrk.json",
+            "size": 10802
+          },
+          {
+            "mtime_ns": 1777812458419653690,
+            "name": "F_37.mrk.json",
+            "size": 13588
+          },
+          {
+            "mtime_ns": 1777812458579655263,
+            "name": "F_41.mrk.json",
+            "size": 10801
+          },
+          {
+            "mtime_ns": 1777812457371643362,
+            "name": "F_42.mrk.json",
+            "size": 11360
+          },
+          {
+            "mtime_ns": 1777812457527644900,
+            "name": "F_43.mrk.json",
+            "size": 10798
+          },
+          {
+            "mtime_ns": 1777812456731637038,
+            "name": "F_44.mrk.json",
+            "size": 10794
+          },
+          {
+            "mtime_ns": 1777812456571635455,
+            "name": "F_45.mrk.json",
+            "size": 10798
+          },
+          {
+            "mtime_ns": 1777812457883648413,
+            "name": "F_46.mrk.json",
+            "size": 13034
+          },
+          {
+            "mtime_ns": 1777812458043649991,
+            "name": "F_47.mrk.json",
+            "size": 10793
+          }
+        ],
+        "kind": "mrk_dir",
+        "path": "/root/uploads/41-55/41"
+      },
+      "sid": "041"
+    },
+    "ToothFairy3F_044": {
+      "boundary_file": null,
+      "manual_dir": "/root/uploads/41-55/44",
+      "points_file": {
+        "files": [
+          {
+            "mtime_ns": 1777812435103415056,
+            "name": "F_31.mrk.json",
+            "size": 11937
+          },
+          {
+            "mtime_ns": 1777812433587398808,
+            "name": "F_32.mrk.json",
+            "size": 12484
+          },
+          {
+            "mtime_ns": 1777812433783400916,
+            "name": "F_33.mrk.json",
+            "size": 9129
+          },
+          {
+            "mtime_ns": 1777812434623409921,
+            "name": "F_34.mrk.json",
+            "size": 10810
+          },
+          {
+            "mtime_ns": 1777812434463408208,
+            "name": "F_35.mrk.json",
+            "size": 10807
+          },
+          {
+            "mtime_ns": 1777812435587420217,
+            "name": "F_36.mrk.json",
+            "size": 15274
+          },
+          {
+            "mtime_ns": 1777812435743421881,
+            "name": "F_41.mrk.json",
+            "size": 10809
+          },
+          {
+            "mtime_ns": 1777812434779411591,
+            "name": "F_42.mrk.json",
+            "size": 10809
+          },
+          {
+            "mtime_ns": 1777812434943413348,
+            "name": "F_43.mrk.json",
+            "size": 10804
+          },
+          {
+            "mtime_ns": 1777812434139404739,
+            "name": "F_44.mrk.json",
+            "size": 13035
+          },
+          {
+            "mtime_ns": 1777812433939402594,
+            "name": "F_45.mrk.json",
+            "size": 11917
+          },
+          {
+            "mtime_ns": 1777812435263416762,
+            "name": "F_46.mrk.json",
+            "size": 10802
+          },
+          {
+            "mtime_ns": 1777812435423418468,
+            "name": "F_47.mrk.json",
+            "size": 10797
+          }
+        ],
+        "kind": "mrk_dir",
+        "path": "/root/uploads/41-55/44"
+      },
+      "sid": "044"
+    },
+    "ToothFairy3F_050": {
+      "boundary_file": null,
+      "manual_dir": "/root/uploads/41-55/50",
+      "points_file": {
+        "files": [
+          {
+            "mtime_ns": 1777812423747290796,
+            "name": "F_11.mrk.json",
+            "size": 13061
+          },
+          {
+            "mtime_ns": 1777812425951315401,
+            "name": "F_12.mrk.json",
+            "size": 13051
+          },
+          {
+            "mtime_ns": 1777812426119317265,
+            "name": "F_13.mrk.json",
+            "size": 10815
+          },
+          {
+            "mtime_ns": 1777812427783335662,
+            "name": "F_14.mrk.json",
+            "size": 10819
+          },
+          {
+            "mtime_ns": 1777812427623333898,
+            "name": "F_15.mrk.json",
+            "size": 10823
+          },
+          {
+            "mtime_ns": 1777812424139295192,
+            "name": "F_16.mrk.json",
+            "size": 13061
+          },
+          {
+            "mtime_ns": 1777812424339297427,
+            "name": "F_17.mrk.json",
+            "size": 13055
+          },
+          {
+            "mtime_ns": 1777812427467332177,
+            "name": "F_21.mrk.json",
+            "size": 13066
+          },
+          {
+            "mtime_ns": 1777812424499299216,
+            "name": "F_22.mrk.json",
+            "size": 10822
+          },
+          {
+            "mtime_ns": 1777812424675301183,
+            "name": "F_23.mrk.json",
+            "size": 10824
+          },
+          {
+            "mtime_ns": 1777812423939292952,
+            "name": "F_25.mrk.json",
+            "size": 13075
+          },
+          {
+            "mtime_ns": 1777812425591311395,
+            "name": "F_26.mrk.json",
+            "size": 12515
+          },
+          {
+            "mtime_ns": 1777812425751313175,
+            "name": "F_27.mrk.json",
+            "size": 11386
+          },
+          {
+            "mtime_ns": 1777812426319319481,
+            "name": "F_31.mrk.json",
+            "size": 13046
+          },
+          {
+            "mtime_ns": 1777812422767279777,
+            "name": "F_32.mrk.json",
+            "size": 13054
+          },
+          {
+            "mtime_ns": 1777812422963281988,
+            "name": "F_33.mrk.json",
+            "size": 13062
+          },
+          {
+            "mtime_ns": 1777812425071305607,
+            "name": "F_34.mrk.json",
+            "size": 13062
+          },
+          {
+            "mtime_ns": 1777812424871303374,
+            "name": "F_35.mrk.json",
+            "size": 13065
+          },
+          {
+            "mtime_ns": 1777812426871325597,
+            "name": "F_36.mrk.json",
+            "size": 10811
+          },
+          {
+            "mtime_ns": 1777812427071327810,
+            "name": "F_37.mrk.json",
+            "size": 13053
+          },
+          {
+            "mtime_ns": 1777812427263329927,
+            "name": "F_41.mrk.json",
+            "size": 13050
+          },
+          {
+            "mtime_ns": 1777812425231307388,
+            "name": "F_42.mrk.json",
+            "size": 15289
+          },
+          {
+            "mtime_ns": 1777812425395309213,
+            "name": "F_43.mrk.json",
+            "size": 15291
+          },
+          {
+            "mtime_ns": 1777812423347286303,
+            "name": "F_44.mrk.json",
+            "size": 13051
+          },
+          {
+            "mtime_ns": 1777812423155284146,
+            "name": "F_45.mrk.json",
+            "size": 13059
+          },
+          {
+            "mtime_ns": 1777812426511321609,
+            "name": "F_46.mrk.json",
+            "size": 13052
+          },
+          {
+            "mtime_ns": 1777812426711323825,
+            "name": "F_47.mrk.json",
+            "size": 13044
+          }
+        ],
+        "kind": "mrk_dir",
+        "path": "/root/uploads/41-55/50"
+      },
+      "sid": "050"
+    },
+    "ToothFairy3F_051": {
+      "boundary_file": null,
+      "manual_dir": "/root/uploads/41-55/51",
+      "points_file": {
+        "files": [
+          {
+            "mtime_ns": 1777812429007349115,
+            "name": "F_11.mrk.json",
+            "size": 15270
+          },
+          {
+            "mtime_ns": 1777812431259373668,
+            "name": "F_12.mrk.json",
+            "size": 10802
+          },
+          {
+            "mtime_ns": 1777812431455375793,
+            "name": "F_13.mrk.json",
+            "size": 13047
+          },
+          {
+            "mtime_ns": 1777812433151394121,
+            "name": "F_14.mrk.json",
+            "size": 13040
+          },
+          {
+            "mtime_ns": 1777812432951391968,
+            "name": "F_15.mrk.json",
+            "size": 13041
+          },
+          {
+            "mtime_ns": 1777812429563355194,
+            "name": "F_16.mrk.json",
+            "size": 15277
+          },
+          {
+            "mtime_ns": 1777812429759357336,
+            "name": "F_17.mrk.json",
+            "size": 13033
+          },
+          {
+            "mtime_ns": 1777812432751389810,
+            "name": "F_21.mrk.json",
+            "size": 12482
+          },
+          {
+            "mtime_ns": 1777812429959359523,
+            "name": "F_22.mrk.json",
+            "size": 13045
+          },
+          {
+            "mtime_ns": 1777812430155361660,
+            "name": "F_23.mrk.json",
+            "size": 13051
+          },
+          {
+            "mtime_ns": 1777812429399353401,
+            "name": "F_24.mrk.json",
+            "size": 13056
+          },
+          {
+            "mtime_ns": 1777812429203351257,
+            "name": "F_25.mrk.json",
+            "size": 13051
+          },
+          {
+            "mtime_ns": 1777812431095371891,
+            "name": "F_27.mrk.json",
+            "size": 13040
+          },
+          {
+            "mtime_ns": 1777812431647377874,
+            "name": "F_31.mrk.json",
+            "size": 13044
+          },
+          {
+            "mtime_ns": 1777812428055338660,
+            "name": "F_32.mrk.json",
+            "size": 13030
+          },
+          {
+            "mtime_ns": 1777812428255340857,
+            "name": "F_33.mrk.json",
+            "size": 13041
+          },
+          {
+            "mtime_ns": 1777812430511365536,
+            "name": "F_34.mrk.json",
+            "size": 13041
+          },
+          {
+            "mtime_ns": 1777812430315363401,
+            "name": "F_35.mrk.json",
+            "size": 15281
+          },
+          {
+            "mtime_ns": 1777812432195383806,
+            "name": "F_36.mrk.json",
+            "size": 13031
+          },
+          {
+            "mtime_ns": 1777812432359385577,
+            "name": "F_37.mrk.json",
+            "size": 15265
+          },
+          {
+            "mtime_ns": 1777812432555387693,
+            "name": "F_41.mrk.json",
+            "size": 13033
+          },
+          {
+            "mtime_ns": 1777812430707367669,
+            "name": "F_42.mrk.json",
+            "size": 13039
+          },
+          {
+            "mtime_ns": 1777812430899369760,
+            "name": "F_43.mrk.json",
+            "size": 13036
+          },
+          {
+            "mtime_ns": 1777812428651345205,
+            "name": "F_44.mrk.json",
+            "size": 13031
+          },
+          {
+            "mtime_ns": 1777812428451343009,
+            "name": "F_45.mrk.json",
+            "size": 13036
+          },
+          {
+            "mtime_ns": 1777812431839379956,
+            "name": "F_46.mrk.json",
+            "size": 13019
+          },
+          {
+            "mtime_ns": 1777812432003381734,
+            "name": "F_47.mrk.json",
+            "size": 15258
+          }
+        ],
+        "kind": "mrk_dir",
+        "path": "/root/uploads/41-55/51"
+      },
+      "sid": "051"
+    },
+    "ToothFairy3F_052": {
+      "boundary_file": null,
+      "manual_dir": "/root/uploads/41-55/52",
+      "points_file": {
+        "files": [
+          {
+            "mtime_ns": 1777812447419543537,
+            "name": "F_11.mrk.json",
+            "size": 13051
+          },
+          {
+            "mtime_ns": 1777812449439564066,
+            "name": "F_12.mrk.json",
+            "size": 15281
+          },
+          {
+            "mtime_ns": 1777812449599565686,
+            "name": "F_13.mrk.json",
+            "size": 15289
+          },
+          {
+            "mtime_ns": 1777812451191581761,
+            "name": "F_14.mrk.json",
+            "size": 15284
+          },
+          {
+            "mtime_ns": 1777812451031580151,
+            "name": "F_15.mrk.json",
+            "size": 13034
+          },
+          {
+            "mtime_ns": 1777812450831578135,
+            "name": "F_21.mrk.json",
+            "size": 13059
+          },
+          {
+            "mtime_ns": 1777812447971549165,
+            "name": "F_22.mrk.json",
+            "size": 13612
+          },
+          {
+            "mtime_ns": 1777812448167551158,
+            "name": "F_23.mrk.json",
+            "size": 13056
+          },
+          {
+            "mtime_ns": 1777812447811547534,
+            "name": "F_24.mrk.json",
+            "size": 13050
+          },
+          {
+            "mtime_ns": 1777812447615545535,
+            "name": "F_25.mrk.json",
+            "size": 13040
+          },
+          {
+            "mtime_ns": 1777812449115560785,
+            "name": "F_26.mrk.json",
+            "size": 13047
+          },
+          {
+            "mtime_ns": 1777812449279562446,
+            "name": "F_27.mrk.json",
+            "size": 15283
+          },
+          {
+            "mtime_ns": 1777812449791567631,
+            "name": "F_31.mrk.json",
+            "size": 13036
+          },
+          {
+            "mtime_ns": 1777812446499534140,
+            "name": "F_32.mrk.json",
+            "size": 13044
+          },
+          {
+            "mtime_ns": 1777812446671535899,
+            "name": "F_33.mrk.json",
+            "size": 15271
+          },
+          {
+            "mtime_ns": 1777812448523554774,
+            "name": "F_34.mrk.json",
+            "size": 15269
+          },
+          {
+            "mtime_ns": 1777812448363553148,
+            "name": "F_35.mrk.json",
+            "size": 13031
+          },
+          {
+            "mtime_ns": 1777812450303572806,
+            "name": "F_36.mrk.json",
+            "size": 15271
+          },
+          {
+            "mtime_ns": 1777812450467574461,
+            "name": "F_37.mrk.json",
+            "size": 17507
+          },
+          {
+            "mtime_ns": 1777812450623576035,
+            "name": "F_41.mrk.json",
+            "size": 15263
+          },
+          {
+            "mtime_ns": 1777812448719556767,
+            "name": "F_42.mrk.json",
+            "size": 13030
+          },
+          {
+            "mtime_ns": 1777812448919558798,
+            "name": "F_43.mrk.json",
+            "size": 13037
+          },
+          {
+            "mtime_ns": 1777812447031539581,
+            "name": "F_44.mrk.json",
+            "size": 15270
+          },
+          {
+            "mtime_ns": 1777812446867537905,
+            "name": "F_45.mrk.json",
+            "size": 13025
+          },
+          {
+            "mtime_ns": 1777812449951569251,
+            "name": "F_46.mrk.json",
+            "size": 10799
+          },
+          {
+            "mtime_ns": 1777812450143571191,
+            "name": "F_47.mrk.json",
+            "size": 13018
+          }
+        ],
+        "kind": "mrk_dir",
+        "path": "/root/uploads/41-55/52"
+      },
+      "sid": "052"
+    },
+    "ToothFairy3F_053": {
+      "boundary_file": null,
+      "manual_dir": "/tmp/manual_inc_053_055/53",
+      "points_file": {
+        "files": [
+          {
+            "mtime_ns": 1777812442211489929,
+            "name": "F_11.mrk.json",
+            "size": 13038
+          },
+          {
+            "mtime_ns": 1777812444543514056,
+            "name": "F_12.mrk.json",
+            "size": 13031
+          },
+          {
+            "mtime_ns": 1777812444719515870,
+            "name": "F_13.mrk.json",
+            "size": 15279
+          },
+          {
+            "mtime_ns": 1777812446227531357,
+            "name": "F_14.mrk.json",
+            "size": 15286
+          },
+          {
+            "mtime_ns": 1777812446063529679,
+            "name": "F_15.mrk.json",
+            "size": 17515
+          },
+          {
+            "mtime_ns": 1777812442763495659,
+            "name": "F_16.mrk.json",
+            "size": 13031
+          },
+          {
+            "mtime_ns": 1777812442923497319,
+            "name": "F_17.mrk.json",
+            "size": 15275
+          },
+          {
+            "mtime_ns": 1777812445907528078,
+            "name": "F_21.mrk.json",
+            "size": 10808
+          },
+          {
+            "mtime_ns": 1777812443119499350,
+            "name": "F_22.mrk.json",
+            "size": 13047
+          },
+          {
+            "mtime_ns": 1777812443319501418,
+            "name": "F_23.mrk.json",
+            "size": 13054
+          },
+          {
+            "mtime_ns": 1777812442567493624,
+            "name": "F_24.mrk.json",
+            "size": 13052
+          },
+          {
+            "mtime_ns": 1777812442371491590,
+            "name": "F_25.mrk.json",
+            "size": 15280
+          },
+          {
+            "mtime_ns": 1777812444187510387,
+            "name": "F_26.mrk.json",
+            "size": 15278
+          },
+          {
+            "mtime_ns": 1777812444347512036,
+            "name": "F_27.mrk.json",
+            "size": 15283
+          },
+          {
+            "mtime_ns": 1777812444879517518,
+            "name": "F_31.mrk.json",
+            "size": 15271
+          },
+          {
+            "mtime_ns": 1777812441307480518,
+            "name": "F_32.mrk.json",
+            "size": 15283
+          },
+          {
+            "mtime_ns": 1777812441467482185,
+            "name": "F_33.mrk.json",
+            "size": 15286
+          },
+          {
+            "mtime_ns": 1777812443675505099,
+            "name": "F_34.mrk.json",
+            "size": 13048
+          },
+          {
+            "mtime_ns": 1777812443479503072,
+            "name": "F_35.mrk.json",
+            "size": 15273
+          },
+          {
+            "mtime_ns": 1777812445431523191,
+            "name": "F_36.mrk.json",
+            "size": 13040
+          },
+          {
+            "mtime_ns": 1777812445587524793,
+            "name": "F_37.mrk.json",
+            "size": 15271
+          },
+          {
+            "mtime_ns": 1777812445747526436,
+            "name": "F_41.mrk.json",
+            "size": 11920
+          },
+          {
+            "mtime_ns": 1777812443867507085,
+            "name": "F_42.mrk.json",
+            "size": 12481
+          },
+          {
+            "mtime_ns": 1777812444027508738,
+            "name": "F_43.mrk.json",
+            "size": 10800
+          },
+          {
+            "mtime_ns": 1777812441819485852,
+            "name": "F_44.mrk.json",
+            "size": 13044
+          },
+          {
+            "mtime_ns": 1777812441623483811,
+            "name": "F_45.mrk.json",
+            "size": 15260
+          },
+          {
+            "mtime_ns": 1777812445075519536,
+            "name": "F_46.mrk.json",
+            "size": 13030
+          },
+          {
+            "mtime_ns": 1777812445235521179,
+            "name": "F_47.mrk.json",
+            "size": 15262
+          }
+        ],
+        "ignored_files": [],
+        "kind": "mrk_dir",
+        "path": "/tmp/manual_inc_053_055/53"
+      },
+      "sid": "053"
+    },
+    "ToothFairy3F_054": {
+      "boundary_file": null,
+      "manual_dir": "/root/uploads/41-55/54",
+      "points_file": {
+        "files": [
+          {
+            "mtime_ns": 1777812436887434043,
+            "name": "F_11.mrk.json",
+            "size": 15274
+          },
+          {
+            "mtime_ns": 1777812439115457571,
+            "name": "F_12.mrk.json",
+            "size": 15291
+          },
+          {
+            "mtime_ns": 1777812439319459712,
+            "name": "F_13.mrk.json",
+            "size": 13043
+          },
+          {
+            "mtime_ns": 1777812441067478017,
+            "name": "F_14.mrk.json",
+            "size": 13042
+          },
+          {
+            "mtime_ns": 1777812440867475927,
+            "name": "F_15.mrk.json",
+            "size": 13034
+          },
+          {
+            "mtime_ns": 1777812437279438196,
+            "name": "F_16.mrk.json",
+            "size": 13047
+          },
+          {
+            "mtime_ns": 1777812437471440227,
+            "name": "F_17.mrk.json",
+            "size": 13040
+          },
+          {
+            "mtime_ns": 1777812440671473877,
+            "name": "F_21.mrk.json",
+            "size": 15288
+          },
+          {
+            "mtime_ns": 1777812437667442302,
+            "name": "F_22.mrk.json",
+            "size": 13042
+          },
+          {
+            "mtime_ns": 1777812437827443994,
+            "name": "F_23.mrk.json",
+            "size": 15287
+          },
+          {
+            "mtime_ns": 1777812437083436122,
+            "name": "F_25.mrk.json",
+            "size": 13056
+          },
+          {
+            "mtime_ns": 1777812438759453824,
+            "name": "F_26.mrk.json",
+            "size": 15286
+          },
+          {
+            "mtime_ns": 1777812438955455890,
+            "name": "F_27.mrk.json",
+            "size": 13038
+          },
+          {
+            "mtime_ns": 1777812439515461770,
+            "name": "F_31.mrk.json",
+            "size": 13039
+          },
+          {
+            "mtime_ns": 1777812435983424440,
+            "name": "F_32.mrk.json",
+            "size": 13598
+          },
+          {
+            "mtime_ns": 1777812436175426480,
+            "name": "F_33.mrk.json",
+            "size": 13038
+          },
+          {
+            "mtime_ns": 1777812438283448808,
+            "name": "F_34.mrk.json",
+            "size": 13040
+          },
+          {
+            "mtime_ns": 1777812437987445687,
+            "name": "F_35.mrk.json",
+            "size": 15279
+          },
+          {
+            "mtime_ns": 1777812440107467980,
+            "name": "F_36.mrk.json",
+            "size": 13028
+          },
+          {
+            "mtime_ns": 1777812440307470072,
+            "name": "F_37.mrk.json",
+            "size": 13040
+          },
+          {
+            "mtime_ns": 1777812440503472122,
+            "name": "F_41.mrk.json",
+            "size": 13035
+          },
+          {
+            "mtime_ns": 1777812438439450451,
+            "name": "F_42.mrk.json",
+            "size": 11358
+          },
+          {
+            "mtime_ns": 1777812438599452138,
+            "name": "F_43.mrk.json",
+            "size": 10802
+          },
+          {
+            "mtime_ns": 1777812436531430262,
+            "name": "F_44.mrk.json",
+            "size": 13039
+          },
+          {
+            "mtime_ns": 1777812436339428223,
+            "name": "F_45.mrk.json",
+            "size": 15264
+          },
+          {
+            "mtime_ns": 1777812439711463827,
+            "name": "F_46.mrk.json",
+            "size": 13032
+          },
+          {
+            "mtime_ns": 1777812439911465926,
+            "name": "F_47.mrk.json",
+            "size": 13015
+          }
+        ],
+        "kind": "mrk_dir",
+        "path": "/root/uploads/41-55/54"
+      },
+      "sid": "054"
+    },
+    "ToothFairy3F_055": {
+      "boundary_file": null,
+      "manual_dir": "/tmp/manual_inc_053_055/55",
+      "points_file": {
+        "files": [
+          {
+            "mtime_ns": 1777812452183591732,
+            "name": "F_11.mrk.json",
+            "size": 15837
+          },
+          {
+            "mtime_ns": 1777812454403613928,
+            "name": "F_12.mrk.json",
+            "size": 15273
+          },
+          {
+            "mtime_ns": 1777812454559615482,
+            "name": "F_13.mrk.json",
+            "size": 15292
+          },
+          {
+            "mtime_ns": 1777812456015629952,
+            "name": "F_14.mrk.json",
+            "size": 15281
+          },
+          {
+            "mtime_ns": 1777812455851628324,
+            "name": "F_15.mrk.json",
+            "size": 15279
+          },
+          {
+            "mtime_ns": 1777812452663596544,
+            "name": "F_16.mrk.json",
+            "size": 15273
+          },
+          {
+            "mtime_ns": 1777812452823598148,
+            "name": "F_17.mrk.json",
+            "size": 15264
+          },
+          {
+            "mtime_ns": 1777812455695626775,
+            "name": "F_21.mrk.json",
+            "size": 15281
+          },
+          {
+            "mtime_ns": 1777812452979599712,
+            "name": "F_22.mrk.json",
+            "size": 15299
+          },
+          {
+            "mtime_ns": 1777812453143601351,
+            "name": "F_23.mrk.json",
+            "size": 15302
+          },
+          {
+            "mtime_ns": 1777812452503594940,
+            "name": "F_24.mrk.json",
+            "size": 15290
+          },
+          {
+            "mtime_ns": 1777812452343593336,
+            "name": "F_25.mrk.json",
+            "size": 15283
+          },
+          {
+            "mtime_ns": 1777812454051610423,
+            "name": "F_26.mrk.json",
+            "size": 11370
+          },
+          {
+            "mtime_ns": 1777812454243612335,
+            "name": "F_27.mrk.json",
+            "size": 13040
+          },
+          {
+            "mtime_ns": 1777812454719617076,
+            "name": "F_31.mrk.json",
+            "size": 15267
+          },
+          {
+            "mtime_ns": 1777812451471584577,
+            "name": "F_32.mrk.json",
+            "size": 13043
+          },
+          {
+            "mtime_ns": 1777812451663586508,
+            "name": "F_33.mrk.json",
+            "size": 13043
+          },
+          {
+            "mtime_ns": 1777812453547605389,
+            "name": "F_34.mrk.json",
+            "size": 13029
+          },
+          {
+            "mtime_ns": 1777812453347603390,
+            "name": "F_35.mrk.json",
+            "size": 13044
+          },
+          {
+            "mtime_ns": 1777812455195621811,
+            "name": "F_36.mrk.json",
+            "size": 15274
+          },
+          {
+            "mtime_ns": 1777812455355623400,
+            "name": "F_37.mrk.json",
+            "size": 15278
+          },
+          {
+            "mtime_ns": 1777812453703606947,
+            "name": "F_42.mrk.json",
+            "size": 15278
+          },
+          {
+            "mtime_ns": 1777812453863608545,
+            "name": "F_43.mrk.json",
+            "size": 15268
+          },
+          {
+            "mtime_ns": 1777812451823588117,
+            "name": "F_44.mrk.json",
+            "size": 15265
+          },
+          {
+            "mtime_ns": 1777812454879618669,
+            "name": "F_46.mrk.json",
+            "size": 15261
+          },
+          {
+            "mtime_ns": 1777812455039620263,
+            "name": "F_47.mrk.json",
+            "size": 15259
+          }
+        ],
+        "ignored_files": [
+          "F_41.mrk.json"
+        ],
+        "kind": "mrk_dir",
+        "path": "/tmp/manual_inc_053_055/55"
+      },
+      "sid": "055"
+    }
+  },
+  "updated_at": "2026-05-03T14:00:14.305223+00:00"
+}

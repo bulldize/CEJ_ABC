@@ -1,0 +1,4 @@
+case_id,tooth_id,n_points,status,mean_dist_mm,p95_dist_mm,sr@1.0,sr@2.0,pred_path
+ToothFairy3F_052,31,20,ok,2.695892333984375,4.489449739456177,0.05,0.3,/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/threshold_sweep/theta_0.30/infer/ToothFairy3F_052/tooth_31/C_pred_fit.nii.gz
+ToothFairy3F_052,41,24,ok,3.3514747619628906,5.089097142219543,0.08333333333333333,0.25,/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/threshold_sweep/theta_0.30/infer/ToothFairy3F_052/tooth_41/C_pred_fit.nii.gz
+ToothFairy3F_052,42,20,ok,1.6606582403182983,3.41023588180542,0.25,0.7,/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_20260601_030405/threshold_sweep/theta_0.30/infer/ToothFairy3F_052/tooth_42/C_pred_fit.nii.gz

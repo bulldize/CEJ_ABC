@@ -1,0 +1,5 @@
+[started_at] 2026-06-01T07:23:04.231854+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.eval --config /root/cej_isolated_runs/C/stage1_full19_direct_eval_20260601_043314/config/last_theta_0.20.yaml
+[2026-06-01 07:23:09,907] INFO - saved metrics to /root/cej_isolated_runs/C/stage1_full19_direct_eval_20260601_043314/threshold_sweep_last/theta_0.20/eval
+[finished_at] 2026-06-01T07:23:10.361689+00:00
+[returncode] 0

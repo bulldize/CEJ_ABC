@@ -1,0 +1,3 @@
+[started_at] 2026-05-29T19:45:50.337422+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train_loss_earlystop --config /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/candidates/direct_base24_seed42_lr8e-4/config/goal_mode_train.yaml
+[2026-05-29 19:46:08,975] INFO - loaded pretrained=/root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/input/checkpoints/unsup_last.pt strict=False loaded_tensors=33 missing=81 unexpected=0 skipped_mismatch=81

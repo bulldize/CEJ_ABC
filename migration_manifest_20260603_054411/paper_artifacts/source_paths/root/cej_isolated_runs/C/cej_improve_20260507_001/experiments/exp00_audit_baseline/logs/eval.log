@@ -1,0 +1,5 @@
+[started_at] 2026-05-07T15:44:10.298160+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.eval --config /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/config/train.yaml
+[2026-05-07 15:44:14,562] INFO - saved metrics to /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp00_audit_baseline/outputs/eval
+[finished_at] 2026-05-07T15:44:15.405093+00:00
+[returncode] 0

@@ -1,0 +1,43 @@
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 05:04 ?        00:00:00 /usr/local/bin/tini -- sleep infinity
+root          23       1  0 05:04 ?        00:00:00 sshd: /usr/sbin/sshd [listener] 2 of 10-100 startups
+root          24       1  0 05:04 ?        00:00:00 /usr/bin/python3 /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+root          28       1  0 05:04 ?        00:00:00 sleep infinity
+root          29      24  0 05:04 ?        00:00:00 /bin/bash -c /model/other/filebrowser/filebrowser -d /filebrowser/filebrowser.db users rm admin 2>/dev/null || true && /model/other/filebrowser/filebrowser -d /filebrowser/filebrowser.db users add admin ${JUPYTER_TOKEN} <REDACTED> --locale=zh-cn 2>/dev/null || true && /model/other/filebrowser/filebrowser -c /filebrowser/config.json  > /filebrowser/service.log 2>&1
+root          30      24  0 05:04 ?        00:00:00 /bin/bash -c /usr/local/miniconda3/bin/jupyter-lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --ServerApp.token=<REDACTED> --notebook-dir=/ --ServerApp.terminado_settings='{"shell_command": ["/bin/bash","-l"]}' > /usr/local/jupyterlab.log 2>&1
+root          32      30  0 05:04 ?        00:00:01 /usr/local/miniconda3/bin/python3.12 /usr/local/miniconda3/bin/jupyter-lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --ServerApp.token=<REDACTED> --notebook-dir=/ --ServerApp.terminado_settings={"shell_command": ["/bin/bash","-l"]}
+root          50      23  0 05:05 ?        00:00:07 sshd: root@notty
+root          73      50  0 05:05 ?        00:00:00 -bash
+root          77      29  0 05:05 ?        00:00:00 /model/other/filebrowser/filebrowser -c /filebrowser/config.json
+root          85      73  0 05:05 ?        00:00:00 sh
+root         103      85  0 05:05 ?        00:00:19 /root/.vscode-server/code-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e command-shell --cli-data-dir /root/.vscode-server/cli --parent-process-id 85 --on-host=127.0.0.1 --on-port
+root         136     103  0 05:05 ?        00:00:00 /root/.vscode-server/code-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e --cli-data-dir /root/.vscode-server/cli agent host
+root         161     103  0 05:05 ?        00:00:00 sh /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/bin/code-server --connection-token=<REDACTED> --accept-server-license-terms --agent-host-bridge-port=39699 --agent-host-bridge-host=127.0.0.1 --agent-host-bridge-connection-token=<REDACTED> --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-14704631-e927-4be2-8f17-457b4a594468
+root         165     161  1 05:05 ?        00:00:27 /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/node /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/out/server-main.js --connection-token=<REDACTED> --accept-server-license-terms --agent-host-bridge-port=39699 --agent-host-bridge-host=127.0.0.1 --agent-host-bridge-connection-token=<REDACTED> --start-server --enable-remote-auto-shutdown --socket-path=/tmp/code-14704631-e927-4be2-8f17-457b4a594468
+root         191     165  0 05:05 ?        00:00:01 /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/node /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/out/bootstrap-fork --type=fileWatcher
+root         243       1  0 05:05 ?        00:00:04 /root/xray/xray run -c /root/xray/config.json
+root         277     165  2 05:05 ?        00:01:06 /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/node --dns-result-order=ipv4first /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/out/bootstrap-fork --type=extensionHost --transformURIs --useHostProxy=false
+root         283     165  1 05:05 ?        00:00:33 /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/node /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/out/bootstrap-fork --type=ptyHost --logsPath /root/.vscode-server/data/logs/20260603T050505
+root         322     283  0 05:05 pts/3    00:00:00 /bin/bash --init-file /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh
+root         348     103  0 05:05 ?        00:00:00 /bin/sh
+root         390     103  0 05:05 ?        00:00:00 /bin/sh
+root         783     277  0 05:05 ?        00:00:00 /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/node /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/extensions/markdown-language-features/dist/serverWorkerMain --node-ipc --clientProcessId=277
+root         824     322  0 05:05 pts/3    00:00:00 node /usr/local/bin/codex resume 019e8bbd-14d1-7482-a6b5-b753f9d91f00
+root         858     824  2 05:05 pts/3    00:01:08 /usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex resume 019e8bbd-14d1-7482-a6b5-b753f9d91f00
+root        1122       1  0 05:05 ?        00:00:00 node /usr/local/bin/codex app-server --listen unix:///root/.codex/app-server-control/desktop-ssh-websocket-v0.sock
+root        1127      23  0 05:05 ?        00:00:00 sshd: root@notty
+root        1138    1127  0 05:05 ?        00:00:00 /bin/sh -c printf '%b' '\261\032\174\344\054\055\371\132'; PATH="${CODEX_INSTALL_DIR:-$HOME/.local/bin}:$PATH"; export PATH; codex app-server proxy --sock "${CODEX_HOME:-$HOME/.codex}/app-server-control/desktop-ssh-websocket-v0.sock"
+root        1159    1122  0 05:05 ?        00:00:04 /usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex app-server --listen unix:///root/.codex/app-server-control/desktop-ssh-websocket-v0.sock
+root        1274    1138  0 05:05 ?        00:00:00 node /usr/local/bin/codex app-server proxy --sock /root/.codex/app-server-control/desktop-ssh-websocket-v0.sock
+root        1285    1274  0 05:05 ?        00:00:00 /usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex app-server proxy --sock /root/.codex/app-server-control/desktop-ssh-websocket-v0.sock
+root       15264      85  0 05:44 ?        00:00:00 sleep 180
+root       15994      23  0 05:45 ?        00:00:00 sshd: [accepted]
+root       15995      23  0 05:46 ?        00:00:00 sshd: [accepted]
+root       16066     858  0 05:46 ?        00:00:00 /bin/bash -c /root/workspace/CEJ_ABC/.venv/bin/pip freeze > migration_manifest_20260603_054411/env_manifest/pip_freeze_venv.txt
+root       16069     858  0 05:46 ?        00:00:00 /bin/bash -c git status --short > migration_manifest_20260603_054411/env_manifest/git_status.txt && git log -1 --oneline --decorate > migration_manifest_20260603_054411/env_manifest/git_head.txt
+root       16073     858  0 05:46 ?        00:00:00 /bin/bash -c ps -ef > migration_manifest_20260603_054411/env_manifest/ps_ef.txt
+root       16074     283  0 05:46 ?        00:00:00 /bin/sh -c "/root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/out/vs/base/node/cpuUsage.sh" 322 824 858 16066 16067 16069
+root       16075   16066  0 05:46 ?        00:00:00 /root/workspace/CEJ_ABC/.venv/bin/python /root/workspace/CEJ_ABC/.venv/bin/pip freeze
+root       16076   16074  0 05:46 ?        00:00:00 /bin/bash /root/.vscode-server/cli/servers/Stable-8761a5560cfd65fdd19ce7e2bd18dab5c0a4d84e/server/out/vs/base/node/cpuUsage.sh 322 824 858 16066 16067 16069
+root       16078   16073  0 05:46 ?        00:00:00 ps -ef
+root       16080   16069  0 05:46 ?        00:00:00 [git]

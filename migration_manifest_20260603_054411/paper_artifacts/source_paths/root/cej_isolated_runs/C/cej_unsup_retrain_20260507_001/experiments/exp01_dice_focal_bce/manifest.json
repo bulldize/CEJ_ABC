@@ -1,0 +1,105 @@
+{
+  "experiment": "exp01_dice_focal_bce",
+  "status": "success",
+  "started_at": "2026-05-07T16:09:56.847926+00:00",
+  "finished_at": "2026-05-07T16:13:27.555079+00:00",
+  "run_condition": "if_baseline_no_curve_or_low_candidate",
+  "config_path": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/config/train.yaml",
+  "best_checkpoint": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/best.pt",
+  "last_checkpoint": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/last.pt",
+  "metrics_csv": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/metrics.csv",
+  "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/holdout_analysis",
+  "package_path": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/package/exp01_dice_focal_bce_training_bundle.tar.gz",
+  "train_manifest": {
+    "started_at": "2026-05-07T16:10:08.583478+00:00",
+    "finished_at": "2026-05-07T16:13:26.446451+00:00",
+    "config_path": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/config/train.yaml",
+    "output_dir": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train",
+    "metrics_csv": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/metrics.csv",
+    "best_checkpoint": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/best.pt",
+    "last_checkpoint": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/last.pt",
+    "best_epoch": 0,
+    "best_metrics": {
+      "epoch": 0,
+      "holdout_tooth_count": 65,
+      "sym_mean": 7.846168518066406,
+      "sym_p95": 15.132745742797852,
+      "gt_to_pred_mean": 9.326889038085938,
+      "gt_to_pred_p95": 15.290513992309547,
+      "no_curve_count": 2,
+      "h_pred_max": 1.0,
+      "h_pred_p99": 0.5193254982932968,
+      "vox03": 13487.83076923077,
+      "vox03_total": 876709,
+      "cc_count": 7.323076923076923,
+      "lcc_ratio": 0.9567556282689709,
+      "wrap_coverage": 0.1355863403393573,
+      "hard_case_count": 12
+    },
+    "score_order": [
+      "no_curve_count asc",
+      "sym_p95 asc",
+      "wrap_coverage desc"
+    ],
+    "pretrained": {
+      "loaded": true,
+      "path": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/input/checkpoints/unsup_last.pt",
+      "missing": [],
+      "unexpected": []
+    },
+    "dataset": {
+      "train": {
+        "total_tooth_dirs": 497,
+        "used_labeled_tooth_dirs": 426,
+        "skipped_unlabeled_tooth_dirs": 71,
+        "invalid_tooth_dirs": 0
+      },
+      "holdout": {
+        "total_tooth_dirs": 88,
+        "used_labeled_tooth_dirs": 65,
+        "skipped_unlabeled_tooth_dirs": 23,
+        "invalid_tooth_dirs": 0
+      }
+    },
+    "audit_paths": {
+      "train": {
+        "audit": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/supervised_dataset_audit.json",
+        "skipped_json": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+        "skipped_txt": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+        "invalid_json": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/invalid_labeled_teeth.json",
+        "invalid_txt": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_train/invalid_labeled_teeth.txt"
+      },
+      "holdout": {
+        "audit": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/supervised_dataset_audit.json",
+        "skipped_json": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+        "skipped_txt": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+        "invalid_json": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+        "invalid_txt": "/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+      }
+    },
+    "sampler": {
+      "weighted_sampler": false,
+      "weight_count": 0,
+      "hard_weight_count": 0
+    }
+  },
+  "best_metrics": {
+    "epoch": 0,
+    "holdout_tooth_count": 65,
+    "sym_mean": 7.846168518066406,
+    "sym_p95": 15.132745742797852,
+    "gt_to_pred_mean": 9.326889038085938,
+    "gt_to_pred_p95": 15.290513992309547,
+    "no_curve_count": 2,
+    "h_pred_max": 1.0,
+    "h_pred_p99": 0.5193254982932968,
+    "vox03": 13487.83076923077,
+    "vox03_total": 876709,
+    "cc_count": 7.323076923076923,
+    "lcc_ratio": 0.9567556282689709,
+    "wrap_coverage": 0.1355863403393573,
+    "hard_case_count": 12
+  },
+  "best_epoch": 0,
+  "error": null
+}

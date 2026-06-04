@@ -1,0 +1,13 @@
+[started_at] 2026-06-01T02:21:29.878891+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.infer --config /root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage2_goal19/config/theta_0.30.yaml
+[2026-06-01 02:21:35,417] INFO - inferred case=ToothFairy3F_008 tooth=11
+[2026-06-01 02:21:35,686] INFO - inferred case=ToothFairy3F_008 tooth=12
+[2026-06-01 02:21:35,946] INFO - inferred case=ToothFairy3F_008 tooth=13
+[2026-06-01 02:21:36,185] INFO - inferred case=ToothFairy3F_008 tooth=14
+[2026-06-01 02:21:36,398] INFO - inferred case=ToothFairy3F_008 tooth=15
+[2026-06-01 02:21:36,713] INFO - inferred case=ToothFairy3F_008 tooth=16
+[2026-06-01 02:21:37,012] INFO - inferred case=ToothFairy3F_008 tooth=17
+[2026-06-01 02:21:37,298] INFO - inferred case=ToothFairy3F_008 tooth=18
+[2026-06-01 02:21:37,519] INFO - inferred case=ToothFairy3F_008 tooth=21
+[2026-06-01 02:21:37,784] INFO - inferred case=ToothFairy3F_008 tooth=22
+[2026-06-01 02:21:38,027] INFO - inferred case=ToothFairy3F_008 tooth=23

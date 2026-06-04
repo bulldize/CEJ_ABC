@@ -1,0 +1,22 @@
+{
+  "epoch": 40,
+  "holdout_tooth_count": 491,
+  "sym_mean": 1.0506768226623535,
+  "sym_p95": 2.2360680103302,
+  "gt_to_pred_mean": 1.166402816772461,
+  "gt_to_pred_p95": 2.2360680103302,
+  "manual_point_mean": 0.9620654582977295,
+  "manual_point_p95": 1.9357016742229458,
+  "manual_point_sr1": 0.6257757550682664,
+  "manual_point_sr2": 0.9566611501861813,
+  "manual_point_count": 9668,
+  "no_curve_count": 0,
+  "h_pred_max": 0.9997366070747375,
+  "h_pred_p99": 0.16708436162820153,
+  "vox03": 7743.004073319756,
+  "vox03_total": 3801815,
+  "cc_count": 1.0244399185336048,
+  "lcc_ratio": 0.9998426381402458,
+  "wrap_coverage": 0.570967563916755,
+  "hard_case_count": 12
+}

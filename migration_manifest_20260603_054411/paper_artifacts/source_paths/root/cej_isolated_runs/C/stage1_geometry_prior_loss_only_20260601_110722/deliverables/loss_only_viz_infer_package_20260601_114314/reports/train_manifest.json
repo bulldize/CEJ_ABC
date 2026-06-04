@@ -1,0 +1,177 @@
+{
+  "started_at": "2026-06-01T11:13:07.217355+00:00",
+  "finished_at": "2026-06-01T11:29:02.175656+00:00",
+  "config_path": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/config/train.yaml",
+  "output_dir": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train",
+  "metrics_csv": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/metrics.csv",
+  "best_checkpoint": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/best.pt",
+  "last_checkpoint": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/last.pt",
+  "topk_checkpoints": [
+    {
+      "epoch": 15,
+      "holdout_composite_score": 0.9605852799825471,
+      "holdout_loss": 0.4896746653776902,
+      "holdout_sym_p95": 6.082762718200684,
+      "path": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/topk/epoch_015_score_0.960585.pt"
+    },
+    {
+      "epoch": 18,
+      "holdout_composite_score": 1.0351413633172084,
+      "holdout_loss": 0.5197312813538771,
+      "holdout_sym_p95": 6.082762718200684,
+      "path": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/topk/epoch_018_score_1.035141.pt"
+    },
+    {
+      "epoch": 11,
+      "holdout_composite_score": 1.0415727129235322,
+      "holdout_loss": 0.535001980799895,
+      "holdout_sym_p95": 5.916079998016357,
+      "path": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/topk/epoch_011_score_1.041573.pt"
+    },
+    {
+      "epoch": 19,
+      "holdout_composite_score": 1.0602714811625458,
+      "holdout_loss": 0.5270273933043846,
+      "holdout_sym_p95": 6.164413928985596,
+      "path": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/topk/epoch_019_score_1.060271.pt"
+    },
+    {
+      "epoch": 10,
+      "holdout_composite_score": 1.082139156822246,
+      "holdout_loss": 0.5188862420045413,
+      "holdout_sym_p95": 6.633249759674072,
+      "path": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/topk/epoch_010_score_1.082139.pt"
+    }
+  ],
+  "checkpoint_top_k": 5,
+  "checkpoint_every_n_epochs": 5,
+  "archive_dir": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/archive",
+  "holdout_analysis_dir": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/holdout_analysis",
+  "hard_case_viewer": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+  "early_stop_metric": "holdout_composite_score",
+  "early_stop_score": {
+    "start_epoch": 10,
+    "weights": {
+      "loss": 0.35,
+      "sym_p95": 0.35,
+      "no_curve_count": 0.08,
+      "bad_rate": 0.08,
+      "vox03_empty": 0.04,
+      "cc_count": 0.04,
+      "wrap_miss": 0.06,
+      "hard_case_viewer": 0.12
+    },
+    "targets": {
+      "loss": 0.5,
+      "sym_p95_mm": 5.0,
+      "bad_sym_p95_mm": 5.0,
+      "hard_sym_p95_mm": 5.0,
+      "hard_bad_sym_p95_mm": 5.0,
+      "hard_case_count": 12,
+      "vox03": 100.0,
+      "cc_count": 4.0
+    }
+  },
+  "score_start_epoch": 10,
+  "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+  "best_epoch": 15,
+  "best_composite_score": 0.9605852799825471,
+  "best_monitor_metrics": {
+    "epoch": 15,
+    "holdout_loss": 0.4896746653776902,
+    "holdout_composite_score": 0.9605852799825471,
+    "holdout_bad_rate": 0.3384615384615385,
+    "score_components": {
+      "loss": 0.9793493307553804,
+      "sym_p95": 1.2165525436401368,
+      "manual_point_p95": 0.9399000740051262,
+      "manual_point_sr1_miss": 0.7474509803921568,
+      "no_curve_count": 0.0,
+      "bad_rate": 0.3384615384615385,
+      "vox03_empty": 0.0,
+      "cc_count": 0.0692307692307692,
+      "wrap_miss": 0.7199111267954632,
+      "hard_case_viewer": 0.9914900207519532,
+      "hard_case_sym_p95": 10.049875259399414,
+      "hard_case_no_curve_count": 0,
+      "hard_case_bad_rate": 0.75,
+      "hard_case_missing_rate": 0.0,
+      "hard_case_expected_count": 12
+    },
+    "hard_case_viewer_component": 0.9914900207519532,
+    "hard_case_sym_p95": 10.049875259399414,
+    "hard_case_no_curve_count": 0,
+    "hard_case_bad_rate": 0.75,
+    "holdout_sym_mean": 2.3171820640563965,
+    "holdout_sym_p95": 6.082762718200684,
+    "holdout_manual_point_mean": 2.0004472732543945,
+    "holdout_manual_point_p95": 4.699500370025631,
+    "holdout_manual_point_sr1": 0.25254901960784315,
+    "holdout_manual_point_sr2": 0.6101960784313726,
+    "holdout_manual_point_count": 1275,
+    "holdout_no_curve_count": 0,
+    "h_pred_max": 0.999993085861206,
+    "h_pred_p99": 0.341390627334789,
+    "vox03": 8440.676923076922,
+    "vox03_total": 548644,
+    "cc_count": 1.2769230769230768,
+    "lcc_ratio": 0.9867098282657008,
+    "wrap_coverage": 0.28008887320453685,
+    "hard_case_count": 12,
+    "holdout_tooth_count": 65
+  },
+  "best_holdout_loss": 0.4896746653776902,
+  "best_holdout_sym_p95": 6.082762718200684,
+  "best_holdout_manual_point_p95": 4.699500370025631,
+  "best_holdout_manual_point_sr1": 0.25254901960784315,
+  "best_holdout_no_curve_count": 0,
+  "best_holdout_bad_rate": 0.3384615384615385,
+  "best_wrap_coverage": 0.28008887320453685,
+  "best_hard_case_viewer_component": 0.9914900207519532,
+  "best_hard_case_sym_p95": 10.049875259399414,
+  "best_hard_case_no_curve_count": 0,
+  "best_hard_case_bad_rate": 0.75,
+  "pretrained": {
+    "loaded": true,
+    "path": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/input/checkpoints/unsup_last.pt",
+    "missing": [],
+    "unexpected": [],
+    "loaded_tensor_count": 114,
+    "skipped_mismatch": []
+  },
+  "dataset": {
+    "train": {
+      "total_tooth_dirs": 497,
+      "used_labeled_tooth_dirs": 426,
+      "skipped_unlabeled_tooth_dirs": 71,
+      "invalid_tooth_dirs": 0
+    },
+    "holdout": {
+      "total_tooth_dirs": 88,
+      "used_labeled_tooth_dirs": 65,
+      "skipped_unlabeled_tooth_dirs": 23,
+      "invalid_tooth_dirs": 0
+    }
+  },
+  "audit_paths": {
+    "train": {
+      "audit": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_train/supervised_dataset_audit.json",
+      "skipped_json": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+      "skipped_txt": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+      "invalid_json": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_train/invalid_labeled_teeth.json",
+      "invalid_txt": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_train/invalid_labeled_teeth.txt"
+    },
+    "holdout": {
+      "audit": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_holdout/supervised_dataset_audit.json",
+      "skipped_json": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+      "skipped_txt": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+      "invalid_json": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+      "invalid_txt": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+    }
+  },
+  "sampler": {
+    "weighted_sampler": true,
+    "weight_count": 426,
+    "hard_weight_count": 3
+  }
+}

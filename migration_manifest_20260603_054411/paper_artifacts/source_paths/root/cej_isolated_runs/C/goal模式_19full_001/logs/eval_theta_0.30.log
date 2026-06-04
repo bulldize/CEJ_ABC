@@ -1,0 +1,5 @@
+[started_at] 2026-05-29T19:01:02.065108+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.eval --config /root/cej_isolated_runs/C/goal模式_19full_001/config/theta_0.30.yaml
+[2026-05-29 19:01:08,892] INFO - saved metrics to /root/cej_isolated_runs/C/goal模式_19full_001/threshold_sweep/theta_0.30/eval
+[finished_at] 2026-05-29T19:01:09.613013+00:00
+[returncode] 0

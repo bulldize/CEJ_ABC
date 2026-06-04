@@ -1,0 +1,5 @@
+[started_at] 2026-05-30T13:02:48.591004+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.eval --config /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/candidates/stage2_all19_from_stage1_exp03_trainonly_seed42_lr1e-3_base16_seed42_lr1e-3_eval_epoch_049/config/theta_0.25.yaml
+[2026-05-30 13:02:55,416] INFO - saved metrics to /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/candidates/stage2_all19_from_stage1_exp03_trainonly_seed42_lr1e-3_base16_seed42_lr1e-3_eval_epoch_049/threshold_sweep/theta_0.25/eval
+[finished_at] 2026-05-30T13:02:56.721046+00:00
+[returncode] 0

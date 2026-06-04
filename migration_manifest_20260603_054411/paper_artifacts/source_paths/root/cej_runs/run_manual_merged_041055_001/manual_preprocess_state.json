@@ -1,0 +1,60 @@
+{
+  "done_cases": [
+    "ToothFairy3F_008",
+    "ToothFairy3F_009",
+    "ToothFairy3F_010"
+  ],
+  "failed_cases": {},
+  "last_case": "ToothFairy3F_010",
+  "source_meta": {
+    "ToothFairy3F_008": {
+      "boundary_file": {
+        "kind": "file",
+        "mtime_ns": 1770198714000000000,
+        "path": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/008/scan_boundary_ras.xlsx",
+        "size": 5116
+      },
+      "manual_dir": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/008",
+      "points_file": {
+        "kind": "file",
+        "mtime_ns": 1770198714000000000,
+        "path": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/008/cej_points_ras.xlsx",
+        "size": 49985
+      },
+      "sid": "008"
+    },
+    "ToothFairy3F_009": {
+      "boundary_file": {
+        "kind": "file",
+        "mtime_ns": 1772120899000000000,
+        "path": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/009/CBCT_8_Boundary_Points.xlsx",
+        "size": 5120
+      },
+      "manual_dir": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/009",
+      "points_file": {
+        "kind": "file",
+        "mtime_ns": 1772120583000000000,
+        "path": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/009/points.xlsx",
+        "size": 36066
+      },
+      "sid": "009"
+    },
+    "ToothFairy3F_010": {
+      "boundary_file": {
+        "kind": "file",
+        "mtime_ns": 1772121012000000000,
+        "path": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/010/CBCT_8_Boundary_Points.xlsx",
+        "size": 5118
+      },
+      "manual_dir": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/010",
+      "points_file": {
+        "kind": "file",
+        "mtime_ns": 1772120424000000000,
+        "path": "/root/uploads/华西口腔_CEJ_ABC/manual_merged_041055/010/points.xlsx",
+        "size": 40334
+      },
+      "sid": "010"
+    }
+  },
+  "updated_at": "2026-05-03T13:15:27.877632+00:00"
+}

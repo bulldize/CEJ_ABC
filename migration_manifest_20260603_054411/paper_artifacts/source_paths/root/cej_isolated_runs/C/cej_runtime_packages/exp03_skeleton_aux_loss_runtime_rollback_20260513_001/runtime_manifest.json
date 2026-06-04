@@ -1,0 +1,21 @@
+{
+  "package": "exp03_skeleton_aux_loss_runtime_rollback_20260513_001",
+  "created_at": "2026-05-13T05:20:12.296832+00:00",
+  "created_from": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss",
+  "source_status": "success",
+  "source_best_epoch": 22,
+  "source_best_composite_score": 0.8143920010183066,
+  "source_best_holdout_loss": 0.5032707026371589,
+  "source_best_holdout_sym_p95": 5.099019527435303,
+  "source_best_holdout_no_curve_count": 0,
+  "source_best_holdout_bad_rate": 0.24615384615384617,
+  "checkpoint": "checkpoints/best.pt",
+  "portable_config": "configs/runtime_infer.yaml",
+  "absolute_config": "configs/runtime_infer_absolute.yaml",
+  "use_geometry_gating_runtime": false,
+  "notes": [
+    "Rollback package for exp03_skeleton_aux_loss successful baseline.",
+    "Do not delete failed experiment outputs; switch runtime to this package/config.",
+    "Run src.infer before src.viz."
+  ]
+}

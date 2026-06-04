@@ -1,0 +1,196 @@
+project:
+  seed: 42
+  device: cuda
+data:
+  raw_dir: /root/ToothFairy3
+  raw_layout: toothfairy3
+  images_tr_dir: /root/ToothFairy3/imagesTr
+  labels_tr_dir: /root/ToothFairy3/labelsTr
+  points_dir: /root/ToothFairy3/pointsTr
+  meta_dir: null
+  max_cases: null
+  processed_dir: /root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/input/processed_holdout3
+  output_dir: /root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/threshold_sweep_best/theta_0.30
+  raw_a_name: A.nii.gz
+  raw_b_name: B.nii.gz
+  raw_points_name: points.json
+  raw_meta_name: meta.json
+  cej_points_name: cej_points_ras.xlsx
+  scan_boundary_path: data/scan_boundary_ras.xlsx
+  mark_meta_name: mark_meta.json
+  processed_format: nii.gz
+  use_tooth_mask_channel: true
+  holdout_processed_dir: /root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/input/processed_holdout3
+  shape_prior_name: H_SHAPE_PRIOR
+preprocess:
+  roi_padding_mm: 8.0
+  target_spacing_mm:
+  - 0.5
+  - 0.5
+  - 0.5
+  resample_to_target: false
+  intensity_clip_percentiles:
+  - 1.0
+  - 99.0
+  intensity_norm: zscore
+  dense_sample_step_mm: 0.2
+  curve_closed: true
+  curve_smooth: 0.0
+  sigma_mm: 1.0
+  point_surface_dist_thresh_mm: 3.0
+  z_ignore_ratio: 0.1
+  geometry_prior:
+    write_shape_prior_heatmap: true
+    shape_prior_sigma_mm: 2.0
+    shape_prior_name: H_SHAPE_PRIOR
+  shape_prior_sigma_mm: 2.0
+  shape_prior_name: H_SHAPE_PRIOR
+model:
+  in_channels: 2
+  out_channels: 1
+  base_channels: 16
+  depth: 4
+  num_res_units: 2
+  norm: batch
+train:
+  epochs: 50
+  batch_size: 1
+  lr: 0.001
+  num_workers: 4
+  loss: dice_focal_skeleton
+  cache_rate: 0.0
+  pretrained_ckpt: /root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/input/checkpoints/unsup_last.pt
+  pretrained_strict: false
+  max_epochs: 50
+  early_stopping_patience: 8
+  early_stopping_min_delta: 0.0005
+  min_epochs: 8
+  weighted_sampler: true
+  hard_cases:
+  - 041-31/41/42
+  hard_case_weight: 4.0
+  holdout_batch_size: 1
+  holdout_num_workers: 2
+  checkpoint_top_k: 5
+  checkpoint_every_n_epochs: 5
+  composite_score:
+    start_epoch: 10
+    weights:
+      loss: 0.35
+      sym_p95: 0.35
+      no_curve_count: 0.08
+      bad_rate: 0.08
+      vox03_empty: 0.04
+      cc_count: 0.04
+      wrap_miss: 0.06
+      hard_case_viewer: 0.12
+    targets:
+      loss: 0.5
+      sym_p95_mm: 5.0
+      bad_sym_p95_mm: 5.0
+      hard_sym_p95_mm: 5.0
+      hard_bad_sym_p95_mm: 5.0
+      hard_case_count: 12
+      vox03: 100.0
+      cc_count: 4.0
+  holdout_cache_rate: 0.0
+  loss_lambda_dice: 1.0
+  loss_lambda_bce: 1.0
+  loss_lambda_focal: 0.25
+  focal_gamma: 2.0
+  focal_alpha: 0.75
+  loss_lambda_skeleton: 0.2
+  skeleton_target_threshold: 0.95
+  skeleton_pos_weight: 8.0
+  surface_neighborhood_weight: 0.0
+  surface_neighborhood_radius_vox: 2
+  use_shape_prior_channel_or_loss: true
+  lambda_shape_prior: 0.02
+  shape_prior_sigma_mm: 2.0
+infer:
+  threshold_theta: 0.3
+  use_prior_gating: false
+  prior_sigma_z_mm: 2.0
+  prior_sigma_s_mm: 1.0
+  prior_delta_s_mm: 1.0
+  prior_use_gradient: false
+  prior_gradient_weight: 1.0
+  use_sliding_window: false
+  sw_roi_size: null
+  sw_batch_size: 1
+  sw_overlap: 0.25
+  constrain_curve_to_tooth_mask: false
+  constrain_curve_to_tooth_surface: false
+  keep_lcc_for_curve: false
+  fit_pred_curve: true
+  ckpt_path: /root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/outputs/train/checkpoints/best.pt
+  fit_pred_curve_step_mm: 0.2
+  fit_pred_curve_closed: true
+  fit_pred_curve_smooth: 0.0
+  fit_pred_curve_min_points: 8
+eval:
+  eval_taus_mm:
+  - 0.5
+  - 1.0
+  - 1.5
+  - 2.0
+  prediction_name: C_pred_fit.nii.gz
+viz:
+  enable_2d: false
+  enable_3d: false
+  num_slices: 4
+  max_cases: 3
+  max_teeth_per_case: 64
+  max_render_dim: 96
+  mesh_step: 1
+  slice_opacity: 0.82
+  tooth_opacity: 0.18
+  heatmap_opacity: 0.35
+  prior_opacity: 0.2
+  heatmap_iso_threshold: 0.3
+  pred_heatmap_iso_threshold: 0.3
+  prior_iso_threshold: 0.5
+  curve_max_points: 12000
+  show_prior_3d: true
+  use_error_colormap_for_gt_points: true
+  color_tooth_surface: '#64B5F6'
+  color_gt_heatmap: '#FFA726'
+  color_pred_heatmap: '#FF5252'
+  color_pred_curve: '#FF1744'
+  color_dense_interp_curve: '#F500FF'
+  color_pseudo_gt_skeleton: '#76FF03'
+  color_gt_points: '#FFD600'
+  color_prior: '#7E57C2'
+  show_dense_interp_curve: true
+  dense_interp_curve_closed: true
+  dense_interp_curve_max_points: 20000
+  show_pseudo_gt_skeleton: true
+  pseudo_gt_skeleton_from_interp: false
+  pseudo_gt_skeleton_from_heatmap_peak: true
+  pseudo_gt_peak_threshold: 0.999
+  pseudo_gt_skeleton_threshold: 0.3
+  pseudo_gt_skeleton_max_points: 12000
+export_pseudo_gt:
+  keep_lcc_for_skeleton: false
+  skeleton_from_heatmap_peak: true
+  heatmap_peak_threshold: 0.999
+  nonoverlap_tubes_for_slicer: false
+  skeleton_tube_radius_mm: 0.0
+  interp_tube_radius_mm: 0.0
+  points_tube_radius_mm: 0.0
+  consistency_iou_min: 0.95
+  consistency_dice_min: 0.97
+  fail_on_consistency_violation: true
+holdout_eval:
+  hard_cases:
+  - 052-31/32/41/42/33
+  - 040-42/41/32
+  - 044-31/32/36/46
+  wrap_tau_mm: 1.0
+  gt_peak_threshold: 0.95
+  gt_rel_threshold: 0.95
+  threshold_theta: 0.3
+  fit_pred_curve_step_mm: 0.2
+  fit_pred_curve_closed: true
+  fit_pred_curve_smooth: 0.0
+  fit_pred_curve_min_points: 8

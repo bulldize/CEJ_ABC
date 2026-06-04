@@ -1,0 +1,37 @@
+{
+  "experiment": "exp02_dice_focal_bce",
+  "attempt": 1,
+  "status": "success",
+  "started_at": "2026-05-07T15:48:36.851225+00:00",
+  "finished_at": "2026-05-07T15:52:55.892567+00:00",
+  "attempt_root": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce",
+  "config_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/config/train.yaml",
+  "model_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/train/checkpoints/last.pt",
+  "metrics_csv": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/train/metrics.csv",
+  "audit_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/train/supervised_dataset_audit.json",
+  "eval_summary_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/eval/metrics_summary.json",
+  "eval_per_tooth_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/eval/metrics_per_tooth.csv",
+  "package_path": "/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/package/exp02_dice_focal_bce_training_bundle.tar.gz",
+  "metrics_summary": {
+    "mean": 0.2894294559955597,
+    "p95": 0.5783744692802428,
+    "sr": {
+      "0.5": 0.9161490683229814,
+      "1.0": 0.9919772256728778,
+      "1.5": 0.995600414078675
+    },
+    "prediction_name": "C_pred_fit.nii.gz",
+    "tooth_count": 244,
+    "missing_prediction_count": 0,
+    "failed_tooth_count": 0,
+    "ok_tooth_count": 244
+  },
+  "audit_summary": {
+    "total_tooth_dirs": 244,
+    "used_labeled_tooth_dirs": 188,
+    "skipped_unlabeled_tooth_dirs": 56,
+    "invalid_tooth_dirs": 0,
+    "invalid_used_tooth_dirs": 0
+  },
+  "error": null
+}

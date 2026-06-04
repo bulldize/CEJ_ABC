@@ -1,0 +1,8 @@
+{
+  "created_at": "2026-05-07T15:38:39.192420+00:00",
+  "source_processed": "/root/cej_runs/run_sup_inc_041055_001/processed_manual",
+  "processed_copy": "/root/cej_isolated_runs/C/cej_improve_20260507_001/input/processed_manual_copy",
+  "source_seed_checkpoint": "/root/cej_runs/run_sup_inc_041055_001/outputs/train/checkpoints/last.pt",
+  "seed_checkpoint_copy": "/root/cej_isolated_runs/C/cej_improve_20260507_001/input/checkpoints/seed_last.pt",
+  "tooth_dir_count": 244
+}

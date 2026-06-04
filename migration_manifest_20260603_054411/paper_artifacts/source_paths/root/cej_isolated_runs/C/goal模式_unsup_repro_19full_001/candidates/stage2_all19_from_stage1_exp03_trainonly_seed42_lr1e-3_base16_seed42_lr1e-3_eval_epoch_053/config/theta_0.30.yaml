@@ -1,0 +1,222 @@
+project:
+  seed: 42
+  device: auto
+  candidate_name: stage2_all19_from_stage1_exp03_trainonly_seed42_lr1e-3_base16_seed42_lr1e-3_eval_epoch_053
+  stage1_candidate: stage1_exp03_trainonly_seed42_lr1e-3
+  stage1_initializer: /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/candidates/stage1_exp03_trainonly_seed42_lr1e-3/outputs/train/checkpoints/best.pt
+  strict_test_cases:
+  - ToothFairy3F_040
+  - ToothFairy3F_044
+  - ToothFairy3F_052
+data:
+  raw_dir: /root/ToothFairy3
+  raw_layout: toothfairy3
+  images_tr_dir: /root/ToothFairy3/imagesTr
+  labels_tr_dir: /root/ToothFairy3/labelsTr
+  points_dir: /root/ToothFairy3/pointsTr
+  meta_dir: null
+  max_cases: null
+  processed_dir: /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/input/processed_stage1_holdout
+  output_dir: /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/candidates/stage2_all19_from_stage1_exp03_trainonly_seed42_lr1e-3_base16_seed42_lr1e-3_eval_epoch_053/threshold_sweep/theta_0.30
+  raw_a_name: A.nii.gz
+  raw_b_name: B.nii.gz
+  raw_points_name: points.json
+  raw_meta_name: meta.json
+  cej_points_name: cej_points_ras.xlsx
+  scan_boundary_path: data/scan_boundary_ras.xlsx
+  mark_meta_name: mark_meta.json
+  processed_format: nii.gz
+  use_tooth_mask_channel: true
+  holdout_processed_dir: /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/input/processed_stage1_holdout
+  eval_processed_dir: /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/input/processed_stage1_holdout
+  strict_test_processed_dir: /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/input/processed_stage1_holdout
+  strict_test_cases:
+  - ToothFairy3F_040
+  - ToothFairy3F_044
+  - ToothFairy3F_052
+  stage2_train_cases:
+  - ToothFairy3F_008
+  - ToothFairy3F_009
+  - ToothFairy3F_010
+  - ToothFairy3F_018
+  - ToothFairy3F_021
+  - ToothFairy3F_023
+  - ToothFairy3F_025
+  - ToothFairy3F_026
+  - ToothFairy3F_027
+  - ToothFairy3F_033
+  - ToothFairy3F_041
+  - ToothFairy3F_050
+  - ToothFairy3F_051
+  - ToothFairy3F_053
+  - ToothFairy3F_054
+  - ToothFairy3F_055
+preprocess:
+  roi_padding_mm: 8.0
+  target_spacing_mm:
+  - 0.5
+  - 0.5
+  - 0.5
+  resample_to_target: false
+  intensity_clip_percentiles:
+  - 1.0
+  - 99.0
+  intensity_norm: zscore
+  dense_sample_step_mm: 0.2
+  curve_closed: true
+  curve_smooth: 0.0
+  sigma_mm: 1.0
+  point_surface_dist_thresh_mm: 3.0
+  z_ignore_ratio: 0.1
+model:
+  in_channels: 2
+  out_channels: 1
+  base_channels: 16
+  depth: 4
+  num_res_units: 2
+  norm: batch
+train:
+  epochs: 80
+  batch_size: 1
+  lr: 0.001
+  num_workers: 4
+  loss: dice_focal_skeleton
+  cache_rate: 0.0
+  pretrained_ckpt: /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/candidates/stage1_exp03_trainonly_seed42_lr1e-3/outputs/train/checkpoints/best.pt
+  pretrained_strict: false
+  training_route: stage1_exp03_trainonly_seed42_lr1e-3->stage2_all19_from_stage1_exp03_trainonly_seed42_lr1e-3_base16_seed42_lr1e-3_eval_epoch_053
+  max_epochs: 80
+  min_epochs: 20
+  early_stopping_patience: 16
+  early_stopping_min_delta: 0.0001
+  holdout_batch_size: 1
+  holdout_num_workers: 2
+  holdout_cache_rate: 0.0
+  weighted_sampler: true
+  hard_cases:
+  - 052-31/32/33/41/42
+  - 040-32/41/42
+  - 044-31/32/36/46
+  hard_case_weight: 4.0
+  checkpoint_top_k: 5
+  checkpoint_every_n_epochs: 5
+  loss_lambda_dice: 1.0
+  loss_lambda_bce: 1.0
+  loss_lambda_focal: 0.25
+  focal_gamma: 2.0
+  focal_alpha: 0.75
+  loss_lambda_skeleton: 0.4
+  skeleton_target_threshold: 0.95
+  skeleton_pos_weight: 10.0
+  surface_neighborhood_weight: 0.05
+  surface_neighborhood_radius_vox: 2
+  composite_score:
+    start_epoch: 5
+    weights:
+      loss: 0.08
+      sym_p95: 0.16
+      manual_point_p95: 0.58
+      manual_point_sr1_miss: 0.16
+      no_curve_count: 0.1
+      bad_rate: 0.05
+      vox03_empty: 0.02
+      cc_count: 0.02
+      wrap_miss: 0.02
+      hard_case_viewer: 0.05
+    targets:
+      loss: 0.35
+      sym_p95_mm: 2.0
+      manual_point_p95_mm: 2.0
+      bad_sym_p95_mm: 2.0
+      hard_sym_p95_mm: 2.0
+      hard_bad_sym_p95_mm: 2.0
+      hard_case_count: 12
+      vox03: 100.0
+      cc_count: 4.0
+infer:
+  threshold_theta: 0.3
+  constrain_curve_to_tooth_mask: false
+  constrain_curve_to_tooth_surface: false
+  keep_lcc_for_curve: false
+  fit_pred_curve: true
+  use_prior_gating: false
+  prior_sigma_z_mm: 2.0
+  prior_sigma_s_mm: 1.0
+  prior_delta_s_mm: 1.0
+  prior_use_gradient: false
+  prior_gradient_weight: 1.0
+  use_sliding_window: false
+  sw_roi_size: null
+  sw_batch_size: 1
+  sw_overlap: 0.25
+  ckpt_path: /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/candidates/stage2_all19_from_stage1_exp03_trainonly_seed42_lr1e-3_base16_seed42_lr1e-3/outputs/train/checkpoints/topk/epoch_053_score_1.023080.pt
+  fit_pred_curve_step_mm: 0.2
+  fit_pred_curve_closed: true
+  fit_pred_curve_smooth: 0.0
+  fit_pred_curve_min_points: 8
+eval:
+  eval_taus_mm:
+  - 0.5
+  - 1.0
+  - 1.5
+  - 2.0
+  prediction_name: C_pred_fit.nii.gz
+viz:
+  enable_2d: false
+  enable_3d: true
+  num_slices: 4
+  max_cases: 19
+  max_teeth_per_case: 64
+  max_render_dim: 96
+  mesh_step: 1
+  slice_opacity: 0.82
+  tooth_opacity: 0.18
+  heatmap_opacity: 0.35
+  prior_opacity: 0.2
+  heatmap_iso_threshold: 0.3
+  pred_heatmap_iso_threshold: 0.3
+  prior_iso_threshold: 0.5
+  curve_max_points: 12000
+  show_prior_3d: true
+  use_error_colormap_for_gt_points: true
+  color_tooth_surface: '#64B5F6'
+  color_gt_heatmap: '#FFA726'
+  color_pred_heatmap: '#FF5252'
+  color_pred_curve: '#FF1744'
+  color_dense_interp_curve: '#F500FF'
+  color_pseudo_gt_skeleton: '#76FF03'
+  color_gt_points: '#FFD600'
+  color_prior: '#7E57C2'
+  show_dense_interp_curve: true
+  dense_interp_curve_closed: true
+  dense_interp_curve_max_points: 20000
+  show_pseudo_gt_skeleton: true
+  pseudo_gt_skeleton_from_interp: false
+  pseudo_gt_skeleton_from_heatmap_peak: true
+  pseudo_gt_peak_threshold: 0.999
+  pseudo_gt_skeleton_threshold: 0.3
+  pseudo_gt_skeleton_max_points: 12000
+export_pseudo_gt:
+  keep_lcc_for_skeleton: false
+  skeleton_from_heatmap_peak: true
+  heatmap_peak_threshold: 0.999
+  nonoverlap_tubes_for_slicer: false
+  skeleton_tube_radius_mm: 0.0
+  interp_tube_radius_mm: 0.0
+  points_tube_radius_mm: 0.0
+  consistency_iou_min: 0.95
+  consistency_dice_min: 0.97
+  fail_on_consistency_violation: true
+holdout_eval:
+  hard_cases:
+  - 052-31/32/33/41/42
+  - 040-32/41/42
+  - 044-31/32/36/46
+  threshold_theta: 0.3
+  fit_pred_curve_step_mm: 0.2
+  fit_pred_curve_closed: true
+  fit_pred_curve_smooth: 0.0
+  fit_pred_curve_min_points: 8
+  wrap_tau_mm: 1.0
+  gt_peak_threshold: 0.95
+  gt_rel_threshold: 0.95

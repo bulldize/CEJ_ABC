@@ -1,0 +1,28 @@
+[started_at] 2026-05-07T15:48:36.857650+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train --config /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/config/train.yaml
+[2026-05-07 15:48:42,628] INFO - supervised dataset audit total=244 used_labeled=188 skipped_unlabeled=56 invalid=0 audit=/root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/train/supervised_dataset_audit.json
+[2026-05-07 15:48:44,305] INFO - loaded pretrained=/root/cej_isolated_runs/C/cej_improve_20260507_001/input/checkpoints/seed_last.pt strict=False missing=0 unexpected=0
+[2026-05-07 15:48:54,255] INFO - epoch 0 loss 0.3885
+[2026-05-07 15:49:01,339] INFO - epoch 1 loss 0.3881
+[2026-05-07 15:49:08,498] INFO - epoch 2 loss 0.3884
+[2026-05-07 15:49:15,517] INFO - epoch 3 loss 0.3876
+[2026-05-07 15:49:22,625] INFO - epoch 4 loss 0.3871
+[2026-05-07 15:49:29,584] INFO - epoch 5 loss 0.3866
+[2026-05-07 15:49:36,608] INFO - epoch 6 loss 0.3862
+[2026-05-07 15:49:43,935] INFO - epoch 7 loss 0.3863
+[2026-05-07 15:49:51,227] INFO - epoch 8 loss 0.3860
+[2026-05-07 15:49:58,346] INFO - epoch 9 loss 0.3855
+[2026-05-07 15:50:05,615] INFO - epoch 10 loss 0.3859
+[2026-05-07 15:50:12,990] INFO - epoch 11 loss 0.3857
+[2026-05-07 15:50:20,435] INFO - epoch 12 loss 0.3856
+[2026-05-07 15:50:28,145] INFO - epoch 13 loss 0.3852
+[2026-05-07 15:50:35,387] INFO - epoch 14 loss 0.3848
+[2026-05-07 15:50:42,760] INFO - epoch 15 loss 0.3848
+[2026-05-07 15:50:50,085] INFO - epoch 16 loss 0.3846
+[2026-05-07 15:50:57,253] INFO - epoch 17 loss 0.3845
+[2026-05-07 15:51:04,493] INFO - epoch 18 loss 0.3846
+[2026-05-07 15:51:11,652] INFO - epoch 19 loss 0.3843
+[2026-05-07 15:51:11,665] INFO - saved checkpoint /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/train/checkpoints/last.pt
+[2026-05-07 15:51:11,665] INFO - saved train manifest /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/train/train_manifest.json
+[finished_at] 2026-05-07T15:51:12.730098+00:00
+[returncode] 0

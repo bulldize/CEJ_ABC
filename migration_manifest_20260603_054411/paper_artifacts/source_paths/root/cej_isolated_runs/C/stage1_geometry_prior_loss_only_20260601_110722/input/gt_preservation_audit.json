@@ -1,0 +1,33 @@
+{
+  "created_at": "2026-06-01T11:11:43.865614+00:00",
+  "mode": "shape_prior_loss_only",
+  "gt_modified": false,
+  "train16": {
+    "processed_dir": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/input/processed_train16",
+    "tooth_dir_count": 497,
+    "artifact_record_count": 1491,
+    "changed_count": 0,
+    "removed_count": 0,
+    "unexpected_new_count": 0,
+    "mismatch_count": 0,
+    "gt_preserved": true,
+    "changed": [],
+    "removed": [],
+    "unexpected_new": []
+  },
+  "holdout3": {
+    "processed_dir": "/root/cej_isolated_runs/C/stage1_geometry_prior_loss_only_20260601_110722/input/processed_holdout3",
+    "tooth_dir_count": 88,
+    "artifact_record_count": 264,
+    "changed_count": 0,
+    "removed_count": 0,
+    "unexpected_new_count": 0,
+    "mismatch_count": 0,
+    "gt_preserved": true,
+    "changed": [],
+    "removed": [],
+    "unexpected_new": []
+  },
+  "gt_preserved": true,
+  "mismatch_count": 0
+}

@@ -1,0 +1,4 @@
+[started_at] 2026-05-07T17:38:31.023148+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train_loss_earlystop --config /root/cej_isolated_runs/C/cej_loss_earlystop_20260507_003/experiments/exp01_dice_focal_bce/config/train.yaml
+[2026-05-07 17:38:42,875] INFO - loaded pretrained=/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_003/input/checkpoints/unsup_last.pt strict=False missing=0 unexpected=0
+[2026-05-07 17:39:24,458] INFO - epoch=0 train_loss=1.059389 holdout_loss=0.713855 score=1.907933 sym_p95=15.132745742797852 no_curve=2 bad_rate=0.9231 vox03=13487.83076923077 cc=7.323076923076923 wrap=0.1355863403393573 best_score=None best_epoch=None patience=0/8 active=False

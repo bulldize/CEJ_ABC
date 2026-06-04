@@ -1,0 +1,97 @@
+[started_at] 2026-05-30T13:02:56.735866+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.infer --config /root/cej_isolated_runs/C/goal模式_unsup_repro_19full_001/candidates/stage2_all19_from_stage1_exp03_trainonly_seed42_lr1e-3_base16_seed42_lr1e-3_eval_epoch_049/config/theta_0.30.yaml
+/usr/local/miniconda3/envs/py310/lib/python3.10/site-packages/torch/cuda/__init__.py:138: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at ../c10/cuda/CUDAFunctions.cpp:108.)
+  return torch._C._cuda_getDeviceCount() > 0
+[2026-05-30 13:03:01,817] INFO - inferred case=ToothFairy3F_040 tooth=11
+[2026-05-30 13:03:02,088] INFO - inferred case=ToothFairy3F_040 tooth=12
+[2026-05-30 13:03:02,388] INFO - inferred case=ToothFairy3F_040 tooth=13
+[2026-05-30 13:03:02,655] INFO - inferred case=ToothFairy3F_040 tooth=14
+[2026-05-30 13:03:02,931] INFO - inferred case=ToothFairy3F_040 tooth=15
+[2026-05-30 13:03:03,272] INFO - inferred case=ToothFairy3F_040 tooth=16
+[2026-05-30 13:03:03,640] INFO - inferred case=ToothFairy3F_040 tooth=17
+[2026-05-30 13:03:03,919] INFO - inferred case=ToothFairy3F_040 tooth=21
+[2026-05-30 13:03:04,185] INFO - inferred case=ToothFairy3F_040 tooth=22
+[2026-05-30 13:03:04,680] INFO - inferred case=ToothFairy3F_040 tooth=23
+[2026-05-30 13:03:05,202] INFO - inferred case=ToothFairy3F_040 tooth=24
+[2026-05-30 13:03:05,789] INFO - inferred case=ToothFairy3F_040 tooth=25
+[2026-05-30 13:03:06,345] INFO - inferred case=ToothFairy3F_040 tooth=26
+[2026-05-30 13:03:06,674] INFO - inferred case=ToothFairy3F_040 tooth=27
+[2026-05-30 13:03:07,028] INFO - inferred case=ToothFairy3F_040 tooth=31
+[2026-05-30 13:03:07,420] INFO - inferred case=ToothFairy3F_040 tooth=32
+[2026-05-30 13:03:07,890] INFO - inferred case=ToothFairy3F_040 tooth=33
+[2026-05-30 13:03:08,297] INFO - inferred case=ToothFairy3F_040 tooth=34
+[2026-05-30 13:03:08,728] INFO - inferred case=ToothFairy3F_040 tooth=35
+[2026-05-30 13:03:09,290] INFO - inferred case=ToothFairy3F_040 tooth=36
+[2026-05-30 13:03:09,881] INFO - inferred case=ToothFairy3F_040 tooth=37
+[2026-05-30 13:03:10,432] INFO - inferred case=ToothFairy3F_040 tooth=38
+[2026-05-30 13:03:10,776] INFO - inferred case=ToothFairy3F_040 tooth=41
+[2026-05-30 13:03:11,162] INFO - inferred case=ToothFairy3F_040 tooth=42
+[2026-05-30 13:03:11,622] INFO - inferred case=ToothFairy3F_040 tooth=43
+[2026-05-30 13:03:12,029] INFO - inferred case=ToothFairy3F_040 tooth=44
+[2026-05-30 13:03:12,458] INFO - inferred case=ToothFairy3F_040 tooth=45
+[2026-05-30 13:03:13,023] INFO - inferred case=ToothFairy3F_040 tooth=46
+[2026-05-30 13:03:13,578] INFO - inferred case=ToothFairy3F_040 tooth=47
+[2026-05-30 13:03:14,152] INFO - inferred case=ToothFairy3F_040 tooth=48
+[2026-05-30 13:03:14,639] INFO - inferred case=ToothFairy3F_044 tooth=11
+[2026-05-30 13:03:15,248] INFO - inferred case=ToothFairy3F_044 tooth=12
+[2026-05-30 13:03:15,832] INFO - inferred case=ToothFairy3F_044 tooth=13
+[2026-05-30 13:03:16,428] INFO - inferred case=ToothFairy3F_044 tooth=14
+[2026-05-30 13:03:16,695] INFO - inferred case=ToothFairy3F_044 tooth=15
+[2026-05-30 13:03:17,078] INFO - inferred case=ToothFairy3F_044 tooth=16
+[2026-05-30 13:03:17,376] INFO - inferred case=ToothFairy3F_044 tooth=21
+[2026-05-30 13:03:17,664] INFO - inferred case=ToothFairy3F_044 tooth=22
+[2026-05-30 13:03:17,993] INFO - inferred case=ToothFairy3F_044 tooth=23
+[2026-05-30 13:03:18,272] INFO - inferred case=ToothFairy3F_044 tooth=24
+[2026-05-30 13:03:18,530] INFO - inferred case=ToothFairy3F_044 tooth=25
+[2026-05-30 13:03:18,907] INFO - inferred case=ToothFairy3F_044 tooth=26
+[2026-05-30 13:03:19,246] INFO - inferred case=ToothFairy3F_044 tooth=27
+[2026-05-30 13:03:19,493] INFO - inferred case=ToothFairy3F_044 tooth=28
+[2026-05-30 13:03:19,824] INFO - inferred case=ToothFairy3F_044 tooth=31
+[2026-05-30 13:03:20,186] INFO - inferred case=ToothFairy3F_044 tooth=32
+[2026-05-30 13:03:20,616] INFO - inferred case=ToothFairy3F_044 tooth=33
+[2026-05-30 13:03:21,012] INFO - inferred case=ToothFairy3F_044 tooth=34
+[2026-05-30 13:03:21,384] INFO - inferred case=ToothFairy3F_044 tooth=35
+[2026-05-30 13:03:21,895] INFO - inferred case=ToothFairy3F_044 tooth=36
+[2026-05-30 13:03:22,187] INFO - inferred case=ToothFairy3F_044 tooth=41
+[2026-05-30 13:03:22,530] INFO - inferred case=ToothFairy3F_044 tooth=42
+[2026-05-30 13:03:22,958] INFO - inferred case=ToothFairy3F_044 tooth=43
+[2026-05-30 13:03:23,338] INFO - inferred case=ToothFairy3F_044 tooth=44
+[2026-05-30 13:03:23,715] INFO - inferred case=ToothFairy3F_044 tooth=45
+[2026-05-30 13:03:24,278] INFO - inferred case=ToothFairy3F_044 tooth=46
+[2026-05-30 13:03:25,045] INFO - inferred case=ToothFairy3F_044 tooth=47
+[2026-05-30 13:03:25,766] INFO - inferred case=ToothFairy3F_044 tooth=48
+[2026-05-30 13:03:26,359] INFO - inferred case=ToothFairy3F_052 tooth=11
+[2026-05-30 13:03:26,675] INFO - inferred case=ToothFairy3F_052 tooth=12
+[2026-05-30 13:03:27,019] INFO - inferred case=ToothFairy3F_052 tooth=13
+[2026-05-30 13:03:27,353] INFO - inferred case=ToothFairy3F_052 tooth=14
+[2026-05-30 13:03:27,688] INFO - inferred case=ToothFairy3F_052 tooth=15
+[2026-05-30 13:03:28,146] INFO - inferred case=ToothFairy3F_052 tooth=16
+[2026-05-30 13:03:28,618] INFO - inferred case=ToothFairy3F_052 tooth=17
+[2026-05-30 13:03:28,982] INFO - inferred case=ToothFairy3F_052 tooth=18
+[2026-05-30 13:03:29,298] INFO - inferred case=ToothFairy3F_052 tooth=21
+[2026-05-30 13:03:29,634] INFO - inferred case=ToothFairy3F_052 tooth=22
+[2026-05-30 13:03:29,971] INFO - inferred case=ToothFairy3F_052 tooth=23
+[2026-05-30 13:03:30,319] INFO - inferred case=ToothFairy3F_052 tooth=24
+[2026-05-30 13:03:30,655] INFO - inferred case=ToothFairy3F_052 tooth=25
+[2026-05-30 13:03:31,095] INFO - inferred case=ToothFairy3F_052 tooth=26
+[2026-05-30 13:03:31,551] INFO - inferred case=ToothFairy3F_052 tooth=27
+[2026-05-30 13:03:31,849] INFO - inferred case=ToothFairy3F_052 tooth=31
+[2026-05-30 13:03:32,206] INFO - inferred case=ToothFairy3F_052 tooth=32
+[2026-05-30 13:03:32,604] INFO - inferred case=ToothFairy3F_052 tooth=33
+[2026-05-30 13:03:32,946] INFO - inferred case=ToothFairy3F_052 tooth=34
+[2026-05-30 13:03:33,333] INFO - inferred case=ToothFairy3F_052 tooth=35
+[2026-05-30 13:03:33,827] INFO - inferred case=ToothFairy3F_052 tooth=36
+[2026-05-30 13:03:34,321] INFO - inferred case=ToothFairy3F_052 tooth=37
+[2026-05-30 13:03:35,032] INFO - inferred case=ToothFairy3F_052 tooth=38
+[2026-05-30 13:03:35,627] INFO - inferred case=ToothFairy3F_052 tooth=41
+[2026-05-30 13:03:36,251] INFO - inferred case=ToothFairy3F_052 tooth=42
+[2026-05-30 13:03:36,686] INFO - inferred case=ToothFairy3F_052 tooth=43
+[2026-05-30 13:03:37,027] INFO - inferred case=ToothFairy3F_052 tooth=44
+[2026-05-30 13:03:37,427] INFO - inferred case=ToothFairy3F_052 tooth=45
+[2026-05-30 13:03:37,971] INFO - inferred case=ToothFairy3F_052 tooth=46
+[2026-05-30 13:03:38,437] INFO - inferred case=ToothFairy3F_052 tooth=47
+[2026-05-30 13:03:44,912] INFO - stitched case=ToothFairy3F_040
+[2026-05-30 13:03:50,999] INFO - stitched case=ToothFairy3F_044
+[2026-05-30 13:03:57,695] INFO - stitched case=ToothFairy3F_052
+[finished_at] 2026-05-30T13:03:58.659454+00:00
+[returncode] 0

@@ -1,0 +1,5 @@
+[started_at] 2026-05-07T15:52:50.832215+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.eval --config /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/config/train.yaml
+[2026-05-07 15:52:55,173] INFO - saved metrics to /root/cej_isolated_runs/C/cej_improve_20260507_001/experiments/exp02_dice_focal_bce/outputs/eval
+[finished_at] 2026-05-07T15:52:55.666984+00:00
+[returncode] 0

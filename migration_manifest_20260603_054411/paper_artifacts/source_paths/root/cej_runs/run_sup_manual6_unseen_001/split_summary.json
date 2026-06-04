@@ -1,0 +1,111 @@
+{
+  "created_at": "2026-05-06T18:38:03.089776+00:00",
+  "case_ids": [
+    "ToothFairy3F_025",
+    "ToothFairy3F_026",
+    "ToothFairy3F_027",
+    "ToothFairy3F_033",
+    "ToothFairy3F_040",
+    "ToothFairy3F_041",
+    "ToothFairy3F_044",
+    "ToothFairy3F_050",
+    "ToothFairy3F_051",
+    "ToothFairy3F_052",
+    "ToothFairy3F_053",
+    "ToothFairy3F_054",
+    "ToothFairy3F_055"
+  ],
+  "train_case_ids": [
+    "ToothFairy3F_025",
+    "ToothFairy3F_026",
+    "ToothFairy3F_027",
+    "ToothFairy3F_033",
+    "ToothFairy3F_041",
+    "ToothFairy3F_050",
+    "ToothFairy3F_051",
+    "ToothFairy3F_053",
+    "ToothFairy3F_054",
+    "ToothFairy3F_055"
+  ],
+  "holdout_case_ids": [
+    "ToothFairy3F_040",
+    "ToothFairy3F_044",
+    "ToothFairy3F_052"
+  ],
+  "source_processed_roots": [
+    "/root/cej_runs/run_manual_new_025040_001/processed",
+    "/root/cej_runs/run_manual_inc_041055_001/processed"
+  ],
+  "merged_processed_dir": "/root/cej_runs/run_manual_unseen_from_manual6_001/processed",
+  "train_config": "/root/workspace/CEJ_ABC/configs/server_sup_manual6_unseen_train.yaml",
+  "test_config": "/root/workspace/CEJ_ABC/configs/server_sup_manual6_unseen_test.yaml",
+  "pretrained_ckpt": "/root/cej_runs/run_sup_manual6_002/outputs/train/checkpoints/last.pt",
+  "train": {
+    "processed_dir": "/root/cej_runs/run_sup_manual6_unseen_001/processed_manual_train",
+    "case_ids": [
+      "ToothFairy3F_025",
+      "ToothFairy3F_026",
+      "ToothFairy3F_027",
+      "ToothFairy3F_033",
+      "ToothFairy3F_041",
+      "ToothFairy3F_050",
+      "ToothFairy3F_051",
+      "ToothFairy3F_053",
+      "ToothFairy3F_054",
+      "ToothFairy3F_055"
+    ],
+    "case_count": 10,
+    "total_tooth_dirs": 310,
+    "used_labeled_tooth_dirs": 258,
+    "skipped_unlabeled_tooth_dirs": 52,
+    "audit_paths": {
+      "audit": "/root/cej_runs/run_sup_manual6_unseen_001/audit/train/supervised_dataset_audit.json",
+      "skipped_json": "/root/cej_runs/run_sup_manual6_unseen_001/audit/train/skipped_unlabeled_teeth.json",
+      "skipped_txt": "/root/cej_runs/run_sup_manual6_unseen_001/audit/train/skipped_unlabeled_teeth.txt"
+    }
+  },
+  "test": {
+    "processed_dir": "/root/cej_runs/run_sup_manual6_unseen_001/processed_manual_test",
+    "case_ids": [
+      "ToothFairy3F_040",
+      "ToothFairy3F_044",
+      "ToothFairy3F_052"
+    ],
+    "case_count": 3,
+    "total_tooth_dirs": 88,
+    "used_labeled_tooth_dirs": 65,
+    "skipped_unlabeled_tooth_dirs": 23,
+    "audit_paths": {
+      "audit": "/root/cej_runs/run_sup_manual6_unseen_001/audit/test/supervised_dataset_audit.json",
+      "skipped_json": "/root/cej_runs/run_sup_manual6_unseen_001/audit/test/skipped_unlabeled_teeth.json",
+      "skipped_txt": "/root/cej_runs/run_sup_manual6_unseen_001/audit/test/skipped_unlabeled_teeth.txt"
+    }
+  },
+  "all_unseen": {
+    "processed_dir": "/root/cej_runs/run_manual_unseen_from_manual6_001/processed",
+    "case_ids": [
+      "ToothFairy3F_025",
+      "ToothFairy3F_026",
+      "ToothFairy3F_027",
+      "ToothFairy3F_033",
+      "ToothFairy3F_040",
+      "ToothFairy3F_041",
+      "ToothFairy3F_044",
+      "ToothFairy3F_050",
+      "ToothFairy3F_051",
+      "ToothFairy3F_052",
+      "ToothFairy3F_053",
+      "ToothFairy3F_054",
+      "ToothFairy3F_055"
+    ],
+    "case_count": 13,
+    "total_tooth_dirs": 398,
+    "used_labeled_tooth_dirs": 323,
+    "skipped_unlabeled_tooth_dirs": 75,
+    "audit_paths": {
+      "audit": "/root/cej_runs/run_sup_manual6_unseen_001/audit/all_unseen/supervised_dataset_audit.json",
+      "skipped_json": "/root/cej_runs/run_sup_manual6_unseen_001/audit/all_unseen/skipped_unlabeled_teeth.json",
+      "skipped_txt": "/root/cej_runs/run_sup_manual6_unseen_001/audit/all_unseen/skipped_unlabeled_teeth.txt"
+    }
+  }
+}

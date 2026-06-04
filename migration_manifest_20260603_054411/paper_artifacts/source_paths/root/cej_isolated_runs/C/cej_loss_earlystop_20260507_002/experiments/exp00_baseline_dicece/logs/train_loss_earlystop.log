@@ -1,0 +1,6 @@
+[started_at] 2026-05-07T17:01:18.896332+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train_loss_earlystop --config /root/cej_isolated_runs/C/cej_loss_earlystop_20260507_002/experiments/exp00_baseline_dicece/config/train.yaml
+[2026-05-07 17:01:31,062] INFO - loaded pretrained=/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_002/input/checkpoints/unsup_last.pt strict=False missing=0 unexpected=0
+[2026-05-07 17:01:56,671] INFO - epoch=0 train_loss=1.051384 holdout_loss=0.699170 best=0.699170 best_epoch=0 patience=0/8
+[2026-05-07 17:02:18,015] INFO - epoch=1 train_loss=0.478873 holdout_loss=0.692344 best=0.692344 best_epoch=1 patience=0/8
+[2026-05-07 17:02:39,196] INFO - epoch=2 train_loss=0.448476 holdout_loss=0.685135 best=0.685135 best_epoch=2 patience=0/8

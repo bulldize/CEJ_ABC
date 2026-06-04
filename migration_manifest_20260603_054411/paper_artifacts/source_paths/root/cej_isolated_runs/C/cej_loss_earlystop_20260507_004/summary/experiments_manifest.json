@@ -1,0 +1,1268 @@
+{
+  "created_at": "2026-05-07T19:17:15.807057+00:00",
+  "results_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/summary/results.csv",
+  "best_model_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt",
+  "best_package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/package/exp03_skeleton_aux_loss_training_bundle.tar.gz",
+  "experiments": [
+    {
+      "experiment": "exp00_baseline_dicece",
+      "status": "success",
+      "started_at": "2026-05-07T17:42:03.018909+00:00",
+      "finished_at": "2026-05-07T18:01:06.089316+00:00",
+      "run_condition": "all_loss_only_comparison",
+      "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/config/train.yaml",
+      "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/best.pt",
+      "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/last.pt",
+      "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/metrics.csv",
+      "package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/package/exp00_baseline_dicece_training_bundle.tar.gz",
+      "train_manifest": {
+        "started_at": "2026-05-07T17:42:14.503271+00:00",
+        "finished_at": "2026-05-07T18:01:05.050366+00:00",
+        "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/config/train.yaml",
+        "output_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train",
+        "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/metrics.csv",
+        "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/best.pt",
+        "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/last.pt",
+        "topk_checkpoints": [
+          {
+            "epoch": 22,
+            "holdout_composite_score": 1.1749675546089684,
+            "holdout_loss": 0.5202758060051844,
+            "holdout_sym_p95": 9.0,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/topk/epoch_022_score_1.174968.pt"
+          },
+          {
+            "epoch": 30,
+            "holdout_composite_score": 1.19400247828294,
+            "holdout_loss": 0.5271490225425133,
+            "holdout_sym_p95": 8.83176040649414,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/topk/epoch_030_score_1.194002.pt"
+          },
+          {
+            "epoch": 24,
+            "holdout_composite_score": 1.2007707054176509,
+            "holdout_loss": 0.5287260486529424,
+            "holdout_sym_p95": 9.05538558959961,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/topk/epoch_024_score_1.200771.pt"
+          },
+          {
+            "epoch": 17,
+            "holdout_composite_score": 1.2247080058634296,
+            "holdout_loss": 0.550872271336042,
+            "holdout_sym_p95": 9.110433578491211,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/topk/epoch_017_score_1.224708.pt"
+          },
+          {
+            "epoch": 28,
+            "holdout_composite_score": 1.2318228959663027,
+            "holdout_loss": 0.5332493635324331,
+            "holdout_sym_p95": 10.0,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/topk/epoch_028_score_1.231823.pt"
+          }
+        ],
+        "checkpoint_top_k": 5,
+        "checkpoint_every_n_epochs": 5,
+        "archive_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/checkpoints/archive",
+        "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/holdout_analysis",
+        "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+        "early_stop_metric": "holdout_composite_score",
+        "early_stop_score": {
+          "start_epoch": 10,
+          "weights": {
+            "loss": 0.3,
+            "sym_p95": 0.3,
+            "no_curve_count": 0.07,
+            "bad_rate": 0.07,
+            "vox03_empty": 0.03,
+            "cc_count": 0.03,
+            "wrap_miss": 0.05,
+            "hard_case_viewer": 0.15
+          },
+          "targets": {
+            "loss": 0.5,
+            "sym_p95_mm": 5.0,
+            "bad_sym_p95_mm": 5.0,
+            "hard_sym_p95_mm": 5.0,
+            "hard_bad_sym_p95_mm": 5.0,
+            "hard_case_count": 12,
+            "vox03": 100.0,
+            "cc_count": 4.0
+          }
+        },
+        "score_start_epoch": 10,
+        "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+        "best_epoch": 22,
+        "best_composite_score": 1.1749675546089684,
+        "best_monitor_metrics": {
+          "epoch": 22,
+          "holdout_loss": 0.5202758060051844,
+          "holdout_composite_score": 1.1749675546089684,
+          "holdout_bad_rate": 0.4307692307692308,
+          "score_components": {
+            "loss": 1.0405516120103688,
+            "sym_p95": 1.8,
+            "no_curve_count": 0.0,
+            "bad_rate": 0.4307692307692308,
+            "vox03_empty": 0.0,
+            "cc_count": 0.0346153846153846,
+            "wrap_miss": 0.7375738063100615,
+            "hard_case_viewer": 1.6982071533203122,
+            "hard_case_sym_p95": 18.883839416503903,
+            "hard_case_no_curve_count": 0,
+            "hard_case_bad_rate": 0.75,
+            "hard_case_missing_rate": 0.0,
+            "hard_case_expected_count": 12
+          },
+          "hard_case_viewer_component": 1.6982071533203122,
+          "hard_case_sym_p95": 18.883839416503903,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.75,
+          "holdout_sym_mean": 2.8190760612487793,
+          "holdout_sym_p95": 9.0,
+          "holdout_no_curve_count": 0,
+          "h_pred_max": 0.9999994039535522,
+          "h_pred_p99": 0.3266153100528096,
+          "vox03": 8227.476923076923,
+          "vox03_total": 534786,
+          "cc_count": 1.1384615384615384,
+          "lcc_ratio": 0.9923431221706295,
+          "wrap_coverage": 0.26242619368993847,
+          "hard_case_count": 12,
+          "holdout_tooth_count": 65
+        },
+        "best_holdout_loss": 0.5202758060051844,
+        "best_holdout_sym_p95": 9.0,
+        "best_holdout_no_curve_count": 0,
+        "best_holdout_bad_rate": 0.4307692307692308,
+        "best_wrap_coverage": 0.26242619368993847,
+        "best_hard_case_viewer_component": 1.6982071533203122,
+        "best_hard_case_sym_p95": 18.883839416503903,
+        "best_hard_case_no_curve_count": 0,
+        "best_hard_case_bad_rate": 0.75,
+        "pretrained": {
+          "loaded": true,
+          "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+          "missing": [],
+          "unexpected": []
+        },
+        "dataset": {
+          "train": {
+            "total_tooth_dirs": 497,
+            "used_labeled_tooth_dirs": 426,
+            "skipped_unlabeled_tooth_dirs": 71,
+            "invalid_tooth_dirs": 0
+          },
+          "holdout": {
+            "total_tooth_dirs": 88,
+            "used_labeled_tooth_dirs": 65,
+            "skipped_unlabeled_tooth_dirs": 23,
+            "invalid_tooth_dirs": 0
+          }
+        },
+        "audit_paths": {
+          "train": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_train/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_train/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_train/invalid_labeled_teeth.txt"
+          },
+          "holdout": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+          }
+        },
+        "sampler": {
+          "weighted_sampler": false,
+          "weight_count": 0,
+          "hard_weight_count": 0
+        }
+      },
+      "best_epoch": 22,
+      "best_composite_score": 1.1749675546089684,
+      "best_holdout_loss": 0.5202758060051844,
+      "best_holdout_sym_p95": 9.0,
+      "best_holdout_no_curve_count": 0,
+      "best_holdout_bad_rate": 0.4307692307692308,
+      "best_wrap_coverage": 0.26242619368993847,
+      "best_hard_case_viewer_component": 1.6982071533203122,
+      "best_hard_case_sym_p95": 18.883839416503903,
+      "best_hard_case_no_curve_count": 0,
+      "best_hard_case_bad_rate": 0.75,
+      "best_monitor_metrics": {
+        "epoch": 22,
+        "holdout_loss": 0.5202758060051844,
+        "holdout_composite_score": 1.1749675546089684,
+        "holdout_bad_rate": 0.4307692307692308,
+        "score_components": {
+          "loss": 1.0405516120103688,
+          "sym_p95": 1.8,
+          "no_curve_count": 0.0,
+          "bad_rate": 0.4307692307692308,
+          "vox03_empty": 0.0,
+          "cc_count": 0.0346153846153846,
+          "wrap_miss": 0.7375738063100615,
+          "hard_case_viewer": 1.6982071533203122,
+          "hard_case_sym_p95": 18.883839416503903,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.75,
+          "hard_case_missing_rate": 0.0,
+          "hard_case_expected_count": 12
+        },
+        "hard_case_viewer_component": 1.6982071533203122,
+        "hard_case_sym_p95": 18.883839416503903,
+        "hard_case_no_curve_count": 0,
+        "hard_case_bad_rate": 0.75,
+        "holdout_sym_mean": 2.8190760612487793,
+        "holdout_sym_p95": 9.0,
+        "holdout_no_curve_count": 0,
+        "h_pred_max": 0.9999994039535522,
+        "h_pred_p99": 0.3266153100528096,
+        "vox03": 8227.476923076923,
+        "vox03_total": 534786,
+        "cc_count": 1.1384615384615384,
+        "lcc_ratio": 0.9923431221706295,
+        "wrap_coverage": 0.26242619368993847,
+        "hard_case_count": 12,
+        "holdout_tooth_count": 65
+      },
+      "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp00_baseline_dicece/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+      "early_stop_metric": "holdout_composite_score",
+      "early_stop_score": {
+        "start_epoch": 10,
+        "weights": {
+          "loss": 0.3,
+          "sym_p95": 0.3,
+          "no_curve_count": 0.07,
+          "bad_rate": 0.07,
+          "vox03_empty": 0.03,
+          "cc_count": 0.03,
+          "wrap_miss": 0.05,
+          "hard_case_viewer": 0.15
+        },
+        "targets": {
+          "loss": 0.5,
+          "sym_p95_mm": 5.0,
+          "bad_sym_p95_mm": 5.0,
+          "hard_sym_p95_mm": 5.0,
+          "hard_bad_sym_p95_mm": 5.0,
+          "hard_case_count": 12,
+          "vox03": 100.0,
+          "cc_count": 4.0
+        }
+      },
+      "error": null
+    },
+    {
+      "experiment": "exp01_dice_focal_bce",
+      "status": "success",
+      "started_at": "2026-05-07T18:01:14.264542+00:00",
+      "finished_at": "2026-05-07T18:21:10.794039+00:00",
+      "run_condition": "all_loss_only_comparison",
+      "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/config/train.yaml",
+      "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/best.pt",
+      "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/last.pt",
+      "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/metrics.csv",
+      "package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/package/exp01_dice_focal_bce_training_bundle.tar.gz",
+      "train_manifest": {
+        "started_at": "2026-05-07T18:01:24.432397+00:00",
+        "finished_at": "2026-05-07T18:21:09.508625+00:00",
+        "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/config/train.yaml",
+        "output_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train",
+        "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/metrics.csv",
+        "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/best.pt",
+        "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/last.pt",
+        "topk_checkpoints": [
+          {
+            "epoch": 24,
+            "holdout_composite_score": 0.9385958497489517,
+            "holdout_loss": 0.5035715075639579,
+            "holdout_sym_p95": 6.4031243324279785,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_024_score_0.938596.pt"
+          },
+          {
+            "epoch": 16,
+            "holdout_composite_score": 1.1485404114877014,
+            "holdout_loss": 0.52841358597462,
+            "holdout_sym_p95": 8.5440034866333,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_016_score_1.148540.pt"
+          },
+          {
+            "epoch": 21,
+            "holdout_composite_score": 1.248454882453925,
+            "holdout_loss": 0.5628407340783339,
+            "holdout_sym_p95": 9.643651008605957,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_021_score_1.248455.pt"
+          },
+          {
+            "epoch": 28,
+            "holdout_composite_score": 1.5602413220529612,
+            "holdout_loss": 0.5569755169061514,
+            "holdout_sym_p95": 7.6157732009887695,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_028_score_1.560241.pt"
+          },
+          {
+            "epoch": 31,
+            "holdout_composite_score": 1.5732086126668285,
+            "holdout_loss": 0.5495615583199721,
+            "holdout_sym_p95": 7.874007701873779,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/topk/epoch_031_score_1.573209.pt"
+          }
+        ],
+        "checkpoint_top_k": 5,
+        "checkpoint_every_n_epochs": 5,
+        "archive_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/checkpoints/archive",
+        "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/holdout_analysis",
+        "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+        "early_stop_metric": "holdout_composite_score",
+        "early_stop_score": {
+          "start_epoch": 10,
+          "weights": {
+            "loss": 0.3,
+            "sym_p95": 0.3,
+            "no_curve_count": 0.07,
+            "bad_rate": 0.07,
+            "vox03_empty": 0.03,
+            "cc_count": 0.03,
+            "wrap_miss": 0.05,
+            "hard_case_viewer": 0.15
+          },
+          "targets": {
+            "loss": 0.5,
+            "sym_p95_mm": 5.0,
+            "bad_sym_p95_mm": 5.0,
+            "hard_sym_p95_mm": 5.0,
+            "hard_bad_sym_p95_mm": 5.0,
+            "hard_case_count": 12,
+            "vox03": 100.0,
+            "cc_count": 4.0
+          }
+        },
+        "score_start_epoch": 10,
+        "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+        "best_epoch": 24,
+        "best_composite_score": 0.9385958497489517,
+        "best_monitor_metrics": {
+          "epoch": 24,
+          "holdout_loss": 0.5035715075639579,
+          "holdout_composite_score": 0.9385958497489517,
+          "holdout_bad_rate": 0.3384615384615385,
+          "score_components": {
+            "loss": 1.0071430151279157,
+            "sym_p95": 1.2806248664855957,
+            "no_curve_count": 0.0,
+            "bad_rate": 0.3384615384615385,
+            "vox03_empty": 0.0,
+            "cc_count": 0.0692307692307692,
+            "wrap_miss": 0.7296479903039744,
+            "hard_case_viewer": 1.2667590332031249,
+            "hard_case_sym_p95": 13.490737915039062,
+            "hard_case_no_curve_count": 0,
+            "hard_case_bad_rate": 0.75,
+            "hard_case_missing_rate": 0.0,
+            "hard_case_expected_count": 12
+          },
+          "hard_case_viewer_component": 1.2667590332031249,
+          "hard_case_sym_p95": 13.490737915039062,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.75,
+          "holdout_sym_mean": 2.34995436668396,
+          "holdout_sym_p95": 6.4031243324279785,
+          "holdout_no_curve_count": 0,
+          "h_pred_max": 0.9999992847442627,
+          "h_pred_p99": 0.32748005707438554,
+          "vox03": 8030.0615384615385,
+          "vox03_total": 521954,
+          "cc_count": 1.2769230769230768,
+          "lcc_ratio": 0.9912331124349945,
+          "wrap_coverage": 0.2703520096960256,
+          "hard_case_count": 12,
+          "holdout_tooth_count": 65
+        },
+        "best_holdout_loss": 0.5035715075639579,
+        "best_holdout_sym_p95": 6.4031243324279785,
+        "best_holdout_no_curve_count": 0,
+        "best_holdout_bad_rate": 0.3384615384615385,
+        "best_wrap_coverage": 0.2703520096960256,
+        "best_hard_case_viewer_component": 1.2667590332031249,
+        "best_hard_case_sym_p95": 13.490737915039062,
+        "best_hard_case_no_curve_count": 0,
+        "best_hard_case_bad_rate": 0.75,
+        "pretrained": {
+          "loaded": true,
+          "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+          "missing": [],
+          "unexpected": []
+        },
+        "dataset": {
+          "train": {
+            "total_tooth_dirs": 497,
+            "used_labeled_tooth_dirs": 426,
+            "skipped_unlabeled_tooth_dirs": 71,
+            "invalid_tooth_dirs": 0
+          },
+          "holdout": {
+            "total_tooth_dirs": 88,
+            "used_labeled_tooth_dirs": 65,
+            "skipped_unlabeled_tooth_dirs": 23,
+            "invalid_tooth_dirs": 0
+          }
+        },
+        "audit_paths": {
+          "train": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_train/invalid_labeled_teeth.txt"
+          },
+          "holdout": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+          }
+        },
+        "sampler": {
+          "weighted_sampler": false,
+          "weight_count": 0,
+          "hard_weight_count": 0
+        }
+      },
+      "best_epoch": 24,
+      "best_composite_score": 0.9385958497489517,
+      "best_holdout_loss": 0.5035715075639579,
+      "best_holdout_sym_p95": 6.4031243324279785,
+      "best_holdout_no_curve_count": 0,
+      "best_holdout_bad_rate": 0.3384615384615385,
+      "best_wrap_coverage": 0.2703520096960256,
+      "best_hard_case_viewer_component": 1.2667590332031249,
+      "best_hard_case_sym_p95": 13.490737915039062,
+      "best_hard_case_no_curve_count": 0,
+      "best_hard_case_bad_rate": 0.75,
+      "best_monitor_metrics": {
+        "epoch": 24,
+        "holdout_loss": 0.5035715075639579,
+        "holdout_composite_score": 0.9385958497489517,
+        "holdout_bad_rate": 0.3384615384615385,
+        "score_components": {
+          "loss": 1.0071430151279157,
+          "sym_p95": 1.2806248664855957,
+          "no_curve_count": 0.0,
+          "bad_rate": 0.3384615384615385,
+          "vox03_empty": 0.0,
+          "cc_count": 0.0692307692307692,
+          "wrap_miss": 0.7296479903039744,
+          "hard_case_viewer": 1.2667590332031249,
+          "hard_case_sym_p95": 13.490737915039062,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.75,
+          "hard_case_missing_rate": 0.0,
+          "hard_case_expected_count": 12
+        },
+        "hard_case_viewer_component": 1.2667590332031249,
+        "hard_case_sym_p95": 13.490737915039062,
+        "hard_case_no_curve_count": 0,
+        "hard_case_bad_rate": 0.75,
+        "holdout_sym_mean": 2.34995436668396,
+        "holdout_sym_p95": 6.4031243324279785,
+        "holdout_no_curve_count": 0,
+        "h_pred_max": 0.9999992847442627,
+        "h_pred_p99": 0.32748005707438554,
+        "vox03": 8030.0615384615385,
+        "vox03_total": 521954,
+        "cc_count": 1.2769230769230768,
+        "lcc_ratio": 0.9912331124349945,
+        "wrap_coverage": 0.2703520096960256,
+        "hard_case_count": 12,
+        "holdout_tooth_count": 65
+      },
+      "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp01_dice_focal_bce/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+      "early_stop_metric": "holdout_composite_score",
+      "early_stop_score": {
+        "start_epoch": 10,
+        "weights": {
+          "loss": 0.3,
+          "sym_p95": 0.3,
+          "no_curve_count": 0.07,
+          "bad_rate": 0.07,
+          "vox03_empty": 0.03,
+          "cc_count": 0.03,
+          "wrap_miss": 0.05,
+          "hard_case_viewer": 0.15
+        },
+        "targets": {
+          "loss": 0.5,
+          "sym_p95_mm": 5.0,
+          "bad_sym_p95_mm": 5.0,
+          "hard_sym_p95_mm": 5.0,
+          "hard_bad_sym_p95_mm": 5.0,
+          "hard_case_count": 12,
+          "vox03": 100.0,
+          "cc_count": 4.0
+        }
+      },
+      "error": null
+    },
+    {
+      "experiment": "exp02_focal_hard_sampling",
+      "status": "success",
+      "started_at": "2026-05-07T18:21:18.966045+00:00",
+      "finished_at": "2026-05-07T18:32:16.475243+00:00",
+      "run_condition": "all_loss_only_comparison",
+      "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/config/train.yaml",
+      "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/best.pt",
+      "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/last.pt",
+      "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/metrics.csv",
+      "package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/package/exp02_focal_hard_sampling_training_bundle.tar.gz",
+      "train_manifest": {
+        "started_at": "2026-05-07T18:21:30.468798+00:00",
+        "finished_at": "2026-05-07T18:32:15.230655+00:00",
+        "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/config/train.yaml",
+        "output_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train",
+        "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/metrics.csv",
+        "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/best.pt",
+        "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/last.pt",
+        "topk_checkpoints": [
+          {
+            "epoch": 10,
+            "holdout_composite_score": 1.3777890071701904,
+            "holdout_loss": 0.5535280502759493,
+            "holdout_sym_p95": 12.041594505310059,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/topk/epoch_010_score_1.377789.pt"
+          },
+          {
+            "epoch": 17,
+            "holdout_composite_score": 1.6859285497501977,
+            "holdout_loss": 0.5470089463087229,
+            "holdout_sym_p95": 9.899495124816895,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/topk/epoch_017_score_1.685929.pt"
+          },
+          {
+            "epoch": 12,
+            "holdout_composite_score": 1.729033425447227,
+            "holdout_loss": 0.5459673629357265,
+            "holdout_sym_p95": 10.630146026611328,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/topk/epoch_012_score_1.729033.pt"
+          },
+          {
+            "epoch": 15,
+            "holdout_composite_score": 1.8286221684724886,
+            "holdout_loss": 0.528042949621494,
+            "holdout_sym_p95": 12.369317054748535,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/topk/epoch_015_score_1.828622.pt"
+          },
+          {
+            "epoch": 13,
+            "holdout_composite_score": 1.8464951292470917,
+            "holdout_loss": 0.5615853635164407,
+            "holdout_sym_p95": 11.224971771240234,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/topk/epoch_013_score_1.846495.pt"
+          }
+        ],
+        "checkpoint_top_k": 5,
+        "checkpoint_every_n_epochs": 5,
+        "archive_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/checkpoints/archive",
+        "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/holdout_analysis",
+        "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+        "early_stop_metric": "holdout_composite_score",
+        "early_stop_score": {
+          "start_epoch": 10,
+          "weights": {
+            "loss": 0.3,
+            "sym_p95": 0.3,
+            "no_curve_count": 0.07,
+            "bad_rate": 0.07,
+            "vox03_empty": 0.03,
+            "cc_count": 0.03,
+            "wrap_miss": 0.05,
+            "hard_case_viewer": 0.15
+          },
+          "targets": {
+            "loss": 0.5,
+            "sym_p95_mm": 5.0,
+            "bad_sym_p95_mm": 5.0,
+            "hard_sym_p95_mm": 5.0,
+            "hard_bad_sym_p95_mm": 5.0,
+            "hard_case_count": 12,
+            "vox03": 100.0,
+            "cc_count": 4.0
+          }
+        },
+        "score_start_epoch": 10,
+        "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+        "best_epoch": 10,
+        "best_composite_score": 1.3777890071701904,
+        "best_monitor_metrics": {
+          "epoch": 10,
+          "holdout_loss": 0.5535280502759493,
+          "holdout_composite_score": 1.3777890071701904,
+          "holdout_bad_rate": 0.4,
+          "score_components": {
+            "loss": 1.1070561005518986,
+            "sym_p95": 2.4083189010620116,
+            "no_curve_count": 0.0,
+            "bad_rate": 0.4,
+            "vox03_empty": 0.0,
+            "cc_count": 0.05769230769230771,
+            "wrap_miss": 0.7690682525229287,
+            "hard_case_viewer": 1.6999488321940106,
+            "hard_case_sym_p95": 18.384777069091797,
+            "hard_case_no_curve_count": 0,
+            "hard_case_bad_rate": 0.9166666666666666,
+            "hard_case_missing_rate": 0.0,
+            "hard_case_expected_count": 12
+          },
+          "hard_case_viewer_component": 1.6999488321940106,
+          "hard_case_sym_p95": 18.384777069091797,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.9166666666666666,
+          "holdout_sym_mean": 3.434138059616089,
+          "holdout_sym_p95": 12.041594505310059,
+          "holdout_no_curve_count": 0,
+          "h_pred_max": 1.0,
+          "h_pred_p99": 0.36892200999854413,
+          "vox03": 8609.030769230769,
+          "vox03_total": 559587,
+          "cc_count": 1.2307692307692308,
+          "lcc_ratio": 0.9950015441632197,
+          "wrap_coverage": 0.23093174747707138,
+          "hard_case_count": 12,
+          "holdout_tooth_count": 65
+        },
+        "best_holdout_loss": 0.5535280502759493,
+        "best_holdout_sym_p95": 12.041594505310059,
+        "best_holdout_no_curve_count": 0,
+        "best_holdout_bad_rate": 0.4,
+        "best_wrap_coverage": 0.23093174747707138,
+        "best_hard_case_viewer_component": 1.6999488321940106,
+        "best_hard_case_sym_p95": 18.384777069091797,
+        "best_hard_case_no_curve_count": 0,
+        "best_hard_case_bad_rate": 0.9166666666666666,
+        "pretrained": {
+          "loaded": true,
+          "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+          "missing": [],
+          "unexpected": []
+        },
+        "dataset": {
+          "train": {
+            "total_tooth_dirs": 497,
+            "used_labeled_tooth_dirs": 426,
+            "skipped_unlabeled_tooth_dirs": 71,
+            "invalid_tooth_dirs": 0
+          },
+          "holdout": {
+            "total_tooth_dirs": 88,
+            "used_labeled_tooth_dirs": 65,
+            "skipped_unlabeled_tooth_dirs": 23,
+            "invalid_tooth_dirs": 0
+          }
+        },
+        "audit_paths": {
+          "train": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_train/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_train/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_train/invalid_labeled_teeth.txt"
+          },
+          "holdout": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_holdout/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+          }
+        },
+        "sampler": {
+          "weighted_sampler": true,
+          "weight_count": 426,
+          "hard_weight_count": 3
+        }
+      },
+      "best_epoch": 10,
+      "best_composite_score": 1.3777890071701904,
+      "best_holdout_loss": 0.5535280502759493,
+      "best_holdout_sym_p95": 12.041594505310059,
+      "best_holdout_no_curve_count": 0,
+      "best_holdout_bad_rate": 0.4,
+      "best_wrap_coverage": 0.23093174747707138,
+      "best_hard_case_viewer_component": 1.6999488321940106,
+      "best_hard_case_sym_p95": 18.384777069091797,
+      "best_hard_case_no_curve_count": 0,
+      "best_hard_case_bad_rate": 0.9166666666666666,
+      "best_monitor_metrics": {
+        "epoch": 10,
+        "holdout_loss": 0.5535280502759493,
+        "holdout_composite_score": 1.3777890071701904,
+        "holdout_bad_rate": 0.4,
+        "score_components": {
+          "loss": 1.1070561005518986,
+          "sym_p95": 2.4083189010620116,
+          "no_curve_count": 0.0,
+          "bad_rate": 0.4,
+          "vox03_empty": 0.0,
+          "cc_count": 0.05769230769230771,
+          "wrap_miss": 0.7690682525229287,
+          "hard_case_viewer": 1.6999488321940106,
+          "hard_case_sym_p95": 18.384777069091797,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.9166666666666666,
+          "hard_case_missing_rate": 0.0,
+          "hard_case_expected_count": 12
+        },
+        "hard_case_viewer_component": 1.6999488321940106,
+        "hard_case_sym_p95": 18.384777069091797,
+        "hard_case_no_curve_count": 0,
+        "hard_case_bad_rate": 0.9166666666666666,
+        "holdout_sym_mean": 3.434138059616089,
+        "holdout_sym_p95": 12.041594505310059,
+        "holdout_no_curve_count": 0,
+        "h_pred_max": 1.0,
+        "h_pred_p99": 0.36892200999854413,
+        "vox03": 8609.030769230769,
+        "vox03_total": 559587,
+        "cc_count": 1.2307692307692308,
+        "lcc_ratio": 0.9950015441632197,
+        "wrap_coverage": 0.23093174747707138,
+        "hard_case_count": 12,
+        "holdout_tooth_count": 65
+      },
+      "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp02_focal_hard_sampling/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+      "early_stop_metric": "holdout_composite_score",
+      "early_stop_score": {
+        "start_epoch": 10,
+        "weights": {
+          "loss": 0.3,
+          "sym_p95": 0.3,
+          "no_curve_count": 0.07,
+          "bad_rate": 0.07,
+          "vox03_empty": 0.03,
+          "cc_count": 0.03,
+          "wrap_miss": 0.05,
+          "hard_case_viewer": 0.15
+        },
+        "targets": {
+          "loss": 0.5,
+          "sym_p95_mm": 5.0,
+          "bad_sym_p95_mm": 5.0,
+          "hard_sym_p95_mm": 5.0,
+          "hard_bad_sym_p95_mm": 5.0,
+          "hard_case_count": 12,
+          "vox03": 100.0,
+          "cc_count": 4.0
+        }
+      },
+      "error": null
+    },
+    {
+      "experiment": "exp03_skeleton_aux_loss",
+      "status": "success",
+      "started_at": "2026-05-07T18:32:22.746528+00:00",
+      "finished_at": "2026-05-07T18:50:52.650813+00:00",
+      "run_condition": "all_loss_only_comparison",
+      "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/config/train.yaml",
+      "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt",
+      "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/last.pt",
+      "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/metrics.csv",
+      "package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/package/exp03_skeleton_aux_loss_training_bundle.tar.gz",
+      "train_manifest": {
+        "started_at": "2026-05-07T18:32:35.536337+00:00",
+        "finished_at": "2026-05-07T18:50:51.428410+00:00",
+        "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/config/train.yaml",
+        "output_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train",
+        "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/metrics.csv",
+        "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt",
+        "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/last.pt",
+        "topk_checkpoints": [
+          {
+            "epoch": 22,
+            "holdout_composite_score": 0.8143920010183066,
+            "holdout_loss": 0.5032707026371589,
+            "holdout_sym_p95": 5.099019527435303,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/topk/epoch_022_score_0.814392.pt"
+          },
+          {
+            "epoch": 25,
+            "holdout_composite_score": 0.8618586599216341,
+            "holdout_loss": 0.48291290998458863,
+            "holdout_sym_p95": 5.4772257804870605,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/topk/epoch_025_score_0.861859.pt"
+          },
+          {
+            "epoch": 17,
+            "holdout_composite_score": 0.8763531931676651,
+            "holdout_loss": 0.509955003628364,
+            "holdout_sym_p95": 5.4772257804870605,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/topk/epoch_017_score_0.876353.pt"
+          },
+          {
+            "epoch": 20,
+            "holdout_composite_score": 0.8963706001438778,
+            "holdout_loss": 0.5045287774159358,
+            "holdout_sym_p95": 5.099019527435303,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/topk/epoch_020_score_0.896371.pt"
+          },
+          {
+            "epoch": 18,
+            "holdout_composite_score": 0.9100248637272336,
+            "holdout_loss": 0.5091586383489463,
+            "holdout_sym_p95": 5.385164737701416,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/topk/epoch_018_score_0.910025.pt"
+          }
+        ],
+        "checkpoint_top_k": 5,
+        "checkpoint_every_n_epochs": 5,
+        "archive_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/archive",
+        "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/holdout_analysis",
+        "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+        "early_stop_metric": "holdout_composite_score",
+        "early_stop_score": {
+          "start_epoch": 10,
+          "weights": {
+            "loss": 0.3,
+            "sym_p95": 0.3,
+            "no_curve_count": 0.07,
+            "bad_rate": 0.07,
+            "vox03_empty": 0.03,
+            "cc_count": 0.03,
+            "wrap_miss": 0.05,
+            "hard_case_viewer": 0.15
+          },
+          "targets": {
+            "loss": 0.5,
+            "sym_p95_mm": 5.0,
+            "bad_sym_p95_mm": 5.0,
+            "hard_sym_p95_mm": 5.0,
+            "hard_bad_sym_p95_mm": 5.0,
+            "hard_case_count": 12,
+            "vox03": 100.0,
+            "cc_count": 4.0
+          }
+        },
+        "score_start_epoch": 10,
+        "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+        "best_epoch": 22,
+        "best_composite_score": 0.8143920010183066,
+        "best_monitor_metrics": {
+          "epoch": 22,
+          "holdout_loss": 0.5032707026371589,
+          "holdout_composite_score": 0.8143920010183066,
+          "holdout_bad_rate": 0.24615384615384617,
+          "score_components": {
+            "loss": 1.0065414052743178,
+            "sym_p95": 1.0198039054870605,
+            "no_curve_count": 0.0,
+            "bad_rate": 0.24615384615384617,
+            "vox03_empty": 0.0,
+            "cc_count": 0.04999999999999999,
+            "wrap_miss": 0.7181827089266211,
+            "hard_case_viewer": 1.0123233540852865,
+            "hard_case_sym_p95": 10.049875259399414,
+            "hard_case_no_curve_count": 0,
+            "hard_case_bad_rate": 0.8333333333333334,
+            "hard_case_missing_rate": 0.0,
+            "hard_case_expected_count": 12
+          },
+          "hard_case_viewer_component": 1.0123233540852865,
+          "hard_case_sym_p95": 10.049875259399414,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.8333333333333334,
+          "holdout_sym_mean": 2.0750811100006104,
+          "holdout_sym_p95": 5.099019527435303,
+          "holdout_no_curve_count": 0,
+          "h_pred_max": 0.9998395442962646,
+          "h_pred_p99": 0.21738800317306448,
+          "vox03": 6863.461538461538,
+          "vox03_total": 446125,
+          "cc_count": 1.2,
+          "lcc_ratio": 0.9802467942667217,
+          "wrap_coverage": 0.281817291073379,
+          "hard_case_count": 12,
+          "holdout_tooth_count": 65
+        },
+        "best_holdout_loss": 0.5032707026371589,
+        "best_holdout_sym_p95": 5.099019527435303,
+        "best_holdout_no_curve_count": 0,
+        "best_holdout_bad_rate": 0.24615384615384617,
+        "best_wrap_coverage": 0.281817291073379,
+        "best_hard_case_viewer_component": 1.0123233540852865,
+        "best_hard_case_sym_p95": 10.049875259399414,
+        "best_hard_case_no_curve_count": 0,
+        "best_hard_case_bad_rate": 0.8333333333333334,
+        "pretrained": {
+          "loaded": true,
+          "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+          "missing": [],
+          "unexpected": []
+        },
+        "dataset": {
+          "train": {
+            "total_tooth_dirs": 497,
+            "used_labeled_tooth_dirs": 426,
+            "skipped_unlabeled_tooth_dirs": 71,
+            "invalid_tooth_dirs": 0
+          },
+          "holdout": {
+            "total_tooth_dirs": 88,
+            "used_labeled_tooth_dirs": 65,
+            "skipped_unlabeled_tooth_dirs": 23,
+            "invalid_tooth_dirs": 0
+          }
+        },
+        "audit_paths": {
+          "train": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_train/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_train/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_train/invalid_labeled_teeth.txt"
+          },
+          "holdout": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_holdout/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+          }
+        },
+        "sampler": {
+          "weighted_sampler": true,
+          "weight_count": 426,
+          "hard_weight_count": 3
+        }
+      },
+      "best_epoch": 22,
+      "best_composite_score": 0.8143920010183066,
+      "best_holdout_loss": 0.5032707026371589,
+      "best_holdout_sym_p95": 5.099019527435303,
+      "best_holdout_no_curve_count": 0,
+      "best_holdout_bad_rate": 0.24615384615384617,
+      "best_wrap_coverage": 0.281817291073379,
+      "best_hard_case_viewer_component": 1.0123233540852865,
+      "best_hard_case_sym_p95": 10.049875259399414,
+      "best_hard_case_no_curve_count": 0,
+      "best_hard_case_bad_rate": 0.8333333333333334,
+      "best_monitor_metrics": {
+        "epoch": 22,
+        "holdout_loss": 0.5032707026371589,
+        "holdout_composite_score": 0.8143920010183066,
+        "holdout_bad_rate": 0.24615384615384617,
+        "score_components": {
+          "loss": 1.0065414052743178,
+          "sym_p95": 1.0198039054870605,
+          "no_curve_count": 0.0,
+          "bad_rate": 0.24615384615384617,
+          "vox03_empty": 0.0,
+          "cc_count": 0.04999999999999999,
+          "wrap_miss": 0.7181827089266211,
+          "hard_case_viewer": 1.0123233540852865,
+          "hard_case_sym_p95": 10.049875259399414,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.8333333333333334,
+          "hard_case_missing_rate": 0.0,
+          "hard_case_expected_count": 12
+        },
+        "hard_case_viewer_component": 1.0123233540852865,
+        "hard_case_sym_p95": 10.049875259399414,
+        "hard_case_no_curve_count": 0,
+        "hard_case_bad_rate": 0.8333333333333334,
+        "holdout_sym_mean": 2.0750811100006104,
+        "holdout_sym_p95": 5.099019527435303,
+        "holdout_no_curve_count": 0,
+        "h_pred_max": 0.9998395442962646,
+        "h_pred_p99": 0.21738800317306448,
+        "vox03": 6863.461538461538,
+        "vox03_total": 446125,
+        "cc_count": 1.2,
+        "lcc_ratio": 0.9802467942667217,
+        "wrap_coverage": 0.281817291073379,
+        "hard_case_count": 12,
+        "holdout_tooth_count": 65
+      },
+      "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp03_skeleton_aux_loss/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+      "early_stop_metric": "holdout_composite_score",
+      "early_stop_score": {
+        "start_epoch": 10,
+        "weights": {
+          "loss": 0.3,
+          "sym_p95": 0.3,
+          "no_curve_count": 0.07,
+          "bad_rate": 0.07,
+          "vox03_empty": 0.03,
+          "cc_count": 0.03,
+          "wrap_miss": 0.05,
+          "hard_case_viewer": 0.15
+        },
+        "targets": {
+          "loss": 0.5,
+          "sym_p95_mm": 5.0,
+          "bad_sym_p95_mm": 5.0,
+          "hard_sym_p95_mm": 5.0,
+          "hard_bad_sym_p95_mm": 5.0,
+          "hard_case_count": 12,
+          "vox03": 100.0,
+          "cc_count": 4.0
+        }
+      },
+      "error": null
+    },
+    {
+      "experiment": "exp04_surface_soft_constraint",
+      "status": "success",
+      "started_at": "2026-05-07T18:51:01.037298+00:00",
+      "finished_at": "2026-05-07T19:17:06.363987+00:00",
+      "run_condition": "all_loss_only_comparison",
+      "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/config/train.yaml",
+      "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/best.pt",
+      "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/last.pt",
+      "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/metrics.csv",
+      "package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/package/exp04_surface_soft_constraint_training_bundle.tar.gz",
+      "train_manifest": {
+        "started_at": "2026-05-07T18:51:12.679546+00:00",
+        "finished_at": "2026-05-07T19:17:05.328064+00:00",
+        "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/config/train.yaml",
+        "output_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train",
+        "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/metrics.csv",
+        "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/best.pt",
+        "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/last.pt",
+        "topk_checkpoints": [
+          {
+            "epoch": 35,
+            "holdout_composite_score": 0.81957415098876,
+            "holdout_loss": 0.49646820976183964,
+            "holdout_sym_p95": 5.0,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_035_score_0.819574.pt"
+          },
+          {
+            "epoch": 41,
+            "holdout_composite_score": 0.8225389519102382,
+            "holdout_loss": 0.48493565504367536,
+            "holdout_sym_p95": 5.099019527435303,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_041_score_0.822539.pt"
+          },
+          {
+            "epoch": 37,
+            "holdout_composite_score": 0.8242718472150441,
+            "holdout_loss": 0.49480752165500935,
+            "holdout_sym_p95": 5.099019527435303,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_037_score_0.824272.pt"
+          },
+          {
+            "epoch": 34,
+            "holdout_composite_score": 0.8413821871983627,
+            "holdout_loss": 0.4875262214587285,
+            "holdout_sym_p95": 5.0,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_034_score_0.841382.pt"
+          },
+          {
+            "epoch": 38,
+            "holdout_composite_score": 0.8429294343794961,
+            "holdout_loss": 0.5047455462125632,
+            "holdout_sym_p95": 5.099019527435303,
+            "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_038_score_0.842929.pt"
+          }
+        ],
+        "checkpoint_top_k": 5,
+        "checkpoint_every_n_epochs": 5,
+        "archive_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/archive",
+        "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/holdout_analysis",
+        "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+        "early_stop_metric": "holdout_composite_score",
+        "early_stop_score": {
+          "start_epoch": 10,
+          "weights": {
+            "loss": 0.3,
+            "sym_p95": 0.3,
+            "no_curve_count": 0.07,
+            "bad_rate": 0.07,
+            "vox03_empty": 0.03,
+            "cc_count": 0.03,
+            "wrap_miss": 0.05,
+            "hard_case_viewer": 0.15
+          },
+          "targets": {
+            "loss": 0.5,
+            "sym_p95_mm": 5.0,
+            "bad_sym_p95_mm": 5.0,
+            "hard_sym_p95_mm": 5.0,
+            "hard_bad_sym_p95_mm": 5.0,
+            "hard_case_count": 12,
+            "vox03": 100.0,
+            "cc_count": 4.0
+          }
+        },
+        "score_start_epoch": 10,
+        "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+        "best_epoch": 35,
+        "best_composite_score": 0.81957415098876,
+        "best_monitor_metrics": {
+          "epoch": 35,
+          "holdout_loss": 0.49646820976183964,
+          "holdout_composite_score": 0.81957415098876,
+          "holdout_bad_rate": 0.23076923076923078,
+          "score_components": {
+            "loss": 0.9929364195236793,
+            "sym_p95": 1.0,
+            "no_curve_count": 0.0,
+            "bad_rate": 0.23076923076923078,
+            "vox03_empty": 0.0,
+            "cc_count": 0.0346153846153846,
+            "wrap_miss": 0.7000356675125555,
+            "hard_case_viewer": 1.1299942270914713,
+            "hard_case_sym_p95": 12.041594505310059,
+            "hard_case_no_curve_count": 0,
+            "hard_case_bad_rate": 0.6666666666666666,
+            "hard_case_missing_rate": 0.0,
+            "hard_case_expected_count": 12
+          },
+          "hard_case_viewer_component": 1.1299942270914713,
+          "hard_case_sym_p95": 12.041594505310059,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.6666666666666666,
+          "holdout_sym_mean": 1.9355920553207397,
+          "holdout_sym_p95": 5.0,
+          "holdout_no_curve_count": 0,
+          "h_pred_max": 0.9997677206993103,
+          "h_pred_p99": 0.221979126182024,
+          "vox03": 6917.246153846154,
+          "vox03_total": 449621,
+          "cc_count": 1.1384615384615384,
+          "lcc_ratio": 0.9685185059290309,
+          "wrap_coverage": 0.2999643324874445,
+          "hard_case_count": 12,
+          "holdout_tooth_count": 65
+        },
+        "best_holdout_loss": 0.49646820976183964,
+        "best_holdout_sym_p95": 5.0,
+        "best_holdout_no_curve_count": 0,
+        "best_holdout_bad_rate": 0.23076923076923078,
+        "best_wrap_coverage": 0.2999643324874445,
+        "best_hard_case_viewer_component": 1.1299942270914713,
+        "best_hard_case_sym_p95": 12.041594505310059,
+        "best_hard_case_no_curve_count": 0,
+        "best_hard_case_bad_rate": 0.6666666666666666,
+        "pretrained": {
+          "loaded": true,
+          "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+          "missing": [],
+          "unexpected": []
+        },
+        "dataset": {
+          "train": {
+            "total_tooth_dirs": 497,
+            "used_labeled_tooth_dirs": 426,
+            "skipped_unlabeled_tooth_dirs": 71,
+            "invalid_tooth_dirs": 0
+          },
+          "holdout": {
+            "total_tooth_dirs": 88,
+            "used_labeled_tooth_dirs": 65,
+            "skipped_unlabeled_tooth_dirs": 23,
+            "invalid_tooth_dirs": 0
+          }
+        },
+        "audit_paths": {
+          "train": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/invalid_labeled_teeth.txt"
+          },
+          "holdout": {
+            "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+          }
+        },
+        "sampler": {
+          "weighted_sampler": true,
+          "weight_count": 426,
+          "hard_weight_count": 3
+        }
+      },
+      "best_epoch": 35,
+      "best_composite_score": 0.81957415098876,
+      "best_holdout_loss": 0.49646820976183964,
+      "best_holdout_sym_p95": 5.0,
+      "best_holdout_no_curve_count": 0,
+      "best_holdout_bad_rate": 0.23076923076923078,
+      "best_wrap_coverage": 0.2999643324874445,
+      "best_hard_case_viewer_component": 1.1299942270914713,
+      "best_hard_case_sym_p95": 12.041594505310059,
+      "best_hard_case_no_curve_count": 0,
+      "best_hard_case_bad_rate": 0.6666666666666666,
+      "best_monitor_metrics": {
+        "epoch": 35,
+        "holdout_loss": 0.49646820976183964,
+        "holdout_composite_score": 0.81957415098876,
+        "holdout_bad_rate": 0.23076923076923078,
+        "score_components": {
+          "loss": 0.9929364195236793,
+          "sym_p95": 1.0,
+          "no_curve_count": 0.0,
+          "bad_rate": 0.23076923076923078,
+          "vox03_empty": 0.0,
+          "cc_count": 0.0346153846153846,
+          "wrap_miss": 0.7000356675125555,
+          "hard_case_viewer": 1.1299942270914713,
+          "hard_case_sym_p95": 12.041594505310059,
+          "hard_case_no_curve_count": 0,
+          "hard_case_bad_rate": 0.6666666666666666,
+          "hard_case_missing_rate": 0.0,
+          "hard_case_expected_count": 12
+        },
+        "hard_case_viewer_component": 1.1299942270914713,
+        "hard_case_sym_p95": 12.041594505310059,
+        "hard_case_no_curve_count": 0,
+        "hard_case_bad_rate": 0.6666666666666666,
+        "holdout_sym_mean": 1.9355920553207397,
+        "holdout_sym_p95": 5.0,
+        "holdout_no_curve_count": 0,
+        "h_pred_max": 0.9997677206993103,
+        "h_pred_p99": 0.221979126182024,
+        "vox03": 6917.246153846154,
+        "vox03_total": 449621,
+        "cc_count": 1.1384615384615384,
+        "lcc_ratio": 0.9685185059290309,
+        "wrap_coverage": 0.2999643324874445,
+        "hard_case_count": 12,
+        "holdout_tooth_count": 65
+      },
+      "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+      "early_stop_metric": "holdout_composite_score",
+      "early_stop_score": {
+        "start_epoch": 10,
+        "weights": {
+          "loss": 0.3,
+          "sym_p95": 0.3,
+          "no_curve_count": 0.07,
+          "bad_rate": 0.07,
+          "vox03_empty": 0.03,
+          "cc_count": 0.03,
+          "wrap_miss": 0.05,
+          "hard_case_viewer": 0.15
+        },
+        "targets": {
+          "loss": 0.5,
+          "sym_p95_mm": 5.0,
+          "bad_sym_p95_mm": 5.0,
+          "hard_sym_p95_mm": 5.0,
+          "hard_bad_sym_p95_mm": 5.0,
+          "hard_case_count": 12,
+          "vox03": 100.0,
+          "cc_count": 4.0
+        }
+      },
+      "error": null
+    }
+  ]
+}

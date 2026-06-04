@@ -1,0 +1,114 @@
+{
+  "created_at": "2026-05-07T16:20:01.084378+00:00",
+  "results_csv": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/summary/results.csv",
+  "best_model_path": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/checkpoints/best.pt",
+  "best_package_path": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/package/exp00_baseline_dicece_training_bundle.tar.gz",
+  "experiments": [
+    {
+      "experiment": "exp00_baseline_dicece",
+      "status": "success",
+      "started_at": "2026-05-07T16:16:47.900940+00:00",
+      "finished_at": "2026-05-07T16:19:59.827625+00:00",
+      "run_condition": "always",
+      "config_path": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/config/train.yaml",
+      "best_checkpoint": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/checkpoints/best.pt",
+      "last_checkpoint": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/checkpoints/last.pt",
+      "metrics_csv": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/metrics.csv",
+      "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/holdout_analysis",
+      "package_path": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/package/exp00_baseline_dicece_training_bundle.tar.gz",
+      "train_manifest": {
+        "started_at": "2026-05-07T16:16:59.864509+00:00",
+        "finished_at": "2026-05-07T16:19:58.781735+00:00",
+        "config_path": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/config/train.yaml",
+        "output_dir": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train",
+        "metrics_csv": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/metrics.csv",
+        "best_checkpoint": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/checkpoints/best.pt",
+        "last_checkpoint": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/checkpoints/last.pt",
+        "best_epoch": 1,
+        "best_metrics": {
+          "epoch": 1,
+          "holdout_tooth_count": 65,
+          "sym_mean": 20.304677963256836,
+          "sym_p95": 169.5258026123047,
+          "gt_to_pred_mean": 24.35294532775879,
+          "gt_to_pred_p95": 171.77601623535156,
+          "no_curve_count": 10,
+          "h_pred_max": 1.0,
+          "h_pred_p99": 0.35511707143249105,
+          "vox03": 9313.83076923077,
+          "vox03_total": 605399,
+          "cc_count": 1.1846153846153846,
+          "lcc_ratio": 0.8535505021781657,
+          "wrap_coverage": 0.14390765487363516,
+          "hard_case_count": 12
+        },
+        "score_order": [
+          "sym_p95 asc",
+          "no_curve_count asc",
+          "wrap_coverage desc"
+        ],
+        "best_min_epoch": 1,
+        "pretrained": {
+          "loaded": true,
+          "path": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/input/checkpoints/unsup_last.pt",
+          "missing": [],
+          "unexpected": []
+        },
+        "dataset": {
+          "train": {
+            "total_tooth_dirs": 497,
+            "used_labeled_tooth_dirs": 426,
+            "skipped_unlabeled_tooth_dirs": 71,
+            "invalid_tooth_dirs": 0
+          },
+          "holdout": {
+            "total_tooth_dirs": 88,
+            "used_labeled_tooth_dirs": 65,
+            "skipped_unlabeled_tooth_dirs": 23,
+            "invalid_tooth_dirs": 0
+          }
+        },
+        "audit_paths": {
+          "train": {
+            "audit": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_train/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_train/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_train/invalid_labeled_teeth.txt"
+          },
+          "holdout": {
+            "audit": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/supervised_dataset_audit.json",
+            "skipped_json": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+            "skipped_txt": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+            "invalid_json": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+            "invalid_txt": "/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_003/experiments/exp00_baseline_dicece/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+          }
+        },
+        "sampler": {
+          "weighted_sampler": false,
+          "weight_count": 0,
+          "hard_weight_count": 0
+        }
+      },
+      "best_metrics": {
+        "epoch": 1,
+        "holdout_tooth_count": 65,
+        "sym_mean": 20.304677963256836,
+        "sym_p95": 169.5258026123047,
+        "gt_to_pred_mean": 24.35294532775879,
+        "gt_to_pred_p95": 171.77601623535156,
+        "no_curve_count": 10,
+        "h_pred_max": 1.0,
+        "h_pred_p99": 0.35511707143249105,
+        "vox03": 9313.83076923077,
+        "vox03_total": 605399,
+        "cc_count": 1.1846153846153846,
+        "lcc_ratio": 0.8535505021781657,
+        "wrap_coverage": 0.14390765487363516,
+        "hard_case_count": 12
+      },
+      "best_epoch": 1,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "epoch": 22,
+  "holdout_tooth_count": 65,
+  "sym_mean": 2.0750811100006104,
+  "sym_p95": 5.099019527435303,
+  "gt_to_pred_mean": 2.1438136100769043,
+  "gt_to_pred_p95": 5.0,
+  "no_curve_count": 0,
+  "h_pred_max": 0.9998395442962646,
+  "h_pred_p99": 0.21738800317306448,
+  "vox03": 6863.461538461538,
+  "vox03_total": 446125,
+  "cc_count": 1.2,
+  "lcc_ratio": 0.9802467942667217,
+  "wrap_coverage": 0.281817291073379,
+  "hard_case_count": 12
+}

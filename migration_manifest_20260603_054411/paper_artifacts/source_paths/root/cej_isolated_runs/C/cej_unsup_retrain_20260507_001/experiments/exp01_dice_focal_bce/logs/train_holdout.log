@@ -1,0 +1,12 @@
+[started_at] 2026-05-07T16:09:56.848005+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train_holdout --config /root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/experiments/exp01_dice_focal_bce/config/train.yaml
+[2026-05-07 16:10:08,582] INFO - loaded pretrained=/root/cej_isolated_runs/C/cej_unsup_retrain_20260507_001/input/checkpoints/unsup_last.pt strict=False missing=0 unexpected=0
+[2026-05-07 16:10:59,575] INFO - epoch=0 loss=1.059389 sym_p95=15.132745742797852 no_curve=2 wrap=0.1356 best_epoch=0 patience=0/5
+[2026-05-07 16:11:28,105] INFO - epoch=1 loss=0.479696 sym_p95=171.54299926757812 no_curve=13 wrap=0.1624 best_epoch=0 patience=1/5
+[2026-05-07 16:11:58,196] INFO - epoch=2 loss=0.451007 sym_p95=171.54299926757812 no_curve=12 wrap=0.1550 best_epoch=0 patience=2/5
+[2026-05-07 16:12:27,558] INFO - epoch=3 loss=0.439342 sym_p95=168.00892639160156 no_curve=8 wrap=0.1594 best_epoch=0 patience=3/5
+[2026-05-07 16:12:56,009] INFO - epoch=4 loss=0.431119 sym_p95=169.5258026123047 no_curve=10 wrap=0.1950 best_epoch=0 patience=4/5
+[2026-05-07 16:13:26,446] INFO - epoch=5 loss=0.428044 sym_p95=169.5258026123047 no_curve=10 wrap=0.1809 best_epoch=0 patience=5/5
+[2026-05-07 16:13:26,446] INFO - early stopping at epoch=5 best_epoch=0
+[finished_at] 2026-05-07T16:13:27.554833+00:00
+[returncode] 0

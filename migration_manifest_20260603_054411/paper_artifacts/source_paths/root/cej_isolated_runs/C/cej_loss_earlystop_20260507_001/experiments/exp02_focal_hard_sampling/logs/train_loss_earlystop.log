@@ -1,0 +1,3 @@
+[started_at] 2026-05-07T17:00:29.365836+00:00
+[cmd] /usr/local/miniconda3/envs/py310/bin/python -m src.train_loss_earlystop --config /root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/experiments/exp02_focal_hard_sampling/config/train.yaml
+[2026-05-07 17:00:40,999] INFO - loaded pretrained=/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_001/input/checkpoints/unsup_last.pt strict=False missing=0 unexpected=0

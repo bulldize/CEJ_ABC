@@ -1,0 +1,2198 @@
+[
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "11",
+    "threshold": 0.6450397133827209,
+    "curve_voxels": 26,
+    "dense_points": 49,
+    "h_max": 0.9214853048324585,
+    "h_sum": 298.6925048828125
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "12",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.03386961296200752,
+    "h_sum": 9.491390228271484
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "13",
+    "threshold": 0.4233647882938385,
+    "curve_voxels": 14,
+    "dense_points": 21,
+    "h_max": 0.6048068404197693,
+    "h_sum": 180.62425231933594
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "14",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.29654183983802795,
+    "h_sum": 75.53282928466797
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "15",
+    "threshold": 0.5925218224525451,
+    "curve_voxels": 66,
+    "dense_points": 101,
+    "h_max": 0.8464597463607788,
+    "h_sum": 406.48077392578125
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "16",
+    "threshold": 0.699604171514511,
+    "curve_voxels": 188,
+    "dense_points": 303,
+    "h_max": 0.9994345307350159,
+    "h_sum": 4961.43994140625
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "17",
+    "threshold": 0.6987271070480346,
+    "curve_voxels": 200,
+    "dense_points": 332,
+    "h_max": 0.9981815814971924,
+    "h_sum": 3003.28173828125
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "21",
+    "threshold": 0.3,
+    "curve_voxels": 114,
+    "dense_points": 217,
+    "h_max": 0.7025579810142517,
+    "h_sum": 91.92866516113281
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "22",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.24151377379894257,
+    "h_sum": 28.042137145996094
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "23",
+    "threshold": 0.6950230836868285,
+    "curve_voxels": 41,
+    "dense_points": 70,
+    "h_max": 0.9928901195526123,
+    "h_sum": 549.1656494140625
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "24",
+    "threshold": 0.6905894458293914,
+    "curve_voxels": 132,
+    "dense_points": 225,
+    "h_max": 0.986556351184845,
+    "h_sum": 1557.9110107421875
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "25",
+    "threshold": 0.6962520003318786,
+    "curve_voxels": 156,
+    "dense_points": 243,
+    "h_max": 0.9946457147598267,
+    "h_sum": 2400.183837890625
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "26",
+    "threshold": 0.6997064769268035,
+    "curve_voxels": 211,
+    "dense_points": 326,
+    "h_max": 0.9995806813240051,
+    "h_sum": 6049.37646484375
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "27",
+    "threshold": 0.6987413763999939,
+    "curve_voxels": 174,
+    "dense_points": 271,
+    "h_max": 0.9982019662857056,
+    "h_sum": 2767.783935546875
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "28",
+    "threshold": 0.6741447687149047,
+    "curve_voxels": 178,
+    "dense_points": 266,
+    "h_max": 0.9630639553070068,
+    "h_sum": 1389.1875
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "31",
+    "threshold": 0.6897657454013824,
+    "curve_voxels": 139,
+    "dense_points": 216,
+    "h_max": 0.9853796362876892,
+    "h_sum": 1231.7943115234375
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "32",
+    "threshold": 0.6975911080837249,
+    "curve_voxels": 130,
+    "dense_points": 198,
+    "h_max": 0.9965587258338928,
+    "h_sum": 2216.82568359375
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "33",
+    "threshold": 0.6988286197185516,
+    "curve_voxels": 182,
+    "dense_points": 278,
+    "h_max": 0.9983265995979309,
+    "h_sum": 4299.12744140625
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "34",
+    "threshold": 0.6988409280776977,
+    "curve_voxels": 147,
+    "dense_points": 224,
+    "h_max": 0.9983441829681396,
+    "h_sum": 4222.6787109375
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "35",
+    "threshold": 0.6998911023139953,
+    "curve_voxels": 218,
+    "dense_points": 347,
+    "h_max": 0.9998444318771362,
+    "h_sum": 5728.70751953125
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "36",
+    "threshold": 0.6999900698661804,
+    "curve_voxels": 261,
+    "dense_points": 387,
+    "h_max": 0.9999858140945435,
+    "h_sum": 9806.55859375
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "37",
+    "threshold": 0.699973714351654,
+    "curve_voxels": 227,
+    "dense_points": 348,
+    "h_max": 0.9999624490737915,
+    "h_sum": 10756.517578125
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "38",
+    "threshold": 0.6929385483264923,
+    "curve_voxels": 42,
+    "dense_points": 74,
+    "h_max": 0.989912211894989,
+    "h_sum": 526.9940795898438
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "41",
+    "threshold": 0.6952629923820495,
+    "curve_voxels": 89,
+    "dense_points": 147,
+    "h_max": 0.9932328462600708,
+    "h_sum": 1145.7540283203125
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "42",
+    "threshold": 0.6967885196208954,
+    "curve_voxels": 196,
+    "dense_points": 312,
+    "h_max": 0.9954121708869934,
+    "h_sum": 2694.191650390625
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "43",
+    "threshold": 0.6997255027294158,
+    "curve_voxels": 174,
+    "dense_points": 273,
+    "h_max": 0.9996078610420227,
+    "h_sum": 5027.97802734375
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "44",
+    "threshold": 0.699487680196762,
+    "curve_voxels": 183,
+    "dense_points": 294,
+    "h_max": 0.999268114566803,
+    "h_sum": 5155.0908203125
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "45",
+    "threshold": 0.6999434232711792,
+    "curve_voxels": 181,
+    "dense_points": 274,
+    "h_max": 0.9999191761016846,
+    "h_sum": 5946.703125
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "46",
+    "threshold": 0.6999890685081481,
+    "curve_voxels": 256,
+    "dense_points": 409,
+    "h_max": 0.9999843835830688,
+    "h_sum": 10492.1748046875
+  },
+  {
+    "case_id": "ToothFairy3F_041",
+    "tooth_id": "47",
+    "threshold": 0.6999728798866272,
+    "curve_voxels": 297,
+    "dense_points": 447,
+    "h_max": 0.999961256980896,
+    "h_sum": 9861.0908203125
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "11",
+    "threshold": 0.672376537322998,
+    "curve_voxels": 48,
+    "dense_points": 77,
+    "h_max": 0.9605379104614258,
+    "h_sum": 520.8937377929688
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "12",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.009016175754368305,
+    "h_sum": 4.311623573303223
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "13",
+    "threshold": 0.6981375157833098,
+    "curve_voxels": 154,
+    "dense_points": 236,
+    "h_max": 0.9973393082618713,
+    "h_sum": 2077.455322265625
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "14",
+    "threshold": 0.47370343208312987,
+    "curve_voxels": 56,
+    "dense_points": 67,
+    "h_max": 0.6767191886901855,
+    "h_sum": 123.94039154052734
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "15",
+    "threshold": 0.6637249290943146,
+    "curve_voxels": 88,
+    "dense_points": 149,
+    "h_max": 0.9481784701347351,
+    "h_sum": 564.5453491210938
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "16",
+    "threshold": 0.6998936057090759,
+    "curve_voxels": 471,
+    "dense_points": 755,
+    "h_max": 0.9998480081558228,
+    "h_sum": 9851.4990234375
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "21",
+    "threshold": 0.5214893639087677,
+    "curve_voxels": 96,
+    "dense_points": 146,
+    "h_max": 0.7449848055839539,
+    "h_sum": 430.6997375488281
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "22",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.0011828019050881267,
+    "h_sum": 4.174633979797363
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "23",
+    "threshold": 0.6263216614723205,
+    "curve_voxels": 77,
+    "dense_points": 115,
+    "h_max": 0.8947452306747437,
+    "h_sum": 510.1534118652344
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "24",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.04311766475439072,
+    "h_sum": 13.308879852294922
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "25",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.010663109831511974,
+    "h_sum": 4.730782985687256
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "26",
+    "threshold": 0.6941768109798431,
+    "curve_voxels": 260,
+    "dense_points": 418,
+    "h_max": 0.9916811585426331,
+    "h_sum": 1534.4791259765625
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "27",
+    "threshold": 0.6940843105316161,
+    "curve_voxels": 147,
+    "dense_points": 203,
+    "h_max": 0.991549015045166,
+    "h_sum": 635.7626953125
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "28",
+    "threshold": 0.688361382484436,
+    "curve_voxels": 144,
+    "dense_points": 217,
+    "h_max": 0.9833734035491943,
+    "h_sum": 1032.1749267578125
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "31",
+    "threshold": 0.697928899526596,
+    "curve_voxels": 115,
+    "dense_points": 187,
+    "h_max": 0.9970412850379944,
+    "h_sum": 2365.300537109375
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "32",
+    "threshold": 0.6976562798023224,
+    "curve_voxels": 151,
+    "dense_points": 240,
+    "h_max": 0.996651828289032,
+    "h_sum": 2848.33544921875
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "33",
+    "threshold": 0.6997006356716156,
+    "curve_voxels": 202,
+    "dense_points": 310,
+    "h_max": 0.9995723366737366,
+    "h_sum": 6055.5869140625
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "34",
+    "threshold": 0.699353039264679,
+    "curve_voxels": 172,
+    "dense_points": 282,
+    "h_max": 0.9990757703781128,
+    "h_sum": 4443.4423828125
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "35",
+    "threshold": 0.6997781157493591,
+    "curve_voxels": 170,
+    "dense_points": 264,
+    "h_max": 0.9996830224990845,
+    "h_sum": 5295.07666015625
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "36",
+    "threshold": 0.6999929070472717,
+    "curve_voxels": 261,
+    "dense_points": 407,
+    "h_max": 0.9999898672103882,
+    "h_sum": 12690.34765625
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "41",
+    "threshold": 0.6982315599918365,
+    "curve_voxels": 127,
+    "dense_points": 201,
+    "h_max": 0.9974736571311951,
+    "h_sum": 1800.3287353515625
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "42",
+    "threshold": 0.6997413158416748,
+    "curve_voxels": 115,
+    "dense_points": 185,
+    "h_max": 0.9996304512023926,
+    "h_sum": 2745.146240234375
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "43",
+    "threshold": 0.699852842092514,
+    "curve_voxels": 169,
+    "dense_points": 264,
+    "h_max": 0.9997897744178772,
+    "h_sum": 6704.8818359375
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "44",
+    "threshold": 0.6997615933418273,
+    "curve_voxels": 175,
+    "dense_points": 268,
+    "h_max": 0.9996594190597534,
+    "h_sum": 4992.84912109375
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "45",
+    "threshold": 0.6999202251434326,
+    "curve_voxels": 192,
+    "dense_points": 291,
+    "h_max": 0.9998860359191895,
+    "h_sum": 4665.44287109375
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "46",
+    "threshold": 0.6999919056892394,
+    "curve_voxels": 304,
+    "dense_points": 468,
+    "h_max": 0.9999884366989136,
+    "h_sum": 12481.1630859375
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "47",
+    "threshold": 0.699966287612915,
+    "curve_voxels": 335,
+    "dense_points": 516,
+    "h_max": 0.9999518394470215,
+    "h_sum": 11256.2265625
+  },
+  {
+    "case_id": "ToothFairy3F_044",
+    "tooth_id": "48",
+    "threshold": 0.6977433145046233,
+    "curve_voxels": 162,
+    "dense_points": 274,
+    "h_max": 0.9967761635780334,
+    "h_sum": 2033.5469970703125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "11",
+    "threshold": 0.6994505047798156,
+    "curve_voxels": 163,
+    "dense_points": 258,
+    "h_max": 0.9992150068283081,
+    "h_sum": 5501.1708984375
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "12",
+    "threshold": 0.6955649018287658,
+    "curve_voxels": 117,
+    "dense_points": 184,
+    "h_max": 0.9936641454696655,
+    "h_sum": 2290.445556640625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "13",
+    "threshold": 0.6995644092559814,
+    "curve_voxels": 191,
+    "dense_points": 316,
+    "h_max": 0.9993777275085449,
+    "h_sum": 5863.46533203125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "14",
+    "threshold": 0.6997631788253784,
+    "curve_voxels": 195,
+    "dense_points": 289,
+    "h_max": 0.9996616840362549,
+    "h_sum": 6139.931640625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "15",
+    "threshold": 0.6997784495353698,
+    "curve_voxels": 176,
+    "dense_points": 266,
+    "h_max": 0.9996834993362427,
+    "h_sum": 6106.38134765625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "16",
+    "threshold": 0.6999587774276733,
+    "curve_voxels": 246,
+    "dense_points": 374,
+    "h_max": 0.9999411106109619,
+    "h_sum": 10906.890625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "17",
+    "threshold": 0.6999555230140686,
+    "curve_voxels": 236,
+    "dense_points": 373,
+    "h_max": 0.9999364614486694,
+    "h_sum": 10453.189453125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "18",
+    "threshold": 0.6989677250385284,
+    "curve_voxels": 304,
+    "dense_points": 456,
+    "h_max": 0.9985253214836121,
+    "h_sum": 2118.594482421875
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "21",
+    "threshold": 0.6997464895248413,
+    "curve_voxels": 206,
+    "dense_points": 330,
+    "h_max": 0.9996378421783447,
+    "h_sum": 6965.9462890625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "22",
+    "threshold": 0.696623420715332,
+    "curve_voxels": 142,
+    "dense_points": 219,
+    "h_max": 0.9951763153076172,
+    "h_sum": 3128.214599609375
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "23",
+    "threshold": 0.699783706665039,
+    "curve_voxels": 180,
+    "dense_points": 277,
+    "h_max": 0.9996910095214844,
+    "h_sum": 5905.2294921875
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "24",
+    "threshold": 0.4105538308620453,
+    "curve_voxels": 19,
+    "dense_points": 29,
+    "h_max": 0.5865054726600647,
+    "h_sum": 95.47035217285156
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "25",
+    "threshold": 0.6997902989387512,
+    "curve_voxels": 193,
+    "dense_points": 298,
+    "h_max": 0.9997004270553589,
+    "h_sum": 5963.32861328125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "26",
+    "threshold": 0.6999820590019226,
+    "curve_voxels": 261,
+    "dense_points": 399,
+    "h_max": 0.9999743700027466,
+    "h_sum": 10505.857421875
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "27",
+    "threshold": 0.6999758005142211,
+    "curve_voxels": 292,
+    "dense_points": 444,
+    "h_max": 0.9999654293060303,
+    "h_sum": 9710.81640625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "28",
+    "threshold": 0.6364785194396972,
+    "curve_voxels": 89,
+    "dense_points": 145,
+    "h_max": 0.9092550277709961,
+    "h_sum": 509.08465576171875
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "31",
+    "threshold": 0.698307454586029,
+    "curve_voxels": 133,
+    "dense_points": 209,
+    "h_max": 0.9975820779800415,
+    "h_sum": 2031.6878662109375
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "32",
+    "threshold": 0.6967775046825408,
+    "curve_voxels": 158,
+    "dense_points": 256,
+    "h_max": 0.9953964352607727,
+    "h_sum": 2986.284912109375
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "33",
+    "threshold": 0.6984524846076965,
+    "curve_voxels": 150,
+    "dense_points": 228,
+    "h_max": 0.9977892637252808,
+    "h_sum": 4611.17529296875
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "34",
+    "threshold": 0.6978693604469299,
+    "curve_voxels": 153,
+    "dense_points": 230,
+    "h_max": 0.9969562292098999,
+    "h_sum": 3855.454345703125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "35",
+    "threshold": 0.6997406482696533,
+    "curve_voxels": 146,
+    "dense_points": 244,
+    "h_max": 0.9996294975280762,
+    "h_sum": 5471.12158203125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "36",
+    "threshold": 0.6999667882919312,
+    "curve_voxels": 224,
+    "dense_points": 369,
+    "h_max": 0.9999525547027588,
+    "h_sum": 9561.2421875
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "37",
+    "threshold": 0.6999785542488097,
+    "curve_voxels": 197,
+    "dense_points": 302,
+    "h_max": 0.9999693632125854,
+    "h_sum": 9476.626953125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "38",
+    "threshold": 0.5125914216041565,
+    "curve_voxels": 119,
+    "dense_points": 156,
+    "h_max": 0.7322734594345093,
+    "h_sum": 436.2568054199219
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "41",
+    "threshold": 0.692153525352478,
+    "curve_voxels": 129,
+    "dense_points": 203,
+    "h_max": 0.98879075050354,
+    "h_sum": 2056.358154296875
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "42",
+    "threshold": 0.6813470780849457,
+    "curve_voxels": 149,
+    "dense_points": 228,
+    "h_max": 0.9733529686927795,
+    "h_sum": 2029.1671142578125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "43",
+    "threshold": 0.6984971702098846,
+    "curve_voxels": 149,
+    "dense_points": 249,
+    "h_max": 0.9978531002998352,
+    "h_sum": 3884.855712890625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "44",
+    "threshold": 0.6989918410778045,
+    "curve_voxels": 141,
+    "dense_points": 224,
+    "h_max": 0.9985597729682922,
+    "h_sum": 4375.83837890625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "45",
+    "threshold": 0.6991190969944,
+    "curve_voxels": 176,
+    "dense_points": 260,
+    "h_max": 0.9987415671348572,
+    "h_sum": 5172.51220703125
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "46",
+    "threshold": 0.699964952468872,
+    "curve_voxels": 259,
+    "dense_points": 392,
+    "h_max": 0.9999499320983887,
+    "h_sum": 9261.84375
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "47",
+    "threshold": 0.699971044063568,
+    "curve_voxels": 286,
+    "dense_points": 431,
+    "h_max": 0.9999586343765259,
+    "h_sum": 10152.4931640625
+  },
+  {
+    "case_id": "ToothFairy3F_050",
+    "tooth_id": "48",
+    "threshold": 0.5321464836597443,
+    "curve_voxels": 91,
+    "dense_points": 132,
+    "h_max": 0.7602092623710632,
+    "h_sum": 241.0076446533203
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "11",
+    "threshold": 0.6995878577232361,
+    "curve_voxels": 194,
+    "dense_points": 299,
+    "h_max": 0.9994112253189087,
+    "h_sum": 7256.6806640625
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "12",
+    "threshold": 0.6985409796237945,
+    "curve_voxels": 148,
+    "dense_points": 251,
+    "h_max": 0.9979156851768494,
+    "h_sum": 3436.70556640625
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "13",
+    "threshold": 0.6997495770454406,
+    "curve_voxels": 224,
+    "dense_points": 345,
+    "h_max": 0.9996422529220581,
+    "h_sum": 6436.74853515625
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "14",
+    "threshold": 0.6999405026435852,
+    "curve_voxels": 209,
+    "dense_points": 353,
+    "h_max": 0.9999150037765503,
+    "h_sum": 6181.69287109375
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "15",
+    "threshold": 0.699845415353775,
+    "curve_voxels": 168,
+    "dense_points": 264,
+    "h_max": 0.9997791647911072,
+    "h_sum": 6333.0703125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "16",
+    "threshold": 0.6999394178390502,
+    "curve_voxels": 261,
+    "dense_points": 411,
+    "h_max": 0.9999134540557861,
+    "h_sum": 10618.3837890625
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "17",
+    "threshold": 0.6999494314193725,
+    "curve_voxels": 240,
+    "dense_points": 380,
+    "h_max": 0.9999277591705322,
+    "h_sum": 10994.7578125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "18",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.028122011572122574,
+    "h_sum": 9.97892951965332
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "21",
+    "threshold": 0.6996923744678497,
+    "curve_voxels": 186,
+    "dense_points": 311,
+    "h_max": 0.999560534954071,
+    "h_sum": 5826.69677734375
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "22",
+    "threshold": 0.6979614436626433,
+    "curve_voxels": 130,
+    "dense_points": 200,
+    "h_max": 0.9970877766609192,
+    "h_sum": 3701.07421875
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "23",
+    "threshold": 0.6998428285121917,
+    "curve_voxels": 202,
+    "dense_points": 304,
+    "h_max": 0.9997754693031311,
+    "h_sum": 7411.837890625
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "24",
+    "threshold": 0.6997424840927123,
+    "curve_voxels": 192,
+    "dense_points": 295,
+    "h_max": 0.9996321201324463,
+    "h_sum": 6311.001953125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "25",
+    "threshold": 0.6997106492519378,
+    "curve_voxels": 179,
+    "dense_points": 283,
+    "h_max": 0.9995866417884827,
+    "h_sum": 5310.6201171875
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "26",
+    "threshold": 0.6973407685756683,
+    "curve_voxels": 160,
+    "dense_points": 251,
+    "h_max": 0.9962010979652405,
+    "h_sum": 1550.177490234375
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "27",
+    "threshold": 0.6998974442481994,
+    "curve_voxels": 235,
+    "dense_points": 359,
+    "h_max": 0.9998534917831421,
+    "h_sum": 9694.724609375
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "28",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.16678158938884735,
+    "h_sum": 36.54742431640625
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "31",
+    "threshold": 0.6957546174526215,
+    "curve_voxels": 132,
+    "dense_points": 232,
+    "h_max": 0.9939351677894592,
+    "h_sum": 1791.4012451171875
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "32",
+    "threshold": 0.6900449991226196,
+    "curve_voxels": 125,
+    "dense_points": 197,
+    "h_max": 0.9857785701751709,
+    "h_sum": 1411.1590576171875
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "33",
+    "threshold": 0.6991490542888641,
+    "curve_voxels": 168,
+    "dense_points": 267,
+    "h_max": 0.9987843632698059,
+    "h_sum": 3380.380126953125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "34",
+    "threshold": 0.6988056719303131,
+    "curve_voxels": 134,
+    "dense_points": 208,
+    "h_max": 0.9982938170433044,
+    "h_sum": 3524.76953125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "35",
+    "threshold": 0.6997996866703033,
+    "curve_voxels": 190,
+    "dense_points": 309,
+    "h_max": 0.9997138381004333,
+    "h_sum": 5823.2607421875
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "36",
+    "threshold": 0.6999603629112243,
+    "curve_voxels": 289,
+    "dense_points": 438,
+    "h_max": 0.9999433755874634,
+    "h_sum": 11225.08203125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "37",
+    "threshold": 0.6999581933021545,
+    "curve_voxels": 287,
+    "dense_points": 429,
+    "h_max": 0.9999402761459351,
+    "h_sum": 10914.7939453125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "38",
+    "threshold": 0.6313345432281494,
+    "curve_voxels": 149,
+    "dense_points": 213,
+    "h_max": 0.9019064903259277,
+    "h_sum": 947.9627075195312
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "41",
+    "threshold": 0.6980696320533752,
+    "curve_voxels": 166,
+    "dense_points": 269,
+    "h_max": 0.9972423315048218,
+    "h_sum": 2643.55615234375
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "42",
+    "threshold": 0.6892223417758941,
+    "curve_voxels": 162,
+    "dense_points": 240,
+    "h_max": 0.9846033453941345,
+    "h_sum": 2462.486083984375
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "43",
+    "threshold": 0.6995011985301971,
+    "curve_voxels": 176,
+    "dense_points": 274,
+    "h_max": 0.9992874264717102,
+    "h_sum": 4777.98291015625
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "44",
+    "threshold": 0.6998722016811371,
+    "curve_voxels": 190,
+    "dense_points": 298,
+    "h_max": 0.999817430973053,
+    "h_sum": 4945.78515625
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "45",
+    "threshold": 0.6993623852729797,
+    "curve_voxels": 163,
+    "dense_points": 279,
+    "h_max": 0.9990891218185425,
+    "h_sum": 5605.02490234375
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "46",
+    "threshold": 0.6999556064605712,
+    "curve_voxels": 243,
+    "dense_points": 402,
+    "h_max": 0.999936580657959,
+    "h_sum": 9364.7783203125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "47",
+    "threshold": 0.6999727964401244,
+    "curve_voxels": 267,
+    "dense_points": 419,
+    "h_max": 0.9999611377716064,
+    "h_sum": 10524.1142578125
+  },
+  {
+    "case_id": "ToothFairy3F_051",
+    "tooth_id": "48",
+    "threshold": 0.6951392829418181,
+    "curve_voxels": 108,
+    "dense_points": 178,
+    "h_max": 0.9930561184883118,
+    "h_sum": 796.8423461914062
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "11",
+    "threshold": 0.6996693849563598,
+    "curve_voxels": 164,
+    "dense_points": 250,
+    "h_max": 0.9995276927947998,
+    "h_sum": 6100.623046875
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "12",
+    "threshold": 0.6975050330162048,
+    "curve_voxels": 152,
+    "dense_points": 235,
+    "h_max": 0.9964357614517212,
+    "h_sum": 3527.11474609375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "13",
+    "threshold": 0.6995649099349975,
+    "curve_voxels": 187,
+    "dense_points": 289,
+    "h_max": 0.9993784427642822,
+    "h_sum": 5879.21435546875
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "14",
+    "threshold": 0.6995531022548676,
+    "curve_voxels": 185,
+    "dense_points": 277,
+    "h_max": 0.9993615746498108,
+    "h_sum": 5653.0849609375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "15",
+    "threshold": 0.6997743606567383,
+    "curve_voxels": 201,
+    "dense_points": 311,
+    "h_max": 0.9996776580810547,
+    "h_sum": 5620.41552734375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "16",
+    "threshold": 0.3408827394247055,
+    "curve_voxels": 79,
+    "dense_points": 104,
+    "h_max": 0.4869753420352936,
+    "h_sum": 173.44140625
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "17",
+    "threshold": 0.6892038166522979,
+    "curve_voxels": 121,
+    "dense_points": 184,
+    "h_max": 0.9845768809318542,
+    "h_sum": 1133.508544921875
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "18",
+    "threshold": 0.6245094537734985,
+    "curve_voxels": 80,
+    "dense_points": 104,
+    "h_max": 0.8921563625335693,
+    "h_sum": 208.04156494140625
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "21",
+    "threshold": 0.699506664276123,
+    "curve_voxels": 180,
+    "dense_points": 264,
+    "h_max": 0.9992952346801758,
+    "h_sum": 5022.39599609375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "22",
+    "threshold": 0.681821346282959,
+    "curve_voxels": 130,
+    "dense_points": 201,
+    "h_max": 0.9740304946899414,
+    "h_sum": 1706.6826171875
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "23",
+    "threshold": 0.6997309684753418,
+    "curve_voxels": 199,
+    "dense_points": 315,
+    "h_max": 0.9996156692504883,
+    "h_sum": 6258.0107421875
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "24",
+    "threshold": 0.6981864988803863,
+    "curve_voxels": 178,
+    "dense_points": 294,
+    "h_max": 0.9974092841148376,
+    "h_sum": 4262.74951171875
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "25",
+    "threshold": 0.6997697710990906,
+    "curve_voxels": 169,
+    "dense_points": 267,
+    "h_max": 0.9996711015701294,
+    "h_sum": 5611.86328125
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "26",
+    "threshold": 0.6999439239501952,
+    "curve_voxels": 222,
+    "dense_points": 344,
+    "h_max": 0.9999198913574219,
+    "h_sum": 9292.5380859375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "27",
+    "threshold": 0.6999722957611083,
+    "curve_voxels": 288,
+    "dense_points": 454,
+    "h_max": 0.9999604225158691,
+    "h_sum": 10553.375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "31",
+    "threshold": 0.6303699016571045,
+    "curve_voxels": 80,
+    "dense_points": 116,
+    "h_max": 0.9005284309387207,
+    "h_sum": 531.0554809570312
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "32",
+    "threshold": 0.6698151469230651,
+    "curve_voxels": 97,
+    "dense_points": 136,
+    "h_max": 0.9568787813186646,
+    "h_sum": 545.6694946289062
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "33",
+    "threshold": 0.6940550208091736,
+    "curve_voxels": 185,
+    "dense_points": 303,
+    "h_max": 0.9915071725845337,
+    "h_sum": 1555.986083984375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "34",
+    "threshold": 0.6959170460700989,
+    "curve_voxels": 140,
+    "dense_points": 228,
+    "h_max": 0.9941672086715698,
+    "h_sum": 2785.363525390625
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "35",
+    "threshold": 0.6994890987873077,
+    "curve_voxels": 147,
+    "dense_points": 230,
+    "h_max": 0.9992701411247253,
+    "h_sum": 5106.681640625
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "36",
+    "threshold": 0.6999669551849365,
+    "curve_voxels": 212,
+    "dense_points": 349,
+    "h_max": 0.9999527931213379,
+    "h_sum": 10651.5546875
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "37",
+    "threshold": 0.6999828934669494,
+    "curve_voxels": 234,
+    "dense_points": 356,
+    "h_max": 0.9999755620956421,
+    "h_sum": 11426.6865234375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "38",
+    "threshold": 0.6896211743354796,
+    "curve_voxels": 74,
+    "dense_points": 105,
+    "h_max": 0.9851731061935425,
+    "h_sum": 522.8831176757812
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "41",
+    "threshold": 0.6693296551704406,
+    "curve_voxels": 80,
+    "dense_points": 112,
+    "h_max": 0.9561852216720581,
+    "h_sum": 424.9585266113281
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "42",
+    "threshold": 0.6770515859127044,
+    "curve_voxels": 82,
+    "dense_points": 132,
+    "h_max": 0.9672165513038635,
+    "h_sum": 549.6952514648438
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "43",
+    "threshold": 0.6988568246364593,
+    "curve_voxels": 170,
+    "dense_points": 272,
+    "h_max": 0.9983668923377991,
+    "h_sum": 3621.167236328125
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "44",
+    "threshold": 0.6978958964347839,
+    "curve_voxels": 142,
+    "dense_points": 243,
+    "h_max": 0.996994137763977,
+    "h_sum": 3602.33251953125
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "45",
+    "threshold": 0.6995236039161682,
+    "curve_voxels": 182,
+    "dense_points": 284,
+    "h_max": 0.9993194341659546,
+    "h_sum": 5088.7509765625
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "46",
+    "threshold": 0.6999845623970031,
+    "curve_voxels": 255,
+    "dense_points": 373,
+    "h_max": 0.9999779462814331,
+    "h_sum": 9203.537109375
+  },
+  {
+    "case_id": "ToothFairy3F_052",
+    "tooth_id": "47",
+    "threshold": 0.6999834775924683,
+    "curve_voxels": 256,
+    "dense_points": 404,
+    "h_max": 0.999976396560669,
+    "h_sum": 10647.6875
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "11",
+    "threshold": 0.6996811926364899,
+    "curve_voxels": 207,
+    "dense_points": 325,
+    "h_max": 0.9995445609092712,
+    "h_sum": 6049.890625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "12",
+    "threshold": 0.6971527636051178,
+    "curve_voxels": 170,
+    "dense_points": 268,
+    "h_max": 0.9959325194358826,
+    "h_sum": 3360.234619140625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "13",
+    "threshold": 0.6997653484344482,
+    "curve_voxels": 183,
+    "dense_points": 288,
+    "h_max": 0.9996647834777832,
+    "h_sum": 6629.62451171875
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "14",
+    "threshold": 0.6996221959590911,
+    "curve_voxels": 190,
+    "dense_points": 291,
+    "h_max": 0.9994602799415588,
+    "h_sum": 6045.99267578125
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "15",
+    "threshold": 0.6997028887271881,
+    "curve_voxels": 229,
+    "dense_points": 353,
+    "h_max": 0.9995755553245544,
+    "h_sum": 6517.70458984375
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "16",
+    "threshold": 0.6999833106994628,
+    "curve_voxels": 311,
+    "dense_points": 477,
+    "h_max": 0.9999761581420898,
+    "h_sum": 11522.537109375
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "17",
+    "threshold": 0.6999531865119933,
+    "curve_voxels": 262,
+    "dense_points": 407,
+    "h_max": 0.999933123588562,
+    "h_sum": 10541.4443359375
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "21",
+    "threshold": 0.6997754454612731,
+    "curve_voxels": 172,
+    "dense_points": 278,
+    "h_max": 0.9996792078018188,
+    "h_sum": 6890.50244140625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "22",
+    "threshold": 0.6983378708362579,
+    "curve_voxels": 179,
+    "dense_points": 277,
+    "h_max": 0.9976255297660828,
+    "h_sum": 3953.0908203125
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "23",
+    "threshold": 0.6997650980949401,
+    "curve_voxels": 190,
+    "dense_points": 303,
+    "h_max": 0.9996644258499146,
+    "h_sum": 6648.7802734375
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "24",
+    "threshold": 0.6994303524494171,
+    "curve_voxels": 193,
+    "dense_points": 298,
+    "h_max": 0.9991862177848816,
+    "h_sum": 6343.8359375
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "25",
+    "threshold": 0.6991979122161864,
+    "curve_voxels": 220,
+    "dense_points": 358,
+    "h_max": 0.9988541603088379,
+    "h_sum": 5582.06689453125
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "26",
+    "threshold": 0.699964952468872,
+    "curve_voxels": 261,
+    "dense_points": 390,
+    "h_max": 0.9999499320983887,
+    "h_sum": 11516.587890625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "27",
+    "threshold": 0.699966287612915,
+    "curve_voxels": 234,
+    "dense_points": 366,
+    "h_max": 0.9999518394470215,
+    "h_sum": 10835.599609375
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "31",
+    "threshold": 0.6948002398014068,
+    "curve_voxels": 166,
+    "dense_points": 261,
+    "h_max": 0.9925717711448669,
+    "h_sum": 2144.981689453125
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "32",
+    "threshold": 0.6969602942466735,
+    "curve_voxels": 142,
+    "dense_points": 225,
+    "h_max": 0.9956575632095337,
+    "h_sum": 2781.71533203125
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "33",
+    "threshold": 0.6993658900260925,
+    "curve_voxels": 193,
+    "dense_points": 301,
+    "h_max": 0.9990941286087036,
+    "h_sum": 5351.41650390625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "34",
+    "threshold": 0.6986144542694092,
+    "curve_voxels": 147,
+    "dense_points": 236,
+    "h_max": 0.9980206489562988,
+    "h_sum": 4233.8017578125
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "35",
+    "threshold": 0.6995081663131714,
+    "curve_voxels": 192,
+    "dense_points": 313,
+    "h_max": 0.9992973804473877,
+    "h_sum": 4790.2666015625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "36",
+    "threshold": 0.699960446357727,
+    "curve_voxels": 276,
+    "dense_points": 414,
+    "h_max": 0.9999434947967529,
+    "h_sum": 10043.541015625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "37",
+    "threshold": 0.69997980594635,
+    "curve_voxels": 217,
+    "dense_points": 340,
+    "h_max": 0.9999711513519287,
+    "h_sum": 10906.7783203125
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "38",
+    "threshold": 0.6772740542888641,
+    "curve_voxels": 152,
+    "dense_points": 221,
+    "h_max": 0.9675343632698059,
+    "h_sum": 995.7819213867188
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "41",
+    "threshold": 0.6961580395698547,
+    "curve_voxels": 121,
+    "dense_points": 187,
+    "h_max": 0.9945114850997925,
+    "h_sum": 2683.600341796875
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "42",
+    "threshold": 0.6917481005191802,
+    "curve_voxels": 136,
+    "dense_points": 205,
+    "h_max": 0.9882115721702576,
+    "h_sum": 2239.36669921875
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "43",
+    "threshold": 0.6993015110492706,
+    "curve_voxels": 162,
+    "dense_points": 256,
+    "h_max": 0.9990021586418152,
+    "h_sum": 4898.62646484375
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "44",
+    "threshold": 0.699618774652481,
+    "curve_voxels": 148,
+    "dense_points": 240,
+    "h_max": 0.9994553923606873,
+    "h_sum": 4451.1806640625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "45",
+    "threshold": 0.6992977559566498,
+    "curve_voxels": 176,
+    "dense_points": 274,
+    "h_max": 0.9989967942237854,
+    "h_sum": 5072.3544921875
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "46",
+    "threshold": 0.6999602794647216,
+    "curve_voxels": 260,
+    "dense_points": 392,
+    "h_max": 0.9999432563781738,
+    "h_sum": 10164.873046875
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "47",
+    "threshold": 0.6999743819236754,
+    "curve_voxels": 273,
+    "dense_points": 424,
+    "h_max": 0.9999634027481079,
+    "h_sum": 11354.5390625
+  },
+  {
+    "case_id": "ToothFairy3F_053",
+    "tooth_id": "48",
+    "threshold": 0.6382437467575073,
+    "curve_voxels": 119,
+    "dense_points": 153,
+    "h_max": 0.9117767810821533,
+    "h_sum": 380.0043640136719
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "11",
+    "threshold": 0.6991576910018921,
+    "curve_voxels": 180,
+    "dense_points": 290,
+    "h_max": 0.9987967014312744,
+    "h_sum": 6034.80029296875
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "12",
+    "threshold": 0.6971760869026183,
+    "curve_voxels": 168,
+    "dense_points": 257,
+    "h_max": 0.995965838432312,
+    "h_sum": 2702.72265625
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "13",
+    "threshold": 0.6994728684425353,
+    "curve_voxels": 184,
+    "dense_points": 298,
+    "h_max": 0.9992469549179077,
+    "h_sum": 5547.38427734375
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "14",
+    "threshold": 0.6999314069747924,
+    "curve_voxels": 191,
+    "dense_points": 307,
+    "h_max": 0.9999020099639893,
+    "h_sum": 6742.19189453125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "15",
+    "threshold": 0.6999120473861694,
+    "curve_voxels": 189,
+    "dense_points": 280,
+    "h_max": 0.9998743534088135,
+    "h_sum": 6361.70703125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "16",
+    "threshold": 0.69997980594635,
+    "curve_voxels": 257,
+    "dense_points": 402,
+    "h_max": 0.9999711513519287,
+    "h_sum": 12056.400390625
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "17",
+    "threshold": 0.6999684572219849,
+    "curve_voxels": 291,
+    "dense_points": 468,
+    "h_max": 0.9999549388885498,
+    "h_sum": 11518.484375
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "21",
+    "threshold": 0.6996602892875671,
+    "curve_voxels": 182,
+    "dense_points": 277,
+    "h_max": 0.9995146989822388,
+    "h_sum": 7164.74462890625
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "22",
+    "threshold": 0.6981622576713562,
+    "curve_voxels": 187,
+    "dense_points": 297,
+    "h_max": 0.9973746538162231,
+    "h_sum": 2640.391845703125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "23",
+    "threshold": 0.6989141941070556,
+    "curve_voxels": 141,
+    "dense_points": 212,
+    "h_max": 0.9984488487243652,
+    "h_sum": 4557.552734375
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "24",
+    "threshold": 0.3833408415317535,
+    "curve_voxels": 13,
+    "dense_points": 20,
+    "h_max": 0.5476297736167908,
+    "h_sum": 68.38053131103516
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "25",
+    "threshold": 0.6998031079769134,
+    "curve_voxels": 195,
+    "dense_points": 320,
+    "h_max": 0.9997187256813049,
+    "h_sum": 6032.37353515625
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "26",
+    "threshold": 0.6999450922012329,
+    "curve_voxels": 238,
+    "dense_points": 374,
+    "h_max": 0.9999215602874756,
+    "h_sum": 11153.421875
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "27",
+    "threshold": 0.6999699592590332,
+    "curve_voxels": 248,
+    "dense_points": 393,
+    "h_max": 0.9999570846557617,
+    "h_sum": 11969.7666015625
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "28",
+    "threshold": 0.6018756747245788,
+    "curve_voxels": 99,
+    "dense_points": 146,
+    "h_max": 0.8598223924636841,
+    "h_sum": 614.6709594726562
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "31",
+    "threshold": 0.6929679632186889,
+    "curve_voxels": 138,
+    "dense_points": 210,
+    "h_max": 0.9899542331695557,
+    "h_sum": 2400.934814453125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "32",
+    "threshold": 0.6948799729347228,
+    "curve_voxels": 161,
+    "dense_points": 243,
+    "h_max": 0.9926856756210327,
+    "h_sum": 2178.128173828125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "33",
+    "threshold": 0.6986554265022278,
+    "curve_voxels": 153,
+    "dense_points": 244,
+    "h_max": 0.9980791807174683,
+    "h_sum": 3983.951904296875
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "34",
+    "threshold": 0.6983116269111633,
+    "curve_voxels": 164,
+    "dense_points": 258,
+    "h_max": 0.997588038444519,
+    "h_sum": 3941.290283203125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "35",
+    "threshold": 0.6992999255657195,
+    "curve_voxels": 184,
+    "dense_points": 291,
+    "h_max": 0.9989998936653137,
+    "h_sum": 5127.49853515625
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "36",
+    "threshold": 0.6999490141868591,
+    "curve_voxels": 258,
+    "dense_points": 390,
+    "h_max": 0.9999271631240845,
+    "h_sum": 10729.169921875
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "37",
+    "threshold": 0.699973714351654,
+    "curve_voxels": 273,
+    "dense_points": 413,
+    "h_max": 0.9999624490737915,
+    "h_sum": 10690.9189453125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "38",
+    "threshold": 0.6908965289592742,
+    "curve_voxels": 164,
+    "dense_points": 243,
+    "h_max": 0.9869950413703918,
+    "h_sum": 1674.859619140625
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "41",
+    "threshold": 0.6977965533733368,
+    "curve_voxels": 126,
+    "dense_points": 201,
+    "h_max": 0.9968522191047668,
+    "h_sum": 2481.766845703125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "42",
+    "threshold": 0.6965486526489257,
+    "curve_voxels": 122,
+    "dense_points": 195,
+    "h_max": 0.9950695037841797,
+    "h_sum": 2447.2958984375
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "43",
+    "threshold": 0.6981761932373046,
+    "curve_voxels": 159,
+    "dense_points": 243,
+    "h_max": 0.9973945617675781,
+    "h_sum": 4267.388671875
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "44",
+    "threshold": 0.6995715856552124,
+    "curve_voxels": 178,
+    "dense_points": 293,
+    "h_max": 0.9993879795074463,
+    "h_sum": 4153.61572265625
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "45",
+    "threshold": 0.6997471570968627,
+    "curve_voxels": 172,
+    "dense_points": 262,
+    "h_max": 0.9996387958526611,
+    "h_sum": 5371.958984375
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "46",
+    "threshold": 0.6999117970466613,
+    "curve_voxels": 263,
+    "dense_points": 387,
+    "h_max": 0.9998739957809448,
+    "h_sum": 10081.154296875
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "47",
+    "threshold": 0.6999556064605712,
+    "curve_voxels": 263,
+    "dense_points": 424,
+    "h_max": 0.999936580657959,
+    "h_sum": 10493.2783203125
+  },
+  {
+    "case_id": "ToothFairy3F_054",
+    "tooth_id": "48",
+    "threshold": 0.6979074954986572,
+    "curve_voxels": 187,
+    "dense_points": 310,
+    "h_max": 0.9970107078552246,
+    "h_sum": 1849.56494140625
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "11",
+    "threshold": 0.6997973501682281,
+    "curve_voxels": 206,
+    "dense_points": 315,
+    "h_max": 0.9997105002403259,
+    "h_sum": 6457.02880859375
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "12",
+    "threshold": 0.6992745995521545,
+    "curve_voxels": 162,
+    "dense_points": 257,
+    "h_max": 0.9989637136459351,
+    "h_sum": 4962.10302734375
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "13",
+    "threshold": 0.6999276518821715,
+    "curve_voxels": 194,
+    "dense_points": 297,
+    "h_max": 0.9998966455459595,
+    "h_sum": 6219.919921875
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "14",
+    "threshold": 0.699818879365921,
+    "curve_voxels": 195,
+    "dense_points": 294,
+    "h_max": 0.99974125623703,
+    "h_sum": 6499.00439453125
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "15",
+    "threshold": 0.6997491598129272,
+    "curve_voxels": 184,
+    "dense_points": 290,
+    "h_max": 0.9996416568756104,
+    "h_sum": 5431.7041015625
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "16",
+    "threshold": 0.6999732136726379,
+    "curve_voxels": 258,
+    "dense_points": 395,
+    "h_max": 0.9999617338180542,
+    "h_sum": 11530.3115234375
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "17",
+    "threshold": 0.6999818921089171,
+    "curve_voxels": 257,
+    "dense_points": 406,
+    "h_max": 0.9999741315841675,
+    "h_sum": 10290.259765625
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "18",
+    "threshold": 0.6651616275310516,
+    "curve_voxels": 52,
+    "dense_points": 89,
+    "h_max": 0.9502308964729309,
+    "h_sum": 404.1339416503906
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "21",
+    "threshold": 0.6997973501682281,
+    "curve_voxels": 216,
+    "dense_points": 323,
+    "h_max": 0.9997105002403259,
+    "h_sum": 6692.47509765625
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "22",
+    "threshold": 0.6995088338851928,
+    "curve_voxels": 178,
+    "dense_points": 277,
+    "h_max": 0.9992983341217041,
+    "h_sum": 4726.716796875
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "23",
+    "threshold": 0.6998066961765289,
+    "curve_voxels": 167,
+    "dense_points": 250,
+    "h_max": 0.9997238516807556,
+    "h_sum": 6101.7744140625
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "24",
+    "threshold": 0.6999601960182189,
+    "curve_voxels": 169,
+    "dense_points": 281,
+    "h_max": 0.9999431371688843,
+    "h_sum": 6713.40576171875
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "25",
+    "threshold": 0.6998394906520843,
+    "curve_voxels": 216,
+    "dense_points": 321,
+    "h_max": 0.9997707009315491,
+    "h_sum": 6237.85693359375
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "26",
+    "threshold": 0.6999686241149902,
+    "curve_voxels": 264,
+    "dense_points": 401,
+    "h_max": 0.9999551773071289,
+    "h_sum": 11110.3544921875
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "27",
+    "threshold": 0.6999455094337463,
+    "curve_voxels": 241,
+    "dense_points": 374,
+    "h_max": 0.9999221563339233,
+    "h_sum": 9338.1689453125
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "28",
+    "threshold": 0.4322466671466827,
+    "curve_voxels": 39,
+    "dense_points": 54,
+    "h_max": 0.6174952387809753,
+    "h_sum": 207.1514434814453
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "31",
+    "threshold": 0.6989360153675079,
+    "curve_voxels": 173,
+    "dense_points": 286,
+    "h_max": 0.9984800219535828,
+    "h_sum": 3719.559326171875
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "32",
+    "threshold": 0.6983535587787628,
+    "curve_voxels": 185,
+    "dense_points": 313,
+    "h_max": 0.9976479411125183,
+    "h_sum": 3318.893798828125
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "33",
+    "threshold": 0.6995841860771179,
+    "curve_voxels": 188,
+    "dense_points": 300,
+    "h_max": 0.9994059801101685,
+    "h_sum": 5441.61962890625
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "34",
+    "threshold": 0.6995571911334991,
+    "curve_voxels": 159,
+    "dense_points": 259,
+    "h_max": 0.9993674159049988,
+    "h_sum": 4339.66748046875
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "35",
+    "threshold": 0.6999153017997741,
+    "curve_voxels": 195,
+    "dense_points": 307,
+    "h_max": 0.999879002571106,
+    "h_sum": 6011.63232421875
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "36",
+    "threshold": 0.6999922394752502,
+    "curve_voxels": 252,
+    "dense_points": 393,
+    "h_max": 0.9999889135360718,
+    "h_sum": 11162.1259765625
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "37",
+    "threshold": 0.6999761343002319,
+    "curve_voxels": 228,
+    "dense_points": 380,
+    "h_max": 0.9999659061431885,
+    "h_sum": 10314.2080078125
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "38",
+    "threshold": 0.6997112333774567,
+    "curve_voxels": 175,
+    "dense_points": 280,
+    "h_max": 0.9995874762535095,
+    "h_sum": 2881.1767578125
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "41",
+    "threshold": 0.3,
+    "curve_voxels": 0,
+    "dense_points": 0,
+    "h_max": 0.0566990002989769,
+    "h_sum": 9.646759033203125
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "42",
+    "threshold": 0.6995735883712768,
+    "curve_voxels": 163,
+    "dense_points": 263,
+    "h_max": 0.9993908405303955,
+    "h_sum": 3245.743896484375
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "43",
+    "threshold": 0.699745488166809,
+    "curve_voxels": 173,
+    "dense_points": 278,
+    "h_max": 0.9996364116668701,
+    "h_sum": 5253.6533203125
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "44",
+    "threshold": 0.6994230926036834,
+    "curve_voxels": 167,
+    "dense_points": 245,
+    "h_max": 0.9991758465766907,
+    "h_sum": 4619.79638671875
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "46",
+    "threshold": 0.6999475121498108,
+    "curve_voxels": 234,
+    "dense_points": 357,
+    "h_max": 0.9999250173568726,
+    "h_sum": 9373.9365234375
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "47",
+    "threshold": 0.6999711275100707,
+    "curve_voxels": 211,
+    "dense_points": 346,
+    "h_max": 0.9999587535858154,
+    "h_sum": 8541.59375
+  },
+  {
+    "case_id": "ToothFairy3F_055",
+    "tooth_id": "48",
+    "threshold": 0.68431276679039,
+    "curve_voxels": 133,
+    "dense_points": 211,
+    "h_max": 0.9775896668434143,
+    "h_sum": 660.4141845703125
+  }
+]

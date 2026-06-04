@@ -1,0 +1,2 @@
+experiment,status,best_epoch,sym_p95,sym_mean,no_curve_count,wrap_coverage,best_checkpoint,package_path
+exp00_baseline_dicece,success,0,14.03566837310791,6.319159030914307,1,0.20665109882285326,/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_002/experiments/exp00_baseline_dicece/outputs/train/checkpoints/best.pt,/root/cej_isolated_runs/C/cej_unsup_retrain_smoke_20260507_002/experiments/exp00_baseline_dicece/package/exp00_baseline_dicece_training_bundle.tar.gz

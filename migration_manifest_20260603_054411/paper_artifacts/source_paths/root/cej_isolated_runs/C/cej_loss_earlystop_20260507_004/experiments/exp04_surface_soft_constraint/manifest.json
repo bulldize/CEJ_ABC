@@ -1,0 +1,252 @@
+{
+  "experiment": "exp04_surface_soft_constraint",
+  "status": "success",
+  "started_at": "2026-05-07T18:51:01.037298+00:00",
+  "finished_at": "2026-05-07T19:17:06.363987+00:00",
+  "run_condition": "all_loss_only_comparison",
+  "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/config/train.yaml",
+  "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/best.pt",
+  "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/last.pt",
+  "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/metrics.csv",
+  "package_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/package/exp04_surface_soft_constraint_training_bundle.tar.gz",
+  "train_manifest": {
+    "started_at": "2026-05-07T18:51:12.679546+00:00",
+    "finished_at": "2026-05-07T19:17:05.328064+00:00",
+    "config_path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/config/train.yaml",
+    "output_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train",
+    "metrics_csv": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/metrics.csv",
+    "best_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/best.pt",
+    "last_checkpoint": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/last.pt",
+    "topk_checkpoints": [
+      {
+        "epoch": 35,
+        "holdout_composite_score": 0.81957415098876,
+        "holdout_loss": 0.49646820976183964,
+        "holdout_sym_p95": 5.0,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_035_score_0.819574.pt"
+      },
+      {
+        "epoch": 41,
+        "holdout_composite_score": 0.8225389519102382,
+        "holdout_loss": 0.48493565504367536,
+        "holdout_sym_p95": 5.099019527435303,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_041_score_0.822539.pt"
+      },
+      {
+        "epoch": 37,
+        "holdout_composite_score": 0.8242718472150441,
+        "holdout_loss": 0.49480752165500935,
+        "holdout_sym_p95": 5.099019527435303,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_037_score_0.824272.pt"
+      },
+      {
+        "epoch": 34,
+        "holdout_composite_score": 0.8413821871983627,
+        "holdout_loss": 0.4875262214587285,
+        "holdout_sym_p95": 5.0,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_034_score_0.841382.pt"
+      },
+      {
+        "epoch": 38,
+        "holdout_composite_score": 0.8429294343794961,
+        "holdout_loss": 0.5047455462125632,
+        "holdout_sym_p95": 5.099019527435303,
+        "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/topk/epoch_038_score_0.842929.pt"
+      }
+    ],
+    "checkpoint_top_k": 5,
+    "checkpoint_every_n_epochs": 5,
+    "archive_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/checkpoints/archive",
+    "holdout_analysis_dir": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/holdout_analysis",
+    "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+    "early_stop_metric": "holdout_composite_score",
+    "early_stop_score": {
+      "start_epoch": 10,
+      "weights": {
+        "loss": 0.3,
+        "sym_p95": 0.3,
+        "no_curve_count": 0.07,
+        "bad_rate": 0.07,
+        "vox03_empty": 0.03,
+        "cc_count": 0.03,
+        "wrap_miss": 0.05,
+        "hard_case_viewer": 0.15
+      },
+      "targets": {
+        "loss": 0.5,
+        "sym_p95_mm": 5.0,
+        "bad_sym_p95_mm": 5.0,
+        "hard_sym_p95_mm": 5.0,
+        "hard_bad_sym_p95_mm": 5.0,
+        "hard_case_count": 12,
+        "vox03": 100.0,
+        "cc_count": 4.0
+      }
+    },
+    "score_start_epoch": 10,
+    "holdout_monitor_loss": "DiceCELoss(sigmoid=True)",
+    "best_epoch": 35,
+    "best_composite_score": 0.81957415098876,
+    "best_monitor_metrics": {
+      "epoch": 35,
+      "holdout_loss": 0.49646820976183964,
+      "holdout_composite_score": 0.81957415098876,
+      "holdout_bad_rate": 0.23076923076923078,
+      "score_components": {
+        "loss": 0.9929364195236793,
+        "sym_p95": 1.0,
+        "no_curve_count": 0.0,
+        "bad_rate": 0.23076923076923078,
+        "vox03_empty": 0.0,
+        "cc_count": 0.0346153846153846,
+        "wrap_miss": 0.7000356675125555,
+        "hard_case_viewer": 1.1299942270914713,
+        "hard_case_sym_p95": 12.041594505310059,
+        "hard_case_no_curve_count": 0,
+        "hard_case_bad_rate": 0.6666666666666666,
+        "hard_case_missing_rate": 0.0,
+        "hard_case_expected_count": 12
+      },
+      "hard_case_viewer_component": 1.1299942270914713,
+      "hard_case_sym_p95": 12.041594505310059,
+      "hard_case_no_curve_count": 0,
+      "hard_case_bad_rate": 0.6666666666666666,
+      "holdout_sym_mean": 1.9355920553207397,
+      "holdout_sym_p95": 5.0,
+      "holdout_no_curve_count": 0,
+      "h_pred_max": 0.9997677206993103,
+      "h_pred_p99": 0.221979126182024,
+      "vox03": 6917.246153846154,
+      "vox03_total": 449621,
+      "cc_count": 1.1384615384615384,
+      "lcc_ratio": 0.9685185059290309,
+      "wrap_coverage": 0.2999643324874445,
+      "hard_case_count": 12,
+      "holdout_tooth_count": 65
+    },
+    "best_holdout_loss": 0.49646820976183964,
+    "best_holdout_sym_p95": 5.0,
+    "best_holdout_no_curve_count": 0,
+    "best_holdout_bad_rate": 0.23076923076923078,
+    "best_wrap_coverage": 0.2999643324874445,
+    "best_hard_case_viewer_component": 1.1299942270914713,
+    "best_hard_case_sym_p95": 12.041594505310059,
+    "best_hard_case_no_curve_count": 0,
+    "best_hard_case_bad_rate": 0.6666666666666666,
+    "pretrained": {
+      "loaded": true,
+      "path": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/input/checkpoints/unsup_last.pt",
+      "missing": [],
+      "unexpected": []
+    },
+    "dataset": {
+      "train": {
+        "total_tooth_dirs": 497,
+        "used_labeled_tooth_dirs": 426,
+        "skipped_unlabeled_tooth_dirs": 71,
+        "invalid_tooth_dirs": 0
+      },
+      "holdout": {
+        "total_tooth_dirs": 88,
+        "used_labeled_tooth_dirs": 65,
+        "skipped_unlabeled_tooth_dirs": 23,
+        "invalid_tooth_dirs": 0
+      }
+    },
+    "audit_paths": {
+      "train": {
+        "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/supervised_dataset_audit.json",
+        "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/skipped_unlabeled_teeth.json",
+        "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/skipped_unlabeled_teeth.txt",
+        "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/invalid_labeled_teeth.json",
+        "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_train/invalid_labeled_teeth.txt"
+      },
+      "holdout": {
+        "audit": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/supervised_dataset_audit.json",
+        "skipped_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/skipped_unlabeled_teeth.json",
+        "skipped_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/skipped_unlabeled_teeth.txt",
+        "invalid_json": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/invalid_labeled_teeth.json",
+        "invalid_txt": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/audit_holdout/invalid_labeled_teeth.txt"
+      }
+    },
+    "sampler": {
+      "weighted_sampler": true,
+      "weight_count": 426,
+      "hard_weight_count": 3
+    }
+  },
+  "best_epoch": 35,
+  "best_composite_score": 0.81957415098876,
+  "best_holdout_loss": 0.49646820976183964,
+  "best_holdout_sym_p95": 5.0,
+  "best_holdout_no_curve_count": 0,
+  "best_holdout_bad_rate": 0.23076923076923078,
+  "best_wrap_coverage": 0.2999643324874445,
+  "best_hard_case_viewer_component": 1.1299942270914713,
+  "best_hard_case_sym_p95": 12.041594505310059,
+  "best_hard_case_no_curve_count": 0,
+  "best_hard_case_bad_rate": 0.6666666666666666,
+  "best_monitor_metrics": {
+    "epoch": 35,
+    "holdout_loss": 0.49646820976183964,
+    "holdout_composite_score": 0.81957415098876,
+    "holdout_bad_rate": 0.23076923076923078,
+    "score_components": {
+      "loss": 0.9929364195236793,
+      "sym_p95": 1.0,
+      "no_curve_count": 0.0,
+      "bad_rate": 0.23076923076923078,
+      "vox03_empty": 0.0,
+      "cc_count": 0.0346153846153846,
+      "wrap_miss": 0.7000356675125555,
+      "hard_case_viewer": 1.1299942270914713,
+      "hard_case_sym_p95": 12.041594505310059,
+      "hard_case_no_curve_count": 0,
+      "hard_case_bad_rate": 0.6666666666666666,
+      "hard_case_missing_rate": 0.0,
+      "hard_case_expected_count": 12
+    },
+    "hard_case_viewer_component": 1.1299942270914713,
+    "hard_case_sym_p95": 12.041594505310059,
+    "hard_case_no_curve_count": 0,
+    "hard_case_bad_rate": 0.6666666666666666,
+    "holdout_sym_mean": 1.9355920553207397,
+    "holdout_sym_p95": 5.0,
+    "holdout_no_curve_count": 0,
+    "h_pred_max": 0.9997677206993103,
+    "h_pred_p99": 0.221979126182024,
+    "vox03": 6917.246153846154,
+    "vox03_total": 449621,
+    "cc_count": 1.1384615384615384,
+    "lcc_ratio": 0.9685185059290309,
+    "wrap_coverage": 0.2999643324874445,
+    "hard_case_count": 12,
+    "holdout_tooth_count": 65
+  },
+  "hard_case_viewer": "/root/cej_isolated_runs/C/cej_loss_earlystop_20260507_004/experiments/exp04_surface_soft_constraint/outputs/train/holdout_analysis/hard_case_viewers/best_hard_case_viewer.html",
+  "early_stop_metric": "holdout_composite_score",
+  "early_stop_score": {
+    "start_epoch": 10,
+    "weights": {
+      "loss": 0.3,
+      "sym_p95": 0.3,
+      "no_curve_count": 0.07,
+      "bad_rate": 0.07,
+      "vox03_empty": 0.03,
+      "cc_count": 0.03,
+      "wrap_miss": 0.05,
+      "hard_case_viewer": 0.15
+    },
+    "targets": {
+      "loss": 0.5,
+      "sym_p95_mm": 5.0,
+      "bad_sym_p95_mm": 5.0,
+      "hard_sym_p95_mm": 5.0,
+      "hard_bad_sym_p95_mm": 5.0,
+      "hard_case_count": 12,
+      "vox03": 100.0,
+      "cc_count": 4.0
+    }
+  },
+  "error": null
+}

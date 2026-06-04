@@ -1,0 +1,162 @@
+{
+  "created_at": "2026-06-01T03:35:17.944920+00:00",
+  "repo_commit": "9bc35130947de4c3a172ba18109d5f610df06202",
+  "stage1_run_root": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage1",
+  "stage1_best_checkpoint": {
+    "path": "/root/cej_isolated_runs/C/unsup_to_goal_retrain_20260601_012139_stage1/experiments/exp03_skeleton_aux_loss/outputs/train/checkpoints/best.pt",
+    "size_bytes": 14361159,
+    "sha256": "4bb03de35363c83b6df49b40820e32494d7ae908bc31da01fb6a45bf2e8753ec"
+  },
+  "stage2_validation_run_root": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_max20_min7_20260601_031934",
+  "stage2_full19_baseline_run_root": "/root/cej_isolated_runs/C/goal模式_19full_001",
+  "stage2_full19_baseline_selection_reason": "historical_success_baseline",
+  "train_cases": [
+    "ToothFairy3F_008",
+    "ToothFairy3F_009",
+    "ToothFairy3F_010",
+    "ToothFairy3F_018",
+    "ToothFairy3F_021",
+    "ToothFairy3F_023",
+    "ToothFairy3F_025",
+    "ToothFairy3F_026",
+    "ToothFairy3F_027",
+    "ToothFairy3F_033",
+    "ToothFairy3F_041",
+    "ToothFairy3F_050",
+    "ToothFairy3F_051",
+    "ToothFairy3F_053",
+    "ToothFairy3F_054",
+    "ToothFairy3F_055"
+  ],
+  "holdout_cases": [
+    "ToothFairy3F_040",
+    "ToothFairy3F_044",
+    "ToothFairy3F_052"
+  ],
+  "train_tooth_count": 497,
+  "holdout_tooth_count": 88,
+  "stage2_validation_best_epoch": 19,
+  "stage2_validation_final_selected_threshold": 0.2,
+  "holdout_final_metrics": {
+    "mean": 0.6592883467674255,
+    "p95": 1.620744848251342,
+    "sr": {
+      "0.5": 0.508235294117647,
+      "1.0": 0.8494117647058823,
+      "1.5": 0.9380392156862745,
+      "2.0": 0.9615686274509804
+    },
+    "mean_dist_mm": 0.6592883467674255,
+    "p95_dist_mm": 1.620744848251342,
+    "sr@0.5mm": 0.508235294117647,
+    "sr@1.0mm": 0.8494117647058823,
+    "sr@1.5mm": 0.9380392156862745,
+    "sr@2.0mm": 0.9615686274509804,
+    "prediction_name": "C_pred_fit.nii.gz",
+    "tooth_count": 88,
+    "missing_prediction_count": 0,
+    "no_curve_count": 0,
+    "failed_tooth_count": 0,
+    "ok_tooth_count": 88
+  },
+  "bad_teeth_list": [
+    {
+      "case_id": "ToothFairy3F_040",
+      "tooth_id": "43",
+      "n_points": "20",
+      "status": "ok",
+      "pred_path": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_max20_min7_20260601_031934/threshold_sweep/theta_0.20/infer/ToothFairy3F_040/tooth_43/C_pred_fit.nii.gz",
+      "mean_dist_mm": "1.0811489820480347",
+      "p95_dist_mm": "2.185072708129883",
+      "sr@0.5": "0.2",
+      "sr@1.0": "0.55",
+      "sr@1.5": "0.7",
+      "sr@2.0": "0.85"
+    },
+    {
+      "case_id": "ToothFairy3F_052",
+      "tooth_id": "31",
+      "n_points": "20",
+      "status": "ok",
+      "pred_path": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_max20_min7_20260601_031934/threshold_sweep/theta_0.20/infer/ToothFairy3F_052/tooth_31/C_pred_fit.nii.gz",
+      "mean_dist_mm": "2.2652690410614014",
+      "p95_dist_mm": "4.254405069351196",
+      "sr@0.5": "0.05",
+      "sr@1.0": "0.2",
+      "sr@1.5": "0.3",
+      "sr@2.0": "0.5"
+    },
+    {
+      "case_id": "ToothFairy3F_052",
+      "tooth_id": "32",
+      "n_points": "20",
+      "status": "ok",
+      "pred_path": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_max20_min7_20260601_031934/threshold_sweep/theta_0.20/infer/ToothFairy3F_052/tooth_32/C_pred_fit.nii.gz",
+      "mean_dist_mm": "1.5702202320098877",
+      "p95_dist_mm": "3.2792219281196595",
+      "sr@0.5": "0.05",
+      "sr@1.0": "0.4",
+      "sr@1.5": "0.65",
+      "sr@2.0": "0.7"
+    },
+    {
+      "case_id": "ToothFairy3F_052",
+      "tooth_id": "41",
+      "n_points": "24",
+      "status": "ok",
+      "pred_path": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_max20_min7_20260601_031934/threshold_sweep/theta_0.20/infer/ToothFairy3F_052/tooth_41/C_pred_fit.nii.gz",
+      "mean_dist_mm": "2.5759036540985107",
+      "p95_dist_mm": "4.153904604911804",
+      "sr@0.5": "0.08333333333333333",
+      "sr@1.0": "0.125",
+      "sr@1.5": "0.25",
+      "sr@2.0": "0.4166666666666667"
+    },
+    {
+      "case_id": "ToothFairy3F_052",
+      "tooth_id": "42",
+      "n_points": "20",
+      "status": "ok",
+      "pred_path": "/root/cej_isolated_runs/C/unsup_to_goal_val16holdout3_max20_min7_20260601_031934/threshold_sweep/theta_0.20/infer/ToothFairy3F_052/tooth_42/C_pred_fit.nii.gz",
+      "mean_dist_mm": "2.2751660346984863",
+      "p95_dist_mm": "4.22306592464447",
+      "sr@0.5": "0.05",
+      "sr@1.0": "0.2",
+      "sr@1.5": "0.4",
+      "sr@2.0": "0.5"
+    }
+  ],
+  "full19_baseline": {
+    "report_path": "/root/cej_isolated_runs/C/goal模式_19full_001/summary/acceptance_report.json",
+    "metrics_summary_path": "/root/cej_isolated_runs/C/goal模式_19full_001/final/eval/metrics_summary.json",
+    "accepted": true,
+    "validation_status": null,
+    "selected_threshold": 0.35,
+    "metrics_summary": {
+      "mean": 0.29731258749961853,
+      "p95": 0.5984374463558196,
+      "sr": {
+        "0.5": 0.9012205213074058,
+        "1.0": 0.9957592056268101,
+        "1.5": 0.9995862639635912,
+        "2.0": 1.0
+      },
+      "mean_dist_mm": 0.29731258749961853,
+      "p95_dist_mm": 0.5984374463558196,
+      "sr@0.5mm": 0.9012205213074058,
+      "sr@1.0mm": 0.9957592056268101,
+      "sr@1.5mm": 0.9995862639635912,
+      "sr@2.0mm": 1.0,
+      "prediction_name": "C_pred_fit.nii.gz",
+      "tooth_count": 585,
+      "missing_prediction_count": 0,
+      "no_curve_count": 0,
+      "failed_tooth_count": 0,
+      "ok_tooth_count": 585
+    }
+  },
+  "comparison_conclusion": {
+    "recommendation": "inspect_holdout_failures",
+    "reason": "holdout3 failed validation triggers: p95_dist_mm_gt_1_50"
+  }
+}
